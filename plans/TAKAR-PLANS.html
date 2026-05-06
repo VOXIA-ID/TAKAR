@@ -287,7 +287,6 @@ a, button { transition: color var(--ease), background var(--ease), border-color 
   padding: var(--sp-5) var(--sp-6);
   box-shadow: var(--shadow-sm);
 }
-.card + .card { /* handled by grid gap */ }
 .card-solo { margin-bottom: var(--sp-4); }
 .card h3 {
   font-size: var(--ts-sm);
@@ -374,22 +373,47 @@ tbody tr:hover td { background: color-mix(in oklch, var(--surface-2) 60%, transp
 }
 
 /* ─── CODE BLOCK ─── */
-.code-block {
+.code-wrap {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin: var(--sp-4) 0;
+}
+.code-wrap-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.code-lang {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  color: var(--text-faint); text-transform: uppercase; letter-spacing: .08em;
+}
+.code-dots { display: flex; gap: 6px; }
+.code-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--border);
+}
+pre.code-block {
+  margin: 0;
   padding: var(--sp-6);
   font-family: var(--font-mono);
-  font-size: var(--ts-xs);
-  line-height: 1.8;
+  font-size: .8rem;
+  line-height: 1.85;
   overflow-x: auto;
-  box-shadow: var(--shadow-sm);
   color: var(--text);
+  white-space: pre;
+  tab-size: 2;
+  background: transparent;
+  max-width: 100%;
 }
-.code-block .c  { color: var(--text-faint); }
-.code-block .kw { color: var(--primary); }
-.code-block .st { color: var(--success); }
-.code-block .tp { color: var(--blue); }
+pre.code-block .c  { color: var(--text-faint); font-style: italic; }
+pre.code-block .kw { color: var(--primary); font-weight: 600; }
+pre.code-block .st { color: var(--success); }
+pre.code-block .tp { color: var(--blue); font-weight: 500; }
+pre.code-block .fn { color: var(--gold); }
 
 /* ─── FORMULA ─── */
 .formula-block {
@@ -498,6 +522,7 @@ tbody tr:hover td { background: color-mix(in oklch, var(--surface-2) 60%, transp
   .topbar { padding: 0 var(--sp-4); }
   .topbar-nav .nav-link { display: none; }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  pre.code-block { font-size: .72rem; }
 }
 </style>
 </head>
@@ -527,7 +552,7 @@ tbody tr:hover td { background: color-mix(in oklch, var(--surface-2) 60%, transp
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-badge"><span class="badge-dot"></span>Research Document · v2.0</div>
+  <div class="hero-badge"><span class="badge-dot"></span>Research Document · v2.1</div>
   <h1><em>TAKAR</em> — Bursa Opini<br>Terukur Indonesia</h1>
   <p class="hero-sub">Dokumen riset awal dan rencana arsitektur untuk membangun platform prediction market pertama Indonesia berbasis probabilitas terukur.</p>
   <div class="hero-meta">
@@ -761,53 +786,60 @@ tbody tr:hover td { background: color-mix(in oklch, var(--surface-2) 60%, transp
       </div>
       <p class="section-intro">PostgreSQL sebagai primary database dengan event sourcing via CosmosDB untuk audit trail lengkap setiap transaksi.</p>
 
-      <div class="code-block">
-<span class="c">-- Core tables (PostgreSQL)</span>
+      <div class="code-wrap">
+        <div class="code-wrap-header">
+          <span class="code-lang">SQL — PostgreSQL</span>
+          <div class="code-dots"><span></span><span></span><span></span></div>
+        </div>
+        <pre class="code-block"><span class="c">-- ─────────────────────────────────────────
+-- Core Tables · TAKAR Platform
+-- ─────────────────────────────────────────</span>
 
 <span class="kw">CREATE TABLE</span> <span class="tp">users</span> (
-  id          UUID <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  id          UUID         <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
   username    VARCHAR(50)  <span class="kw">UNIQUE NOT NULL</span>,
   email       VARCHAR(255) <span class="kw">UNIQUE NOT NULL</span>,
-  balance_idr BIGINT       <span class="kw">DEFAULT</span> <span class="st">0</span>,   <span class="c">-- dalam sen (IDR × 100)</span>
-  kyc_level   SMALLINT     <span class="kw">DEFAULT</span> <span class="st">0</span>,   <span class="c">-- 0=anon, 1=email, 2=KTP</span>
-  created_at  TIMESTAMPTZ  <span class="kw">DEFAULT</span> now()
+  balance_idr BIGINT       <span class="kw">DEFAULT</span> <span class="st">0</span>,        <span class="c">-- dalam sen (IDR × 100)</span>
+  kyc_level   SMALLINT     <span class="kw">DEFAULT</span> <span class="st">0</span>,        <span class="c">-- 0=anon, 1=email, 2=KTP</span>
+  created_at  TIMESTAMPTZ  <span class="kw">DEFAULT</span> <span class="fn">now</span>()
 );
 
 <span class="kw">CREATE TABLE</span> <span class="tp">markets</span> (
-  id            UUID        <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  id            UUID        <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
   title         TEXT        <span class="kw">NOT NULL</span>,
   description   TEXT,
-  category      VARCHAR(50),                 <span class="c">-- politik, ekonomi, olahraga</span>
+  category      VARCHAR(50),                    <span class="c">-- politik, ekonomi, olahraga</span>
   resolution_at TIMESTAMPTZ <span class="kw">NOT NULL</span>,
   resolved_at   TIMESTAMPTZ,
-  outcome       BOOLEAN,                     <span class="c">-- null = belum resolved</span>
-  liquidity_b   BIGINT      <span class="kw">DEFAULT</span> <span class="st">1000000</span>,<span class="c">-- LMSR parameter b (sen)</span>
+  outcome       BOOLEAN,                        <span class="c">-- null = belum resolved</span>
+  liquidity_b   BIGINT      <span class="kw">DEFAULT</span> <span class="st">1000000</span>,  <span class="c">-- LMSR parameter b (sen)</span>
   status        VARCHAR(20) <span class="kw">DEFAULT</span> <span class="st">'active'</span>,
-  created_by    UUID        <span class="kw">REFERENCES</span> users(id),
-  created_at    TIMESTAMPTZ <span class="kw">DEFAULT</span> now()
+  created_by    UUID        <span class="kw">REFERENCES</span> <span class="tp">users</span>(id),
+  created_at    TIMESTAMPTZ <span class="kw">DEFAULT</span> <span class="fn">now</span>()
 );
 
 <span class="kw">CREATE TABLE</span> <span class="tp">positions</span> (
-  id        UUID    <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
-  user_id   UUID    <span class="kw">REFERENCES</span> users(id),
-  market_id UUID    <span class="kw">REFERENCES</span> markets(id),
-  outcome   BOOLEAN <span class="kw">NOT NULL</span>,  <span class="c">-- YES or NO</span>
-  shares    BIGINT  <span class="kw">NOT NULL</span>,   <span class="c">-- jumlah shares</span>
-  avg_cost  BIGINT  <span class="kw">NOT NULL</span>,   <span class="c">-- harga rata-rata beli (sen/share)</span>
-  updated_at TIMESTAMPTZ <span class="kw">DEFAULT</span> now()
+  id         UUID    <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  user_id    UUID    <span class="kw">REFERENCES</span> <span class="tp">users</span>(id),
+  market_id  UUID    <span class="kw">REFERENCES</span> <span class="tp">markets</span>(id),
+  outcome    BOOLEAN <span class="kw">NOT NULL</span>,              <span class="c">-- YES or NO</span>
+  shares     BIGINT  <span class="kw">NOT NULL</span>,              <span class="c">-- jumlah shares</span>
+  avg_cost   BIGINT  <span class="kw">NOT NULL</span>,              <span class="c">-- harga rata-rata beli (sen/share)</span>
+  updated_at TIMESTAMPTZ <span class="kw">DEFAULT</span> <span class="fn">now</span>()
 );
 
 <span class="kw">CREATE TABLE</span> <span class="tp">trades</span> (
-  id        UUID       <span class="kw">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
-  user_id   UUID       <span class="kw">REFERENCES</span> users(id),
-  market_id UUID       <span class="kw">REFERENCES</span> markets(id),
-  side      VARCHAR(4) <span class="kw">NOT NULL</span>,   <span class="c">-- 'BUY' or 'SELL'</span>
-  outcome   BOOLEAN    <span class="kw">NOT NULL</span>,
-  shares    BIGINT     <span class="kw">NOT NULL</span>,
-  price     BIGINT     <span class="kw">NOT NULL</span>,   <span class="c">-- total cost in sen</span>
-  fee       BIGINT     <span class="kw">NOT NULL</span>,   <span class="c">-- platform fee in sen</span>
-  created_at TIMESTAMPTZ <span class="kw">DEFAULT</span> now()
-);</div>
+  id         UUID       <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
+  user_id    UUID       <span class="kw">REFERENCES</span> <span class="tp">users</span>(id),
+  market_id  UUID       <span class="kw">REFERENCES</span> <span class="tp">markets</span>(id),
+  side       VARCHAR(4) <span class="kw">NOT NULL</span>,           <span class="c">-- 'BUY' or 'SELL'</span>
+  outcome    BOOLEAN    <span class="kw">NOT NULL</span>,
+  shares     BIGINT     <span class="kw">NOT NULL</span>,
+  price      BIGINT     <span class="kw">NOT NULL</span>,           <span class="c">-- total cost in sen</span>
+  fee        BIGINT     <span class="kw">NOT NULL</span>,           <span class="c">-- platform fee in sen</span>
+  created_at TIMESTAMPTZ <span class="kw">DEFAULT</span> <span class="fn">now</span>()
+);</pre>
+      </div>
     </section>
 
     <hr class="divider">
@@ -1059,7 +1091,6 @@ tbody tr:hover td { background: color-mix(in oklch, var(--surface-2) 60%, transp
   const html = document.documentElement;
   const btn  = document.querySelector('[data-theme-toggle]');
 
-  // init theme from system
   let theme = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
   html.setAttribute('data-theme', theme);
 
@@ -1075,7 +1106,6 @@ tbody tr:hover td { background: color-mix(in oklch, var(--surface-2) 60%, transp
     });
   }
 
-  // Sidebar active state on scroll
   const sections = document.querySelectorAll('.section[id]');
   const links    = document.querySelectorAll('.sidebar-link');
   const obs = new IntersectionObserver(entries => {
