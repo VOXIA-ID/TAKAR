@@ -23,6 +23,7 @@
   --color-purple:#7a39bb;--color-purple-highlight:#dacfde;
   --shadow-sm:0 1px 2px oklch(0.2 0.01 80/0.06);
   --shadow-md:0 4px 12px oklch(0.2 0.01 80/0.08);
+  --shadow-lg:0 12px 32px oklch(0.2 0.01 80/0.12);
   --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--radius-full:9999px;
   --transition:180ms cubic-bezier(0.16,1,0.3,1);
   --font-body:'Inter',sans-serif;--font-display:'Instrument Serif',Georgia,serif;--font-mono:'JetBrains Mono',monospace;
@@ -31,7 +32,7 @@
   --text-base:clamp(1rem,0.95rem + 0.25vw,1.125rem);
   --text-lg:clamp(1.125rem,1rem + 0.75vw,1.5rem);
   --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
-  --text-hero:clamp(2.5rem,0.5rem + 6vw,5rem);
+  --text-hero:clamp(2rem,0.5rem + 6vw,5rem);
   --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;
   --space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;--space-20:5rem;
 }
@@ -39,61 +40,97 @@
   --color-bg:#0f0e0d;--color-surface:#161513;--color-surface-2:#1c1b19;
   --color-surface-offset:#1d1c1a;--color-divider:#262523;--color-border:#393836;
   --color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;
-  --color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-primary-highlight:#313b3b;
-  --color-success:#6daa45;--color-success-highlight:#3a4435;
-  --color-blue:#5591c7;--color-blue-highlight:#3a4550;
-  --color-gold:#e8af34;--color-gold-highlight:#4d4332;
-  --color-orange:#fdab43;--color-orange-highlight:#564b3e;
-  --color-error:#d163a7;--color-error-highlight:#4c3d46;
-  --color-purple:#a86fdf;--color-purple-highlight:#4e4652;
+  --color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-primary-highlight:#1e3133;
+  --color-success:#6daa45;--color-success-highlight:#1e2e18;
+  --color-blue:#5591c7;--color-blue-highlight:#1a2a38;
+  --color-gold:#e8af34;--color-gold-highlight:#2e2510;
+  --color-orange:#fdab43;--color-orange-highlight:#2e2010;
+  --color-error:#d163a7;--color-error-highlight:#2a1828;
+  --color-purple:#a86fdf;--color-purple-highlight:#221630;
   --shadow-sm:0 1px 2px oklch(0 0 0/0.25);--shadow-md:0 4px 12px oklch(0 0 0/0.35);
+  --shadow-lg:0 12px 32px oklch(0 0 0/0.5);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;scroll-padding-top:5rem}
-body{min-height:100dvh;line-height:1.7;font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg)}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;scroll-padding-top:4.5rem}
+body{min-height:100dvh;line-height:1.7;font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg);overflow-x:hidden}
 img,svg{display:block;max-width:100%}
 h1,h2,h3,h4{text-wrap:balance;line-height:1.2}
-p,li{text-wrap:pretty;max-width:72ch}
-a,button{transition:color var(--transition),background var(--transition),border-color var(--transition)}
+p,li{text-wrap:pretty}
+a,button{transition:color var(--transition),background var(--transition),border-color var(--transition),opacity var(--transition)}
 :focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
-.topbar{position:sticky;top:0;z-index:100;background:color-mix(in oklch,var(--color-bg) 85%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--color-border);padding:var(--space-3) var(--space-6);display:flex;align-items:center;justify-content:space-between;gap:var(--space-4)}
-.topbar-brand{display:flex;align-items:center;gap:var(--space-3);text-decoration:none;color:var(--color-text)}
-.topbar-title{font-family:var(--font-display);font-size:var(--text-lg);font-style:italic;letter-spacing:-0.02em}
+
+/* PROGRESS BAR */
+#progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--color-primary);width:0%;z-index:200;transition:width 0.1s linear}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:color-mix(in oklch,var(--color-bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--color-border);padding:0 var(--space-4);height:52px;display:flex;align-items:center;justify-content:space-between;gap:var(--space-3)}
+.topbar-brand{display:flex;align-items:center;gap:var(--space-2);text-decoration:none;color:var(--color-text);flex-shrink:0}
+.topbar-title{font-family:var(--font-display);font-size:1.15rem;font-style:italic;letter-spacing:-0.02em}
 .topbar-nav{display:flex;align-items:center;gap:var(--space-1)}
-.nav-link{font-size:var(--text-xs);color:var(--color-text-muted);text-decoration:none;padding:var(--space-1) var(--space-3);border-radius:var(--radius-full)}
+.nav-link{font-size:var(--text-xs);color:var(--color-text-muted);text-decoration:none;padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);white-space:nowrap}
 .nav-link:hover{color:var(--color-text);background:var(--color-surface-offset)}
-.theme-toggle{background:none;border:1px solid var(--color-border);border-radius:var(--radius-full);padding:var(--space-2);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);cursor:pointer;width:36px;height:36px}
-.theme-toggle:hover{color:var(--color-text);border-color:var(--color-primary)}
-.hero{padding:var(--space-20) var(--space-6) var(--space-12);max-width:900px;margin:0 auto;text-align:center}
-.hero-badge{display:inline-flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);font-weight:500;color:var(--color-primary);background:var(--color-primary-highlight);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);margin-bottom:var(--space-6);letter-spacing:0.05em;text-transform:uppercase}
-.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--color-primary)}
-.hero h1{font-family:var(--font-display);font-size:var(--text-hero);font-style:italic;letter-spacing:-0.03em;line-height:1.05;margin-bottom:var(--space-6)}
+.topbar-actions{display:flex;align-items:center;gap:var(--space-2);flex-shrink:0}
+.icon-btn{background:none;border:1px solid var(--color-border);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);cursor:pointer;width:40px;height:40px;flex-shrink:0}
+.icon-btn:hover{color:var(--color-text);border-color:var(--color-primary)}
+.hamburger{display:none}
+
+/* DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:oklch(0 0 0 / 0.5);z-index:150;opacity:0;pointer-events:none;transition:opacity var(--transition)}
+.drawer-overlay.open{opacity:1;pointer-events:all}
+.drawer{position:fixed;top:0;left:-280px;width:280px;height:100%;background:var(--color-surface);border-right:1px solid var(--color-border);z-index:160;transition:left 0.28s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;padding:var(--space-6) var(--space-4)}
+.drawer.open{left:0}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6);padding-bottom:var(--space-4);border-bottom:1px solid var(--color-border)}
+.drawer-brand{font-family:var(--font-display);font-style:italic;font-size:1.15rem;color:var(--color-text)}
+.drawer-close{background:none;border:none;color:var(--color-text-muted);cursor:pointer;padding:var(--space-2);border-radius:var(--radius-md);display:flex;align-items:center}
+.drawer-close:hover{color:var(--color-text);background:var(--color-surface-offset)}
+.drawer-section{margin-bottom:var(--space-5)}
+.drawer-label{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-faint);margin-bottom:var(--space-2);padding:0 var(--space-2)}
+.drawer-item{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-2);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text-muted);text-decoration:none;min-height:44px}
+.drawer-item:hover,.drawer-item:active{color:var(--color-text);background:var(--color-surface-offset)}
+.drawer-item.active{color:var(--color-primary);background:var(--color-primary-highlight)}
+.drawer-num{font-size:10px;font-family:var(--font-mono);background:var(--color-surface-dynamic);color:var(--color-text-faint);padding:1px 5px;border-radius:var(--radius-sm);flex-shrink:0}
+
+/* HERO */
+.hero{padding:clamp(var(--space-10),8vw,var(--space-20)) var(--space-4) var(--space-10);max-width:900px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);font-weight:500;color:var(--color-primary);background:var(--color-primary-highlight);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);margin-bottom:var(--space-5);letter-spacing:0.05em;text-transform:uppercase}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--color-primary);flex-shrink:0}
+.hero h1{font-family:var(--font-display);font-size:var(--text-hero);font-style:italic;letter-spacing:-0.03em;line-height:1.05;margin-bottom:var(--space-5)}
 .hero h1 span{color:var(--color-primary)}
-.hero-sub{font-size:var(--text-lg);color:var(--color-text-muted);max-width:58ch;margin:0 auto var(--space-8)}
-.hero-meta{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--space-4);font-size:var(--text-xs);color:var(--color-text-faint)}
+.hero-sub{font-size:clamp(1rem,1rem + 0.25vw,1.2rem);color:var(--color-text-muted);max-width:54ch;margin:0 auto var(--space-6)}
+.hero-meta{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--space-3);font-size:var(--text-xs);color:var(--color-text-faint)}
+
+/* DOC LAYOUT */
 .doc-layout{display:grid;grid-template-columns:220px 1fr;max-width:1200px;margin:0 auto;padding:0 var(--space-4) var(--space-20)}
-.sidebar{position:sticky;top:5rem;height:calc(100vh - 6rem);overflow-y:auto;padding:var(--space-6) var(--space-4) var(--space-6) 0;border-right:1px solid var(--color-border)}
-.sidebar-section{margin-bottom:var(--space-6)}
+
+/* SIDEBAR (desktop only) */
+.sidebar{position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;padding:var(--space-6) var(--space-4) var(--space-6) 0;border-right:1px solid var(--color-border)}
+.sidebar-section{margin-bottom:var(--space-5)}
 .sidebar-label{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-faint);margin-bottom:var(--space-2);padding:0 var(--space-3)}
 .sidebar-item{display:block;padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text-muted);text-decoration:none}
 .sidebar-item:hover{color:var(--color-text);background:var(--color-surface-offset)}
 .sidebar-item.active{color:var(--color-primary);background:var(--color-primary-highlight)}
+
+/* CONTENT */
 .content{padding:var(--space-6) 0 var(--space-6) var(--space-10)}
-.section{margin-bottom:var(--space-16);scroll-margin-top:5rem}
-.section-header{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-6)}
-.section-number{font-size:var(--text-xs);font-weight:700;color:var(--color-primary);background:var(--color-primary-highlight);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);font-family:var(--font-mono);letter-spacing:0.05em}
+.section{margin-bottom:var(--space-16);scroll-margin-top:4.5rem}
+.section-header{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-5)}
+.section-number{font-size:var(--text-xs);font-weight:700;color:var(--color-primary);background:var(--color-primary-highlight);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);font-family:var(--font-mono);letter-spacing:0.05em;flex-shrink:0}
 .section h2{font-family:var(--font-display);font-size:var(--text-xl);font-style:italic;letter-spacing:-0.02em}
-.section-intro{font-size:var(--text-base);color:var(--color-text-muted);margin-bottom:var(--space-8);line-height:1.7;max-width:65ch}
-.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm)}
+.section-intro{font-size:var(--text-base);color:var(--color-text-muted);margin-bottom:var(--space-6);line-height:1.7}
+
+/* CARDS */
+.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm)}
 .card-grid{display:grid;gap:var(--space-4)}
 .card-grid.cols-2{grid-template-columns:repeat(2,1fr)}
 .card-grid.cols-3{grid-template-columns:repeat(3,1fr)}
 .card h3{font-size:var(--text-base);font-weight:600;margin-bottom:var(--space-3)}
 .card p{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6}
 .card ul{font-size:var(--text-sm);color:var(--color-text-muted);padding-left:var(--space-5);display:flex;flex-direction:column;gap:var(--space-2);margin-top:var(--space-3)}
-.highlight-card{border-left:3px solid var(--color-primary);padding:var(--space-5);background:var(--color-primary-highlight);border-radius:0 var(--radius-lg) var(--radius-lg) 0;margin:var(--space-6) 0}
+.highlight-card{border-left:3px solid var(--color-primary);padding:var(--space-5);background:var(--color-primary-highlight);border-radius:0 var(--radius-lg) var(--radius-lg) 0;margin:var(--space-5) 0}
 .highlight-card p{color:var(--color-text);font-size:var(--text-sm);line-height:1.7}
 .highlight-card strong{color:var(--color-primary)}
+
+/* TAGS */
 .tag{display:inline-flex;align-items:center;font-size:var(--text-xs);font-weight:500;padding:2px var(--space-2);border-radius:var(--radius-sm)}
 .tag-green{background:var(--color-success-highlight);color:var(--color-success)}
 .tag-blue{background:var(--color-blue-highlight);color:var(--color-blue)}
@@ -102,25 +139,33 @@ a,button{transition:color var(--transition),background var(--transition),border-
 .tag-purple{background:var(--color-purple-highlight);color:var(--color-purple)}
 .tag-red{background:var(--color-error-highlight);color:var(--color-error)}
 .tag-teal{background:var(--color-primary-highlight);color:var(--color-primary)}
-.table-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--color-border);margin:var(--space-6) 0}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-lg);border:1px solid var(--color-border);margin:var(--space-5) 0}
 table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
 thead{background:var(--color-surface-offset)}
-th{padding:var(--space-3) var(--space-4);text-align:left;font-weight:600;color:var(--color-text-muted);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--color-border)}
+th{padding:var(--space-3) var(--space-4);text-align:left;font-weight:600;color:var(--color-text-muted);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--color-border);white-space:nowrap}
 td{padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider);color:var(--color-text);vertical-align:top}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--color-surface-offset)}
-.arch-diagram{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-8);margin:var(--space-6) 0}
-.arch-layers{display:flex;flex-direction:column;gap:var(--space-4)}
+.vocab-table td:first-child{font-family:var(--font-mono);color:var(--color-error);text-decoration:line-through;font-size:var(--text-xs)}
+.vocab-table td:nth-child(2){font-family:var(--font-mono);color:var(--color-primary);font-weight:600;font-size:var(--text-xs)}
+
+/* ARCH DIAGRAM */
+.arch-diagram{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-5);margin:var(--space-5) 0}
+.arch-layers{display:flex;flex-direction:column;gap:var(--space-3)}
 .arch-layer{border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
-.arch-layer-title{padding:var(--space-2) var(--space-5);font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:flex;align-items:center;gap:var(--space-2)}
-.arch-layer-body{padding:var(--space-4) var(--space-5);display:flex;flex-wrap:wrap;gap:var(--space-3)}
-.arch-box{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-2) var(--space-4);font-size:var(--text-xs);font-weight:500;font-family:var(--font-mono);white-space:nowrap}
+.arch-layer-title{padding:var(--space-2) var(--space-4);font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:flex;align-items:center;gap:var(--space-2)}
+.arch-layer-body{padding:var(--space-3) var(--space-4);display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.arch-box{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-1) var(--space-3);font-size:var(--text-xs);font-weight:500;font-family:var(--font-mono)}
 .layer-client .arch-layer-title{background:color-mix(in oklch,var(--color-blue) 10%,var(--color-surface));color:var(--color-blue)}
 .layer-api .arch-layer-title{background:color-mix(in oklch,var(--color-primary) 10%,var(--color-surface));color:var(--color-primary)}
 .layer-core .arch-layer-title{background:color-mix(in oklch,var(--color-gold) 10%,var(--color-surface));color:var(--color-gold)}
 .layer-data .arch-layer-title{background:color-mix(in oklch,var(--color-purple) 10%,var(--color-surface));color:var(--color-purple)}
 .layer-infra .arch-layer-title{background:color-mix(in oklch,var(--color-orange) 10%,var(--color-surface));color:var(--color-orange)}
-.timeline{display:flex;flex-direction:column;position:relative;padding-left:var(--space-8);margin:var(--space-6) 0}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;position:relative;padding-left:var(--space-8);margin:var(--space-5) 0}
 .timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--color-border)}
 .timeline-item{position:relative;padding-bottom:var(--space-8)}
 .timeline-item::before{content:'';position:absolute;left:-32px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--color-primary);border:2px solid var(--color-bg)}
@@ -129,18 +174,95 @@ tr:hover td{background:var(--color-surface-offset)}
 .timeline-title{font-size:var(--text-base);font-weight:600;margin-bottom:var(--space-2)}
 .timeline-desc{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6}
 .timeline-tags{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3)}
-.code-block{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);font-family:var(--font-mono);font-size:var(--text-xs);overflow-x:auto;line-height:1.8;margin:var(--space-4) 0;color:var(--color-text-muted)}
+
+/* CODE BLOCK */
+.code-block{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);font-family:var(--font-mono);font-size:0.75rem;overflow-x:auto;-webkit-overflow-scrolling:touch;line-height:1.8;margin:var(--space-3) 0;color:var(--color-text-muted)}
 .code-block .kw{color:var(--color-primary)}.code-block .str{color:var(--color-gold)}.code-block .cm{color:var(--color-text-faint);font-style:italic}.code-block .tp{color:var(--color-blue)}
-.vocab-table td:first-child{font-family:var(--font-mono);color:var(--color-error);text-decoration:line-through}
-.vocab-table td:nth-child(2){font-family:var(--font-mono);color:var(--color-primary);font-weight:600}
-.divider{height:1px;background:var(--color-divider);margin:var(--space-12) 0}
-@media(max-width:768px){.doc-layout{grid-template-columns:1fr}.sidebar{display:none}.content{padding:var(--space-4) 0}.card-grid.cols-2,.card-grid.cols-3{grid-template-columns:1fr}.topbar-nav{display:none}}
+
+.divider{height:1px;background:var(--color-divider);margin:var(--space-10) 0}
+
+/* MOBILE NAV (bottom sheet-style TOC trigger) */
+.mobile-toc-btn{display:none;position:fixed;bottom:calc(env(safe-area-inset-bottom) + var(--space-5));right:var(--space-4);z-index:90;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-full);padding:var(--space-3) var(--space-5);font-size:var(--text-sm);font-weight:600;gap:var(--space-2);align-items:center;box-shadow:var(--shadow-lg);cursor:pointer;min-height:48px}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media(max-width:768px){
+  html{scroll-padding-top:3.5rem}
+  .topbar{padding:0 var(--space-3);height:52px}
+  .topbar-nav{display:none}
+  .hamburger{display:flex}
+  .doc-layout{grid-template-columns:1fr;padding:0 0 var(--space-20)}
+  .sidebar{display:none}
+  .content{padding:var(--space-4) var(--space-4) var(--space-4)}
+  .section{margin-bottom:var(--space-10);scroll-margin-top:3.5rem}
+  .section-header{gap:var(--space-3);margin-bottom:var(--space-4)}
+  .section h2{font-size:clamp(1.3rem,5vw,1.8rem)}
+  .section-intro{margin-bottom:var(--space-4)}
+  .hero{padding:var(--space-8) var(--space-4) var(--space-8)}
+  .hero h1{font-size:clamp(1.8rem,9vw,3.5rem);word-break:keep-all}
+  .hero-sub{font-size:var(--text-base)}
+  .card-grid.cols-2,.card-grid.cols-3{grid-template-columns:1fr}
+  .card{padding:var(--space-4)}
+  .arch-diagram{padding:var(--space-4)}
+  .arch-layer-body{gap:var(--space-2)}
+  .arch-box{font-size:0.7rem;padding:3px var(--space-2)}
+  .highlight-card{padding:var(--space-4)}
+  .code-block{font-size:0.7rem;padding:var(--space-3)}
+  td,th{padding:var(--space-2) var(--space-3);font-size:0.75rem}
+  .timeline{padding-left:var(--space-6)}
+  .timeline-item::before{left:-26px}
+  .mobile-toc-btn{display:flex}
+  .divider{margin:var(--space-8) 0}
+  .topbar-title{font-size:1.05rem}
+}
+@media(max-width:420px){
+  .hero h1{font-size:clamp(1.6rem,8vw,2.5rem)}
+  .hero-meta{gap:var(--space-2);font-size:0.7rem}
+  .section-number{font-size:0.65rem;padding:1px var(--space-2)}
+}
 </style>
 </head>
 <body>
+<div id="progress-bar"></div>
+
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<div class="drawer" id="drawer" role="dialog" aria-label="Menu Navigasi">
+  <div class="drawer-header">
+    <span class="drawer-brand">TAKAR</span>
+    <button class="drawer-close" id="drawer-close" aria-label="Tutup menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="drawer-section">
+    <div class="drawer-label">Penelitian</div>
+    <a class="drawer-item" href="#latar"><span class="drawer-num">01</span>Latar Belakang</a>
+    <a class="drawer-item" href="#masalah"><span class="drawer-num">02</span>Masalah & Peluang</a>
+    <a class="drawer-item" href="#kompetitor"><span class="drawer-num">03</span>Analisis Kompetitor</a>
+  </div>
+  <div class="drawer-section">
+    <div class="drawer-label">Strategi</div>
+    <a class="drawer-item" href="#positioning"><span class="drawer-num">04</span>Positioning Legal</a>
+    <a class="drawer-item" href="#vocab"><span class="drawer-num">05</span>Kamus Framing</a>
+    <a class="drawer-item" href="#fitur"><span class="drawer-num">06</span>Fitur Utama</a>
+  </div>
+  <div class="drawer-section">
+    <div class="drawer-label">Teknis</div>
+    <a class="drawer-item" href="#arsitektur"><span class="drawer-num">07</span>Arsitektur Sistem</a>
+    <a class="drawer-item" href="#database"><span class="drawer-num">08</span>Database & Data Flow</a>
+    <a class="drawer-item" href="#mekanisme"><span class="drawer-num">09</span>Mekanisme Bobot</a>
+    <a class="drawer-item" href="#stack"><span class="drawer-num">10</span>Tech Stack</a>
+  </div>
+  <div class="drawer-section">
+    <div class="drawer-label">Bisnis</div>
+    <a class="drawer-item" href="#monetisasi"><span class="drawer-num">11</span>Model Monetisasi</a>
+    <a class="drawer-item" href="#risiko"><span class="drawer-num">12</span>Analisis Risiko</a>
+    <a class="drawer-item" href="#roadmap"><span class="drawer-num">13</span>Roadmap</a>
+  </div>
+</div>
+
 <header class="topbar">
   <a class="topbar-brand" href="#">
-    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-label="TAKAR">
+    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-label="TAKAR">
       <rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.1"/>
       <path d="M8 10h16M14 10v12M20 10l-4 6 4 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="22" cy="22" r="3" fill="currentColor" fill-opacity="0.5"/>
@@ -154,26 +276,37 @@ tr:hover td{background:var(--color-surface-offset)}
     <a class="nav-link" href="#arsitektur">Arsitektur</a>
     <a class="nav-link" href="#roadmap">Roadmap</a>
   </nav>
-  <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-  </button>
+  <div class="topbar-actions">
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle tema">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <button class="icon-btn hamburger" id="hamburger-btn" aria-label="Buka menu" aria-expanded="false">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
 </header>
 
 <section class="hero">
-  <div class="hero-badge"><span class="hero-badge-dot"></span>Research Document v0.2 · Confidential</div>
-  <h1><span>TAKAR</span> — Bursa Opini<br>Terukur Indonesia</h1>
-  <p class="hero-sub">Platform pertama di Indonesia tempat pengguna menyatakan penilaian terukur atas isu publik. Bobot konsensus terbentuk secara organik — bukan opini kosong, tapi sinyal yang tercatat dan diverifikasi.</p>
+  <div class="hero-badge"><span class="hero-badge-dot"></span>Research Document v0.3 &middot; Confidential</div>
+  <h1><span>TAKAR</span> &mdash; Bursa Opini<br>Terukur Indonesia</h1>
+  <p class="hero-sub">Platform pertama di Indonesia tempat pengguna menyatakan penilaian terukur atas isu publik. Bobot konsensus terbentuk secara organik &mdash; bukan opini kosong, tapi sinyal yang tercatat dan diverifikasi.</p>
   <div class="hero-meta">
-    <span>📅 Mei 2026</span><span>·</span><span>🔬 Pre-seed Research</span><span>·</span><span>🇮🇩 Indonesia-first</span><span>·</span><span>✍️ VOXIA / SOLUSI-AI</span>
+    <span>&#128197; Mei 2026</span><span>&middot;</span><span>&#128302; Pre-seed Research</span><span>&middot;</span><span>&#127470;&#127465; Indonesia-first</span><span>&middot;</span><span>&#9997;&#65039; VOXIA / SOLUSI-AI</span>
   </div>
 </section>
+
+<!-- Mobile TOC floating button -->
+<button class="mobile-toc-btn" id="mobile-toc-btn" aria-label="Buka daftar isi">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+  Daftar Isi
+</button>
 
 <div class="doc-layout">
   <aside class="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Penelitian</div>
       <a class="sidebar-item" href="#latar">Latar Belakang</a>
-      <a class="sidebar-item" href="#masalah">Masalah & Peluang</a>
+      <a class="sidebar-item" href="#masalah">Masalah &amp; Peluang</a>
       <a class="sidebar-item" href="#kompetitor">Analisis Kompetitor</a>
     </div>
     <div class="sidebar-section">
@@ -185,7 +318,7 @@ tr:hover td{background:var(--color-surface-offset)}
     <div class="sidebar-section">
       <div class="sidebar-label">Teknis</div>
       <a class="sidebar-item" href="#arsitektur">Arsitektur Sistem</a>
-      <a class="sidebar-item" href="#database">Database & Data Flow</a>
+      <a class="sidebar-item" href="#database">Database &amp; Data Flow</a>
       <a class="sidebar-item" href="#mekanisme">Mekanisme Bobot</a>
       <a class="sidebar-item" href="#stack">Tech Stack</a>
     </div>
@@ -199,180 +332,164 @@ tr:hover td{background:var(--color-surface-offset)}
 
   <main class="content">
 
-    <!-- 01 LATAR BELAKANG -->
     <section class="section" id="latar">
       <div class="section-header"><span class="section-number">01</span><h2>Latar Belakang</h2></div>
       <p class="section-intro">TAKAR lahir dari satu observasi sederhana: Indonesia adalah negara dengan populasi terbesar ke-4 di dunia, tapi belum ada platform yang mengukur bobot opini publik secara transparan, terstruktur, dan bertanggung jawab.</p>
       <div class="highlight-card">
-        <p><strong>Nama & Konsep:</strong> TAKAR — dari kata "menakar". Pengguna <em>menakar</em> suatu isu: seberapa besar bobot keyakinan mereka terhadap suatu hasil nyata. Ini bukan tebak-tebakan — ini adalah ekspresi penilaian yang terukur, dicatat, dan diverifikasi secara objektif berdasarkan fakta publik.</p>
+        <p><strong>Nama &amp; Konsep:</strong> TAKAR &mdash; dari kata &ldquo;menakar&rdquo;. Pengguna <em>menakar</em> suatu isu: seberapa besar bobot keyakinan mereka terhadap suatu hasil nyata. Ini bukan tebak-tebakan &mdash; ini adalah ekspresi penilaian yang terukur, dicatat, dan diverifikasi secara objektif berdasarkan fakta publik.</p>
       </div>
-      <div class="card-grid cols-3" style="margin-top:var(--space-6)">
-        <div class="card"><h3>🌏 Pasar Besar</h3><p>270 juta penduduk, 191 juta pengguna media sosial aktif. Setiap siklus Pilkada, Pemilu, dan event nasional besar menciptakan gelombang opini publik yang belum pernah diukur secara sistematis.</p></div>
-        <div class="card"><h3>💡 Ruang Kosong</h3><p>Belum ada platform legal di Indonesia yang mengagregasi opini publik berbasis insentif akurasi. Yang ada hanya komentar media sosial tanpa akuntabilitas dan lembaga survei tertutup yang tidak transparan.</p></div>
-        <div class="card"><h3>⚖️ Celah Regulasi</h3><p>OJK belum mengatur kategori ini — persis seperti prop trading firm. TAKAR tidak meminta izin untuk kategori yang belum ada; TAKAR <em>mendefinisikan</em> kategori baru dan membangun preseden hukumnya sendiri.</p></div>
+      <div class="card-grid cols-3" style="margin-top:var(--space-5)">
+        <div class="card"><h3>&#127759; Pasar Besar</h3><p>270 juta penduduk, 191 juta pengguna media sosial aktif. Setiap siklus Pilkada, Pemilu, dan event nasional besar menciptakan gelombang opini publik yang belum pernah diukur secara sistematis.</p></div>
+        <div class="card"><h3>&#128161; Ruang Kosong</h3><p>Belum ada platform legal di Indonesia yang mengagregasi opini publik berbasis insentif akurasi. Yang ada hanya komentar media sosial tanpa akuntabilitas dan lembaga survei tertutup yang tidak transparan.</p></div>
+        <div class="card"><h3>&#9878;&#65039; Celah Regulasi</h3><p>OJK belum mengatur kategori ini &mdash; persis seperti prop trading firm. TAKAR tidak meminta izin untuk kategori yang belum ada; TAKAR <em>mendefinisikan</em> kategori baru dan membangun preseden hukumnya sendiri.</p></div>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 02 MASALAH & PELUANG -->
     <section class="section" id="masalah">
-      <div class="section-header"><span class="section-number">02</span><h2>Masalah & Peluang</h2></div>
+      <div class="section-header"><span class="section-number">02</span><h2>Masalah &amp; Peluang</h2></div>
       <div class="card-grid cols-2">
         <div class="card">
-          <h3 style="color:var(--color-error)">❌ Masalah Saat Ini</h3>
+          <h3 style="color:var(--color-error)">&#10060; Masalah Saat Ini</h3>
           <ul>
             <li>Opini publik tidak memiliki mekanisme akuntabilitas apapun</li>
             <li>Lembaga survei sering bias, metodologi tidak transparan</li>
-            <li>Tidak ada cara mengukur "seberapa yakin" seseorang pada suatu isu</li>
+            <li>Tidak ada cara mengukur &ldquo;seberapa yakin&rdquo; seseorang pada suatu isu</li>
             <li>Judi online ilegal (est. Rp 600T/tahun) membuktikan demand ekspresi posisi atas outcome nyata</li>
             <li>Informasi tentang kemungkinan suatu kejadian tersebar dan tidak terstruktur</li>
           </ul>
         </div>
         <div class="card">
-          <h3 style="color:var(--color-success)">✅ Peluang TAKAR</h3>
+          <h3 style="color:var(--color-success)">&#9989; Peluang TAKAR</h3>
           <ul>
-            <li>Posisikan sebagai <strong>platform riset & agregasi opini</strong> — instrumen informasi, bukan hiburan</li>
+            <li>Posisikan sebagai <strong>platform riset &amp; agregasi opini</strong> &mdash; instrumen informasi, bukan hiburan</li>
             <li>Pilkada 2027 dan Pemilu 2029 sebagai katalis traction awal</li>
-            <li>Gen-Z & Milenial familiar dengan fantasy league, trivia berhadiah, dan platform opini berbayar</li>
+            <li>Gen-Z &amp; Milenial familiar dengan fantasy league, trivia berhadiah, dan platform opini berbayar</li>
             <li>B2B angle kuat: media, think tank, konsultan politik, dan lembaga riset butuh data bobot opini</li>
-            <li>Tidak ada kompetitor lokal di ruang ini — first mover advantage penuh</li>
+            <li>Tidak ada kompetitor lokal di ruang ini &mdash; first mover advantage penuh</li>
           </ul>
         </div>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 03 KOMPETITOR -->
     <section class="section" id="kompetitor">
       <div class="section-header"><span class="section-number">03</span><h2>Analisis Kompetitor</h2></div>
       <p class="section-intro">Tidak ada kompetitor langsung di Indonesia. Referensi global ada, tapi semuanya punya hambatan masuk yang membuka ruang bagi TAKAR.</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Platform</th><th>Negara</th><th>Model</th><th>Hambatan vs TAKAR</th></tr></thead>
+          <thead><tr><th>Platform</th><th>Model</th><th>Hambatan vs TAKAR</th></tr></thead>
           <tbody>
-            <tr><td><strong>Polymarket</strong></td><td>🇺🇸 AS</td><td><span class="tag tag-blue">Crypto (USDC)</span></td><td>Butuh wallet crypto, UI bahasa Inggris, tidak hadir secara lokal</td></tr>
-            <tr><td><strong>Metaculus</strong></td><td>🇺🇸 AS</td><td><span class="tag tag-teal">Poin Virtual</span></td><td>Tidak ada insentif finansial nyata, konten Indonesia hampir nol</td></tr>
-            <tr><td><strong>Manifold Markets</strong></td><td>🇺🇸 AS</td><td><span class="tag tag-teal">Poin Virtual</span></td><td>Play money only, tidak ada konteks lokal sama sekali</td></tr>
-            <tr><td><strong>Populix / Jakpat</strong></td><td>🇮🇩 ID</td><td><span class="tag tag-gold">Survey</span></td><td>One-way survey — user tidak menyatakan bobot keyakinan, hanya memilih opsi</td></tr>
-            <tr><td><strong>TAKAR 🎯</strong></td><td>🇮🇩 Indonesia</td><td><span class="tag tag-gold">IDR + Poin</span></td><td>— Platform kategori baru, tanpa kompetitor langsung</td></tr>
+            <tr><td><strong>Polymarket</strong> &#127482;&#127480;</td><td><span class="tag tag-blue">Crypto</span></td><td>Butuh wallet crypto, UI Inggris, tidak hadir lokal</td></tr>
+            <tr><td><strong>Metaculus</strong> &#127482;&#127480;</td><td><span class="tag tag-teal">Poin Virtual</span></td><td>Tidak ada insentif finansial, konten Indonesia nol</td></tr>
+            <tr><td><strong>Manifold</strong> &#127482;&#127480;</td><td><span class="tag tag-teal">Play Money</span></td><td>Tidak ada konteks lokal sama sekali</td></tr>
+            <tr><td><strong>Populix/Jakpat</strong> &#127470;&#127465;</td><td><span class="tag tag-gold">Survey</span></td><td>One-way survey, tanpa bobot keyakinan</td></tr>
+            <tr><td><strong>TAKAR &#127919;</strong> &#127470;&#127465;</td><td><span class="tag tag-gold">IDR + Poin</span></td><td>&mdash; Kategori baru, tanpa kompetitor</td></tr>
           </tbody>
         </table>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 04 POSITIONING LEGAL -->
     <section class="section" id="positioning">
       <div class="section-header"><span class="section-number">04</span><h2>Positioning Legal</h2></div>
       <p class="section-intro">Strategi TAKAR bukan meminta izin untuk kategori yang belum ada regulasinya. Strategi TAKAR adalah membangun fakta hukum bahwa ini adalah kategori baru yang tidak tercakup regulasi yang ada.</p>
-
       <div class="highlight-card">
-        <p><strong>Analogi Prop Firm:</strong> OJK tidak pernah secara eksplisit melarang prop trading firm — mereka beroperasi bebas karena berada di ruang yang belum diatur. TAKAR menggunakan posisi yang sama: <em>bukan broker, bukan exchange efek, bukan perjudian</em> — melainkan <strong>platform agregasi opini berbasis insentif akurasi</strong>, kategori yang belum diatur OJK maupun Kominfo.</p>
+        <p><strong>Analogi Prop Firm:</strong> OJK tidak pernah secara eksplisit melarang prop trading firm &mdash; mereka beroperasi bebas karena berada di ruang yang belum diatur. TAKAR menggunakan posisi yang sama: <em>bukan broker, bukan exchange efek, bukan perjudian</em> &mdash; melainkan <strong>platform agregasi opini berbasis insentif akurasi</strong>, kategori yang belum diatur OJK maupun Kominfo.</p>
       </div>
-
-      <div class="card-grid cols-2" style="margin-top:var(--space-6)">
+      <div class="card-grid cols-2" style="margin-top:var(--space-5)">
         <div class="card">
-          <h3>📋 Definisi Legal TAKAR</h3>
+          <h3>&#128203; Definisi Legal TAKAR</h3>
           <p style="margin-bottom:var(--space-3)">TAKAR adalah <strong>platform teknologi informasi</strong> yang:</p>
           <ul>
             <li>Menyediakan ruang bagi pengguna untuk menyatakan <em>bobot keyakinan</em> atas isu publik yang resolusinya berdasarkan fakta terverifikasi</li>
-            <li>Mengagregasi bobot keyakinan tersebut menjadi <em>konsensus terukur</em> yang dapat digunakan sebagai data riset</li>
-            <li>Memberikan insentif berupa poin/reward kepada pengguna yang akurasi penilaiannya konsisten tinggi</li>
+            <li>Mengagregasi bobot keyakinan menjadi <em>konsensus terukur</em> untuk data riset</li>
+            <li>Memberikan insentif poin/reward kepada pengguna yang akurasi penilaiannya konsisten tinggi</li>
             <li>Menjual data agregat konsensus kepada pihak ketiga (B2B) sebagai produk informasi</li>
           </ul>
         </div>
         <div class="card">
-          <h3>⚖️ Preseden Hukum Relevan</h3>
+          <h3>&#9878;&#65039; Preseden Hukum Relevan</h3>
           <ul>
-            <li><strong>Dream11 (India)</strong> — Fantasy sports diklasifikasikan sebagai "game of skill", bukan gambling. Supreme Court India mengakui perbedaan ini</li>
-            <li><strong>Prop Firm Global</strong> — Beroperasi tanpa lisensi broker karena tidak memegang dana klien secara tradisional</li>
-            <li><strong>Google Opinion Rewards</strong> — Membayar pengguna untuk opini tanpa tergolong perjudian apapun</li>
-            <li><strong>Populix/Jakpat</strong> — Membayar responden survei — TAKAR adalah evolusi dari model ini dengan verifikasi objektif</li>
+            <li><strong>Dream11 (India)</strong> &mdash; Fantasy sports = &ldquo;game of skill&rdquo; bukan gambling, diakui Supreme Court India</li>
+            <li><strong>Prop Firm Global</strong> &mdash; Beroperasi tanpa lisensi broker karena tidak memegang dana klien secara tradisional</li>
+            <li><strong>Google Opinion Rewards</strong> &mdash; Membayar pengguna untuk opini tanpa tergolong perjudian</li>
+            <li><strong>Populix/Jakpat</strong> &mdash; Membayar responden survei; TAKAR adalah evolusi model ini</li>
           </ul>
         </div>
       </div>
-
-      <div class="highlight-card" style="border-left-color:var(--color-gold);margin-top:var(--space-6)">
-        <p><strong>Prinsip Utama:</strong> TAKAR tidak pernah memposisikan diri sebagai platform yang "memprediksi" apapun. TAKAR adalah <em>cermin terukur dari opini publik Indonesia</em>. Resolusi terjadi bukan karena TAKAR memutuskan siapa yang benar — tapi karena <strong>fakta publik yang terverifikasi</strong> (hasil KPU, data BPS, skor resmi liga) menjadi acuan objektif yang tidak terbantahkan.</p>
+      <div class="highlight-card" style="border-left-color:var(--color-gold);margin-top:var(--space-5)">
+        <p><strong>Prinsip Utama:</strong> TAKAR tidak pernah memposisikan diri sebagai platform yang &ldquo;memprediksi&rdquo; apapun. TAKAR adalah <em>cermin terukur dari opini publik Indonesia</em>. Resolusi terjadi bukan karena TAKAR memutuskan siapa yang benar &mdash; tapi karena <strong>fakta publik yang terverifikasi</strong> (hasil KPU, data BPS, skor resmi liga) menjadi acuan objektif yang tidak terbantahkan.</p>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 05 KAMUS FRAMING -->
     <section class="section" id="vocab">
       <div class="section-header"><span class="section-number">05</span><h2>Kamus Framing TAKAR</h2></div>
       <p class="section-intro">Konsistensi bahasa adalah lini pertahanan pertama TAKAR secara hukum dan komunikasi publik. Kata-kata di bawah ini <strong>tidak boleh pernah digunakan</strong> dalam produk, marketing, maupun dokumentasi publik.</p>
       <div class="table-wrap">
         <table class="vocab-table">
-          <thead><tr><th>❌ Jangan Gunakan</th><th>✅ Gunakan Ini</th><th>Alasan</th></tr></thead>
+          <thead><tr><th>&#10060; Jangan</th><th>&#9989; Gunakan</th><th>Alasan</th></tr></thead>
           <tbody>
-            <tr><td>Prediksi / Memprediksi</td><td>Penilaian / Menaksir</td><td>Prediksi berkonotasi spekulasi; taksiran berkonotasi proses analisis</td></tr>
-            <tr><td>Pasar Prediksi</td><td>Bursa Opini Terukur</td><td>Hindari asosiasi langsung dengan platform serupa di luar negeri</td></tr>
-            <tr><td>Taruhan / Betting</td><td>Posisi / Menyatakan Bobot</td><td>Betting langsung masuk definisi perjudian UU No.7/1974</td></tr>
-            <tr><td>Menang / Kalah</td><td>Resolusi Akurat / Tidak Akurat</td><td>Framing kompetisi skill, bukan gambling outcome</td></tr>
-            <tr><td>Probabilitas</td><td>Bobot Konsensus</td><td>Konsensus terdengar lebih seperti riset opini</td></tr>
+            <tr><td>Prediksi</td><td>Penilaian / Menaksir</td><td>Prediksi = spekulasi; taksiran = proses analisis</td></tr>
+            <tr><td>Pasar Prediksi</td><td>Bursa Opini Terukur</td><td>Hindari asosiasi platform serupa luar negeri</td></tr>
+            <tr><td>Taruhan / Betting</td><td>Posisi / Bobot</td><td>Betting = definisi perjudian UU No.7/1974</td></tr>
+            <tr><td>Menang / Kalah</td><td>Resolusi Akurat</td><td>Framing kompetisi skill, bukan gambling</td></tr>
+            <tr><td>Probabilitas</td><td>Bobot Konsensus</td><td>Konsensus = riset opini, bukan odds</td></tr>
             <tr><td>Odds</td><td>Indeks Keyakinan</td><td>Odds identik dengan sportsbook ilegal</td></tr>
-            <tr><td>Profit / Cuan dari posisi</td><td>Reward akurasi / Poin resolusi</td><td>Framing insentif skill, bukan return finansial</td></tr>
-            <tr><td>Market</td><td>Topik / Isu Aktif</td><td>Untuk komunikasi publik — market boleh dipakai internal/teknis</td></tr>
+            <tr><td>Profit / Cuan</td><td>Reward Akurasi</td><td>Framing insentif skill, bukan return finansial</td></tr>
+            <tr><td>Market</td><td>Topik / Isu Aktif</td><td>Untuk komunikasi publik</td></tr>
           </tbody>
         </table>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 06 FITUR -->
     <section class="section" id="fitur">
       <div class="section-header"><span class="section-number">06</span><h2>Fitur Utama</h2></div>
-      <p class="section-intro">TAKAR dirancang berlapis — dimulai dari poin virtual yang sepenuhnya aman secara regulasi, berkembang ke insentif finansial nyata setelah preseden hukum dan komunitas terbentuk.</p>
+      <p class="section-intro">TAKAR dirancang berlapis &mdash; dimulai dari poin virtual yang sepenuhnya aman secara regulasi, berkembang ke insentif finansial nyata setelah preseden hukum dan komunitas terbentuk.</p>
       <div class="card-grid cols-2">
-        <div class="card"><h3>🏛️ Bursa Isu Publik</h3><p>Pengguna menjelajahi dan berpartisipasi dalam isu-isu aktif. Setiap isu memiliki pertanyaan dengan hasil terverifikasi dan tanggal resolusi berbasis fakta publik.</p><ul><li>Isu dibuat oleh user atau dikurasi tim TAKAR</li><li>Auto-resolve via oracle tepercaya (KPU, BPS, skor resmi)</li><li>Kategori: Politik, Ekonomi, Olahraga, Teknologi, Sosial</li></ul></div>
-        <div class="card"><h3>⚖️ Sistem Bobot Keyakinan</h3><p>Pengguna menyatakan seberapa besar bobot keyakinan mereka — bukan sekedar memilih Ya/Tidak, tapi mengalokasikan bobot yang mencerminkan tingkat kepercayaan diri mereka.</p><ul><li>Mekanisme AMM (LMSR) — bobot bergerak dinamis</li><li>Platform sediakan likuiditas awal</li><li>Pengguna bisa keluar kapan saja sebelum resolusi</li></ul></div>
-        <div class="card"><h3>👤 Profil Akurasi</h3><p>Setiap pengguna memiliki track record akurasi publik. Ini menciptakan insentif kuat untuk memberi penilaian yang jujur dan terkalkulasi — bukan asal.</p><ul><li>Calibration score & Brier score per kategori</li><li>Leaderboard mingguan/bulanan</li><li>Sistem badge berbasis konsistensi akurasi</li></ul></div>
-        <div class="card"><h3>🤖 Asisten Konteks AI</h3><p>LLM terintegrasi membantu pengguna membuat penilaian yang lebih baik — memberikan latar belakang isu, data historis, dan ringkasan berita terkini.</p><ul><li>Ringkasan berita terkait isu dari media Indonesia</li><li>Base rate historis dari kejadian serupa di masa lalu</li><li>Analisis sentimen dari media sosial Indonesia</li></ul></div>
-        <div class="card"><h3>📰 Feed Berita Terintegrasi</h3><p>Setiap isu aktif punya feed berita otomatis dari Kompas, Tempo, CNBC Indonesia via RSS — sehingga pengguna selalu punya konteks terbaru saat menentukan bobot.</p></div>
-        <div class="card"><h3>💳 Wallet & Reward</h3><p>Dompet poin virtual di Fase 1. Top-up via transfer bank, QRIS, e-wallet di Fase 2+. Reward akurasi dikreditkan otomatis saat resolusi terkonfirmasi.</p></div>
+        <div class="card"><h3>&#127963;&#65039; Bursa Isu Publik</h3><p>Pengguna menjelajahi dan berpartisipasi dalam isu-isu aktif. Setiap isu memiliki pertanyaan dengan hasil terverifikasi dan tanggal resolusi berbasis fakta publik.</p><ul><li>Isu dibuat user atau dikurasi tim TAKAR</li><li>Auto-resolve via oracle tepercaya (KPU, BPS, skor resmi)</li><li>Kategori: Politik, Ekonomi, Olahraga, Teknologi, Sosial</li></ul></div>
+        <div class="card"><h3>&#9878;&#65039; Sistem Bobot Keyakinan</h3><p>Pengguna menyatakan seberapa besar bobot keyakinan mereka &mdash; bukan sekedar memilih Ya/Tidak, tapi mengalokasikan bobot yang mencerminkan tingkat kepercayaan diri mereka.</p><ul><li>Mekanisme AMM (LMSR) &mdash; bobot bergerak dinamis</li><li>Platform sediakan likuiditas awal</li><li>Pengguna bisa keluar kapan saja sebelum resolusi</li></ul></div>
+        <div class="card"><h3>&#128100; Profil Akurasi</h3><p>Setiap pengguna memiliki track record akurasi publik. Ini menciptakan insentif kuat untuk memberi penilaian yang jujur dan terkalkulasi &mdash; bukan asal.</p><ul><li>Calibration score &amp; Brier score per kategori</li><li>Leaderboard mingguan/bulanan</li><li>Sistem badge berbasis konsistensi akurasi</li></ul></div>
+        <div class="card"><h3>&#129302; Asisten Konteks AI</h3><p>LLM terintegrasi membantu pengguna membuat penilaian yang lebih baik &mdash; memberikan latar belakang isu, data historis, dan ringkasan berita terkini.</p><ul><li>Ringkasan berita terkait dari media Indonesia</li><li>Base rate historis dari kejadian serupa</li><li>Analisis sentimen media sosial Indonesia</li></ul></div>
+        <div class="card"><h3>&#128240; Feed Berita Terintegrasi</h3><p>Setiap isu aktif punya feed berita otomatis dari Kompas, Tempo, CNBC Indonesia via RSS &mdash; sehingga pengguna selalu punya konteks terbaru saat menentukan bobot.</p></div>
+        <div class="card"><h3>&#128179; Wallet &amp; Reward</h3><p>Dompet poin virtual di Fase 1. Top-up via transfer bank, QRIS, e-wallet di Fase 2+. Reward akurasi dikreditkan otomatis saat resolusi terkonfirmasi.</p></div>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 07 ARSITEKTUR -->
     <section class="section" id="arsitektur">
       <div class="section-header"><span class="section-number">07</span><h2>Arsitektur Sistem</h2></div>
-      <p class="section-intro">Cloud-native, microservices-ready, berbasis Azure sesuai stack eksisting VOXIA/INVEZTHINK. Estimasi biaya MVP: ~$200–400/bulan.</p>
+      <p class="section-intro">Cloud-native, microservices-ready, berbasis Azure sesuai stack eksisting VOXIA/INVEZTHINK. Estimasi biaya MVP: ~$200&ndash;400/bulan.</p>
       <div class="arch-diagram">
         <div class="arch-layers">
           <div class="arch-layer layer-client">
-            <div class="arch-layer-title">🖥️ CLIENT LAYER</div>
+            <div class="arch-layer-title">&#128421;&#65039; CLIENT LAYER</div>
             <div class="arch-layer-body">
               <span class="arch-box">Web App (Next.js 15)</span><span class="arch-box">Mobile App (React Native)</span><span class="arch-box">PWA Support</span><span class="arch-box">Admin Dashboard</span>
             </div>
           </div>
           <div class="arch-layer layer-api">
-            <div class="arch-layer-title">⚡ API GATEWAY & AUTH</div>
+            <div class="arch-layer-title">&#9889; API GATEWAY &amp; AUTH</div>
             <div class="arch-layer-body">
-              <span class="arch-box">Azure API Management</span><span class="arch-box">JWT Auth (Azure AD B2C)</span><span class="arch-box">Rate Limiting</span><span class="arch-box">WebSocket (Real-time bobot)</span><span class="arch-box">REST + tRPC</span>
+              <span class="arch-box">Azure API Management</span><span class="arch-box">JWT Auth (Azure AD B2C)</span><span class="arch-box">Rate Limiting</span><span class="arch-box">WebSocket (Real-time)</span><span class="arch-box">REST + tRPC</span>
             </div>
           </div>
           <div class="arch-layer layer-core">
-            <div class="arch-layer-title">🧠 CORE SERVICES</div>
+            <div class="arch-layer-title">&#129504; CORE SERVICES</div>
             <div class="arch-layer-body">
               <span class="arch-box">Isu Service</span><span class="arch-box">Bobot Engine (LMSR)</span><span class="arch-box">Resolution Oracle</span><span class="arch-box">User Service</span><span class="arch-box">Wallet Service</span><span class="arch-box">Notification Service</span><span class="arch-box">AI/LLM Service</span><span class="arch-box">News Aggregator</span>
             </div>
           </div>
           <div class="arch-layer layer-data">
-            <div class="arch-layer-title">🗃️ DATA LAYER</div>
+            <div class="arch-layer-title">&#128451;&#65039; DATA LAYER</div>
             <div class="arch-layer-body">
-              <span class="arch-box">PostgreSQL (Azure PG Flex)</span><span class="arch-box">Redis Cache</span><span class="arch-box">CosmosDB (Activity Logs)</span><span class="arch-box">Azure Blob (Assets)</span><span class="arch-box">Azure Service Bus</span>
+              <span class="arch-box">PostgreSQL (Azure PG Flex)</span><span class="arch-box">Redis Cache</span><span class="arch-box">CosmosDB (Logs)</span><span class="arch-box">Azure Blob (Assets)</span><span class="arch-box">Service Bus</span>
             </div>
           </div>
           <div class="arch-layer layer-infra">
-            <div class="arch-layer-title">☁️ INFRASTRUCTURE</div>
+            <div class="arch-layer-title">&#9729;&#65039; INFRASTRUCTURE</div>
             <div class="arch-layer-body">
               <span class="arch-box">Azure Container Apps</span><span class="arch-box">Azure CDN</span><span class="arch-box">Azure Monitor + App Insights</span><span class="arch-box">GitHub Actions CI/CD</span><span class="arch-box">Azure Key Vault</span>
             </div>
@@ -380,15 +497,13 @@ tr:hover td{background:var(--color-surface-offset)}
         </div>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 08 DATABASE -->
     <section class="section" id="database">
-      <div class="section-header"><span class="section-number">08</span><h2>Database & Data Flow</h2></div>
+      <div class="section-header"><span class="section-number">08</span><h2>Database &amp; Data Flow</h2></div>
       <div class="card-grid cols-2">
         <div class="card">
-          <h3>🗂️ Schema Utama (PostgreSQL)</h3>
+          <h3>&#128450;&#65039; Schema Utama (PostgreSQL)</h3>
           <div class="code-block">
 <span class="cm">-- Core entities</span>
 <span class="kw">users</span> (<span class="tp">id</span>, username, email, verified_ktp,
@@ -400,7 +515,7 @@ tr:hover td{background:var(--color-surface-offset)}
   no_pool, lmsr_b, source_oracle)
 
 <span class="kw">positions</span> (<span class="tp">id</span>, user_id, issue_id, stance,
-  weight_allocated, cost_basis, created_at)
+  weight_allocated, cost_basis)
 
 <span class="kw">transactions</span> (<span class="tp">id</span>, user_id, type, points,
   reference_id, status)
@@ -410,78 +525,72 @@ tr:hover td{background:var(--color-surface-offset)}
           </div>
         </div>
         <div class="card">
-          <h3>🔄 Position Execution Flow</h3>
+          <h3>&#128260; Position Execution Flow</h3>
           <div class="code-block">
-<span class="cm">1. User → POST /api/issues/{id}/position</span>
+<span class="cm">1. User &rarr; POST /api/issues/{id}/position</span>
    { stance: <span class="str">"YES"</span>, weight: 50000 }
 
 <span class="cm">2. LMSR Bobot Engine:</span>
-   cost = b × ln(e^(q_yes/b) + e^(q_no/b))
+   cost = b &times; ln(e^(q_yes/b) + e^(q_no/b))
    new_index = e^(q_yes/b) / sum
 
 <span class="cm">3. Atomic DB transaction:</span>
-   Debit wallet → Allocate weight
+   Debit wallet &rarr; Allocate weight
 
 <span class="cm">4. Publish to Event Bus:</span>
-   → Update Redis (real-time index)
-   → Push WebSocket to subscribers
-   → Log to CosmosDB (audit trail)
+   &rarr; Update Redis (real-time)
+   &rarr; Push WebSocket ke subscribers
+   &rarr; Log to CosmosDB (audit)
 
 <span class="cm">5. Return new index + allocated weight</span>
           </div>
         </div>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 09 MEKANISME BOBOT -->
     <section class="section" id="mekanisme">
       <div class="section-header"><span class="section-number">09</span><h2>Mekanisme Bobot</h2></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Aspek</th><th>Detail</th><th>Catatan</th></tr></thead>
           <tbody>
-            <tr><td><strong>Model AMM</strong></td><td>LMSR (Hanson 2003)</td><td>Optimal untuk agregasi opini biner — menghasilkan distribusi keyakinan kolektif</td></tr>
-            <tr><td><strong>Liquidity Parameter (b)</strong></td><td>Default: b = 100, disesuaikan per isu</td><td>b kecil = sensitif terhadap perubahan bobot; b besar = stabil</td></tr>
-            <tr><td><strong>Pembuatan Isu</strong></td><td>Deposit likuiditas min. 50.000 poin</td><td>TAKAR juga kurasi "isu unggulan" yang disubsidi likuiditasnya</td></tr>
-            <tr><td><strong>Resolusi</strong></td><td>Auto (oracle) atau manual (admin + 2 moderator)</td><td>Dispute window: 24 jam setelah resolusi dikumandangkan</td></tr>
-            <tr><td><strong>Platform Fee</strong></td><td>2% per alokasi bobot</td><td>Digunakan untuk subsidi likuiditas isu unggulan dan operasional</td></tr>
-            <tr><td><strong>Minimum Bobot</strong></td><td>1.000 poin (virtual) / Rp 10.000 (real)</td><td>Rendah untuk memastikan akses mass market</td></tr>
+            <tr><td><strong>Model AMM</strong></td><td>LMSR (Hanson 2003)</td><td>Optimal untuk agregasi opini biner</td></tr>
+            <tr><td><strong>Parameter b</strong></td><td>Default: b = 100</td><td>b kecil = sensitif; b besar = stabil</td></tr>
+            <tr><td><strong>Buat Isu</strong></td><td>Deposit min. 50.000 poin</td><td>TAKAR subsidi isu unggulan</td></tr>
+            <tr><td><strong>Resolusi</strong></td><td>Auto (oracle) atau manual</td><td>Dispute window: 24 jam</td></tr>
+            <tr><td><strong>Platform Fee</strong></td><td>2% per alokasi bobot</td><td>Subsidi likuiditas + operasional</td></tr>
+            <tr><td><strong>Min. Bobot</strong></td><td>1.000 poin / Rp 10.000</td><td>Akses mass market</td></tr>
           </tbody>
         </table>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 10 TECH STACK -->
     <section class="section" id="stack">
       <div class="section-header"><span class="section-number">10</span><h2>Tech Stack</h2></div>
       <div class="card-grid cols-3">
-        <div class="card"><h3><span class="tag tag-blue">Frontend</span></h3><ul><li><strong>Next.js 15</strong> — App Router, SSR/SSG</li><li><strong>TypeScript</strong> strict mode</li><li><strong>Tailwind CSS v4</strong></li><li><strong>Recharts / D3</strong> — indeks bobot charts</li><li><strong>Zustand</strong> + TanStack Query</li></ul></div>
-        <div class="card"><h3><span class="tag tag-teal">Backend</span></h3><ul><li><strong>Node.js + tRPC</strong> — type-safe API</li><li><strong>Prisma ORM</strong> — PostgreSQL</li><li><strong>BullMQ</strong> — job queues</li><li><strong>Socket.io</strong> — real-time bobot</li><li><strong>Azure Functions</strong> — serverless jobs</li></ul></div>
+        <div class="card"><h3><span class="tag tag-blue">Frontend</span></h3><ul><li><strong>Next.js 15</strong> &mdash; App Router, SSR/SSG</li><li><strong>TypeScript</strong> strict mode</li><li><strong>Tailwind CSS v4</strong></li><li><strong>Recharts / D3</strong> &mdash; indeks bobot charts</li><li><strong>Zustand</strong> + TanStack Query</li></ul></div>
+        <div class="card"><h3><span class="tag tag-teal">Backend</span></h3><ul><li><strong>Node.js + tRPC</strong> &mdash; type-safe API</li><li><strong>Prisma ORM</strong> &mdash; PostgreSQL</li><li><strong>BullMQ</strong> &mdash; job queues</li><li><strong>Socket.io</strong> &mdash; real-time bobot</li><li><strong>Azure Functions</strong> &mdash; serverless jobs</li></ul></div>
         <div class="card"><h3><span class="tag tag-orange">Infrastructure</span></h3><ul><li><strong>Azure Container Apps</strong></li><li><strong>Azure PostgreSQL Flexible</strong></li><li><strong>Azure Cache for Redis</strong></li><li><strong>Azure Service Bus</strong></li><li><strong>GitHub Actions</strong> + Terraform</li></ul></div>
-        <div class="card"><h3><span class="tag tag-purple">AI / ML</span></h3><ul><li><strong>OpenAI GPT-4o</strong> — konteks & ringkasan isu</li><li><strong>Azure Cognitive Search</strong> — semantic news</li><li><strong>Custom NLP</strong> — auto-kategorisasi isu</li><li><strong>Sentiment API</strong> — X/Twitter Indonesia</li></ul></div>
-        <div class="card"><h3><span class="tag tag-gold">Payment</span></h3><ul><li><strong>Midtrans</strong> — QRIS, VA, e-wallet</li><li><strong>Xendit</strong> — disbursement/withdrawal</li><li>Fase 1: Virtual poin saja</li><li>Fase 2+: IDR real money</li></ul></div>
-        <div class="card"><h3><span class="tag tag-teal">Monitoring</span></h3><ul><li><strong>Azure Monitor + App Insights</strong></li><li><strong>Sentry</strong> — error tracking</li><li><strong>Grafana</strong> — custom dashboards</li><li><strong>Uptime Robot</strong> — availability alerts</li></ul></div>
+        <div class="card"><h3><span class="tag tag-purple">AI / ML</span></h3><ul><li><strong>OpenAI GPT-4o</strong> &mdash; konteks &amp; ringkasan</li><li><strong>Azure Cognitive Search</strong> &mdash; semantic news</li><li><strong>Custom NLP</strong> &mdash; auto-kategorisasi</li><li><strong>Sentiment API</strong> &mdash; X Indonesia</li></ul></div>
+        <div class="card"><h3><span class="tag tag-gold">Payment</span></h3><ul><li><strong>Midtrans</strong> &mdash; QRIS, VA, e-wallet</li><li><strong>Xendit</strong> &mdash; disbursement/withdrawal</li><li>Fase 1: Virtual poin saja</li><li>Fase 2+: IDR real money</li></ul></div>
+        <div class="card"><h3><span class="tag tag-teal">Monitoring</span></h3><ul><li><strong>Azure Monitor + App Insights</strong></li><li><strong>Sentry</strong> &mdash; error tracking</li><li><strong>Grafana</strong> &mdash; custom dashboards</li><li><strong>Uptime Robot</strong> &mdash; availability alerts</li></ul></div>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 11 MONETISASI -->
     <section class="section" id="monetisasi">
       <div class="section-header"><span class="section-number">11</span><h2>Model Monetisasi</h2></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Stream</th><th>Mekanisme</th><th>Fase</th><th>Kontribusi Est.</th></tr></thead>
+          <thead><tr><th>Stream</th><th>Mekanisme</th><th>Fase</th><th>Est.</th></tr></thead>
           <tbody>
-            <tr><td><strong>Platform Fee</strong></td><td>2% per alokasi bobot</td><td><span class="tag tag-green">Fase 1</span></td><td>55–65%</td></tr>
-            <tr><td><strong>Isu Creation Fee</strong></td><td>Rp 5.000–50.000 + deposit likuiditas</td><td><span class="tag tag-green">Fase 1</span></td><td>10–15%</td></tr>
-            <tr><td><strong>Premium Subscription</strong></td><td>Analytics mendalam, API data, early access isu</td><td><span class="tag tag-blue">Fase 2</span></td><td>15–20%</td></tr>
-            <tr><td><strong>B2B Data API</strong></td><td>Agregat bobot konsensus untuk media, konsultan, think tank</td><td><span class="tag tag-blue">Fase 2</span></td><td>10–15%</td></tr>
-            <tr><td><strong>Sponsored Issues</strong></td><td>Brand/lembaga bayar untuk isu unggulan yang relevan dengan mereka</td><td><span class="tag tag-orange">Fase 3</span></td><td>5–10%</td></tr>
+            <tr><td><strong>Platform Fee</strong></td><td>2% per alokasi bobot</td><td><span class="tag tag-green">Fase 1</span></td><td>55&ndash;65%</td></tr>
+            <tr><td><strong>Creation Fee</strong></td><td>Rp 5k&ndash;50k + deposit</td><td><span class="tag tag-green">Fase 1</span></td><td>10&ndash;15%</td></tr>
+            <tr><td><strong>Premium Sub</strong></td><td>Analytics, API data, early access</td><td><span class="tag tag-blue">Fase 2</span></td><td>15&ndash;20%</td></tr>
+            <tr><td><strong>B2B Data API</strong></td><td>Agregat konsensus untuk media &amp; konsultan</td><td><span class="tag tag-blue">Fase 2</span></td><td>10&ndash;15%</td></tr>
+            <tr><td><strong>Sponsored Issues</strong></td><td>Brand bayar untuk isu unggulan</td><td><span class="tag tag-orange">Fase 3</span></td><td>5&ndash;10%</td></tr>
           </tbody>
         </table>
       </div>
@@ -489,89 +598,139 @@ tr:hover td{background:var(--color-surface-offset)}
         <p><strong>B2B adalah moat jangka panjang:</strong> Data bobot konsensus dari jutaan pengguna Indonesia adalah produk yang tidak bisa direplikasi kompetitor baru. Media seperti Kompas dan konsultan politik akan membayar mahal untuk akses ke sinyal ini sebelum Pilkada 2027.</p>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 12 RISIKO -->
     <section class="section" id="risiko">
       <div class="section-header"><span class="section-number">12</span><h2>Analisis Risiko</h2></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Risiko</th><th>Level</th><th>Prob.</th><th>Mitigasi</th></tr></thead>
+          <thead><tr><th>Risiko</th><th>Level</th><th>Mitigasi</th></tr></thead>
           <tbody>
-            <tr><td><strong>Salah framing publik</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>30%</td><td>Kamus framing diterapkan ketat di semua touchpoint; tim PR terlatih</td></tr>
-            <tr><td><strong>Regulasi baru yang mencakup TAKAR</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>25%</td><td>Monitor aktif regulasi OJK/Kominfo; law firm on-retainer; siapkan argumen kategorisasi</td></tr>
-            <tr><td><strong>Manipulasi bobot terkoordinasi</strong></td><td><span class="tag tag-red">TINGGI</span></td><td>60%</td><td>Minimum bobot per user, deteksi anomali, rate limiting, review manual isu high-profile</td></tr>
-            <tr><td><strong>Cold start — kurang likuiditas awal</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>65%</td><td>TAKAR subsidi likuiditas 20 isu unggulan pertama; rekrut komunitas forecaster Indonesia sebagai seed users</td></tr>
-            <tr><td><strong>Resolusi disengketakan</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>30%</td><td>Multi-oracle verification, dispute window 24 jam, panel moderator independen</td></tr>
-            <tr><td><strong>Churn user tinggi</strong></td><td><span class="tag tag-teal">RENDAH</span></td><td>50%</td><td>Gamification kuat, notifikasi resolusi real-time, streak & achievement rewards</td></tr>
+            <tr><td><strong>Salah framing publik</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Kamus framing ketat; tim PR terlatih</td></tr>
+            <tr><td><strong>Regulasi baru</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Monitor OJK/Kominfo; law firm on-retainer</td></tr>
+            <tr><td><strong>Manipulasi bobot</strong></td><td><span class="tag tag-red">TINGGI</span></td><td>Min. bobot, deteksi anomali, rate limiting</td></tr>
+            <tr><td><strong>Cold start</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Subsidi 20 isu unggulan; rekrut seed forecasters</td></tr>
+            <tr><td><strong>Resolusi disengketakan</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Multi-oracle, dispute window 24 jam</td></tr>
+            <tr><td><strong>Churn user tinggi</strong></td><td><span class="tag tag-teal">RENDAH</span></td><td>Gamification kuat, notifikasi resolusi real-time</td></tr>
           </tbody>
         </table>
       </div>
     </section>
-
     <div class="divider"></div>
 
-    <!-- 13 ROADMAP -->
     <section class="section" id="roadmap">
       <div class="section-header"><span class="section-number">13</span><h2>Roadmap</h2></div>
       <div class="timeline">
         <div class="timeline-item">
-          <div class="timeline-phase">Fase 0 — Q2 2026 · Sekarang</div>
-          <div class="timeline-title">Riset, Legal & Seed Community</div>
-          <div class="timeline-desc">Finalisasi dokumen ini. Konsultasi law firm fintech. Daftarkan PSE Kominfo. Identifikasi 50 seed users dari komunitas yang sudah aktif berdiskusi tentang isu publik (Twitter/X, forum). Landing page waitlist.</div>
+          <div class="timeline-phase">Fase 0 &mdash; Q2 2026 &middot; Sekarang</div>
+          <div class="timeline-title">Riset, Legal &amp; Seed Community</div>
+          <div class="timeline-desc">Finalisasi dokumen ini. Konsultasi law firm fintech. Daftarkan PSE Kominfo. Identifikasi 50 seed users dari komunitas yang sudah aktif berdiskusi tentang isu publik. Landing page waitlist.</div>
           <div class="timeline-tags"><span class="tag tag-teal">Riset</span><span class="tag tag-teal">Legal Setup</span><span class="tag tag-teal">PSE Kominfo</span></div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-phase">Fase 1 — Q3 2026</div>
-          <div class="timeline-title">MVP — Platform Poin Virtual</div>
-          <div class="timeline-desc">Launch dengan sistem poin virtual sepenuhnya. 20 isu unggulan dikurasi tim TAKAR. LMSR bobot engine live. Profil akurasi & leaderboard. Target: 1.000 registered users, 200 MAU.</div>
+          <div class="timeline-phase">Fase 1 &mdash; Q3 2026</div>
+          <div class="timeline-title">MVP &mdash; Platform Poin Virtual</div>
+          <div class="timeline-desc">Launch dengan sistem poin virtual sepenuhnya. 20 isu unggulan dikurasi tim TAKAR. LMSR bobot engine live. Profil akurasi &amp; leaderboard. Target: 1.000 registered users, 200 MAU.</div>
           <div class="timeline-tags"><span class="tag tag-blue">Next.js MVP</span><span class="tag tag-blue">LMSR Engine</span><span class="tag tag-blue">Azure Deploy</span></div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-phase">Fase 2 — Q4 2026</div>
-          <div class="timeline-title">Growth — User Issues + AI Context</div>
+          <div class="timeline-phase">Fase 2 &mdash; Q4 2026</div>
+          <div class="timeline-title">Growth &mdash; User Issues + AI Context</div>
           <div class="timeline-desc">Buka pembuatan isu untuk semua user. Integrasi AI context assistant. Mobile app React Native. Target: 5.000 users, 1.000 MAU, 500 isu aktif.</div>
           <div class="timeline-tags"><span class="tag tag-gold">AI Integration</span><span class="tag tag-gold">Mobile App</span><span class="tag tag-gold">User Issues</span></div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-phase">Fase 3 — Q1 2027</div>
-          <div class="timeline-title">Monetisasi — Real Reward + B2B</div>
-          <div class="timeline-desc">Pilot reward IDR nyata dengan user terverifikasi KTP. Integrasi Midtrans & Xendit. Launch B2B Data API untuk media dan konsultan menjelang Pilkada 2027.</div>
+          <div class="timeline-phase">Fase 3 &mdash; Q1 2027</div>
+          <div class="timeline-title">Monetisasi &mdash; Real Reward + B2B</div>
+          <div class="timeline-desc">Pilot reward IDR nyata dengan user terverifikasi KTP. Integrasi Midtrans &amp; Xendit. Launch B2B Data API untuk media dan konsultan menjelang Pilkada 2027.</div>
           <div class="timeline-tags"><span class="tag tag-orange">Real Reward</span><span class="tag tag-orange">KYC/KTP</span><span class="tag tag-orange">B2B API</span></div>
         </div>
         <div class="timeline-item">
-          <div class="timeline-phase">Fase 4 — Q2–Q3 2027</div>
-          <div class="timeline-title">Scale — Pilkada Momentum & Fundraising</div>
-          <div class="timeline-desc">Manfaatkan momentum Pilkada 2027 sebagai showcase akurasi TAKAR. Partnership media besar (Kompas, Detik, CNBC Indonesia). Seed round fundraising. Target: 50.000 users, volume reward signifikan.</div>
+          <div class="timeline-phase">Fase 4 &mdash; Q2&ndash;Q3 2027</div>
+          <div class="timeline-title">Scale &mdash; Pilkada Momentum &amp; Fundraising</div>
+          <div class="timeline-desc">Manfaatkan momentum Pilkada 2027 sebagai showcase akurasi TAKAR. Partnership media besar (Kompas, Detik, CNBC Indonesia). Seed round fundraising. Target: 50.000 users.</div>
           <div class="timeline-tags"><span class="tag tag-purple">Pilkada 2027</span><span class="tag tag-purple">Fundraising</span><span class="tag tag-purple">Media Partnership</span></div>
         </div>
       </div>
     </section>
-
     <div class="divider"></div>
 
     <div class="card" style="background:var(--color-surface-offset);border-style:dashed;text-align:center;padding:var(--space-8)">
       <p style="color:var(--color-text-muted);font-size:var(--text-sm);margin:0 auto">
-        <strong style="color:var(--color-text)">TAKAR</strong> — Dokumen ini bersifat konfidensial, intellectual property VOXIA / SOLUSI-AI.<br>
-        Versi: v0.2 · Mei 2026 · Status: Pre-seed Research · Framing: Bursa Opini Terukur
+        <strong style="color:var(--color-text)">TAKAR</strong> &mdash; Dokumen ini bersifat konfidensial, intellectual property VOXIA / SOLUSI-AI.<br>
+        Versi: v0.3 &middot; Mei 2026 &middot; Status: Pre-seed Research &middot; Framing: Bursa Opini Terukur
       </p>
     </div>
-
   </main>
 </div>
 
 <script>
 (function(){
+  // Progress bar
+  var pb=document.getElementById('progress-bar');
+  function updateProgress(){
+    var s=document.documentElement.scrollTop||document.body.scrollTop;
+    var h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+    pb.style.width=(h>0?(s/h*100):0)+'%';
+  }
+  window.addEventListener('scroll',updateProgress,{passive:true});
+
+  // Theme toggle
   var t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
   var d=r.getAttribute('data-theme')||'dark';
-  function icon(){if(t)t.innerHTML=d==='dark'?'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>':'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';}
-  icon();
-  if(t)t.addEventListener('click',function(){d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);icon();});
+  function setThemeIcon(){
+    if(!t)return;
+    t.innerHTML=d==='dark'
+      ?'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      :'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  }
+  setThemeIcon();
+  if(t)t.addEventListener('click',function(){d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);setThemeIcon();});
+
+  // Drawer
+  var drawer=document.getElementById('drawer');
+  var overlay=document.getElementById('drawer-overlay');
+  var hamburger=document.getElementById('hamburger-btn');
+  var drawerClose=document.getElementById('drawer-close');
+  var tocBtn=document.getElementById('mobile-toc-btn');
+  function openDrawer(){
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+    hamburger&&hamburger.setAttribute('aria-expanded','true');
+    document.body.style.overflow='hidden';
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+    hamburger&&hamburger.setAttribute('aria-expanded','false');
+    document.body.style.overflow='';
+  }
+  hamburger&&hamburger.addEventListener('click',openDrawer);
+  tocBtn&&tocBtn.addEventListener('click',openDrawer);
+  drawerClose&&drawerClose.addEventListener('click',closeDrawer);
+  overlay&&overlay.addEventListener('click',closeDrawer);
+  // Close drawer when a link is tapped
+  drawer.querySelectorAll('.drawer-item').forEach(function(a){
+    a.addEventListener('click',closeDrawer);
+  });
+
+  // Active section highlight (sidebar + drawer)
   var sections=document.querySelectorAll('.section');
-  var links=document.querySelectorAll('.sidebar-item');
-  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)links.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id);});});},{rootMargin:'-30% 0px -60% 0px'});
+  var sidebarLinks=document.querySelectorAll('.sidebar-item');
+  var drawerLinks=document.querySelectorAll('.drawer-item');
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        var id='#'+e.target.id;
+        sidebarLinks.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')===id);});
+        drawerLinks.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')===id);});
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
   sections.forEach(function(s){obs.observe(s);});
+
+  // Escape key closes drawer
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawer();});
 })();
 </script>
 </body>
