@@ -181,7 +181,7 @@ tr:hover td{background:var(--color-surface-offset)}
 
 .divider{height:1px;background:var(--color-divider);margin:var(--space-10) 0}
 
-/* MOBILE NAV (bottom sheet-style TOC trigger) */
+/* MOBILE TOC BUTTON */
 .mobile-toc-btn{display:none;position:fixed;bottom:calc(env(safe-area-inset-bottom) + var(--space-5));right:var(--space-4);z-index:90;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-full);padding:var(--space-3) var(--space-5);font-size:var(--text-sm);font-weight:600;gap:var(--space-2);align-items:center;box-shadow:var(--shadow-lg);cursor:pointer;min-height:48px}
 
 /* ===== MOBILE RESPONSIVE ===== */
@@ -236,7 +236,7 @@ tr:hover td{background:var(--color-surface-offset)}
   <div class="drawer-section">
     <div class="drawer-label">Penelitian</div>
     <a class="drawer-item" href="#latar"><span class="drawer-num">01</span>Latar Belakang</a>
-    <a class="drawer-item" href="#masalah"><span class="drawer-num">02</span>Masalah & Peluang</a>
+    <a class="drawer-item" href="#masalah"><span class="drawer-num">02</span>Masalah &amp; Peluang</a>
     <a class="drawer-item" href="#kompetitor"><span class="drawer-num">03</span>Analisis Kompetitor</a>
   </div>
   <div class="drawer-section">
@@ -248,7 +248,7 @@ tr:hover td{background:var(--color-surface-offset)}
   <div class="drawer-section">
     <div class="drawer-label">Teknis</div>
     <a class="drawer-item" href="#arsitektur"><span class="drawer-num">07</span>Arsitektur Sistem</a>
-    <a class="drawer-item" href="#database"><span class="drawer-num">08</span>Database & Data Flow</a>
+    <a class="drawer-item" href="#database"><span class="drawer-num">08</span>Database &amp; Data Flow</a>
     <a class="drawer-item" href="#mekanisme"><span class="drawer-num">09</span>Mekanisme Bobot</a>
     <a class="drawer-item" href="#stack"><span class="drawer-num">10</span>Tech Stack</a>
   </div>
@@ -291,7 +291,7 @@ tr:hover td{background:var(--color-surface-offset)}
   <h1><span>TAKAR</span> &mdash; Bursa Opini<br>Terukur Indonesia</h1>
   <p class="hero-sub">Platform pertama di Indonesia tempat pengguna menyatakan penilaian terukur atas isu publik. Bobot konsensus terbentuk secara organik &mdash; bukan opini kosong, tapi sinyal yang tercatat dan diverifikasi.</p>
   <div class="hero-meta">
-    <span>&#128197; Mei 2026</span><span>&middot;</span><span>&#128302; Pre-seed Research</span><span>&middot;</span><span>&#127470;&#127465; Indonesia-first</span><span>&middot;</span><span>&#9997;&#65039; VOXIA / SOLUSI-AI</span>
+    <span>&#128197; Mei 2026</span><span>&middot;</span><span>&#128302; Pre-seed Research</span><span>&middot;</span><span>&#127470;&#127465; Indonesia-first</span><span>&middot;</span><span>&#9997;&#65039; Iwan Cahyo Suryadi</span>
   </div>
 </section>
 
@@ -657,7 +657,7 @@ tr:hover td{background:var(--color-surface-offset)}
 
     <div class="card" style="background:var(--color-surface-offset);border-style:dashed;text-align:center;padding:var(--space-8)">
       <p style="color:var(--color-text-muted);font-size:var(--text-sm);margin:0 auto">
-        <strong style="color:var(--color-text)">TAKAR</strong> &mdash; Dokumen ini bersifat konfidensial, intellectual property VOXIA / SOLUSI-AI.<br>
+        <strong style="color:var(--color-text)">TAKAR</strong> &mdash; Dokumen ini bersifat konfidensial, intellectual property <strong style="color:var(--color-text)">Iwan Cahyo Suryadi (ICS)</strong>.<br>
         Versi: v0.3 &middot; Mei 2026 &middot; Status: Pre-seed Research &middot; Framing: Bursa Opini Terukur
       </p>
     </div>
@@ -709,12 +709,11 @@ tr:hover td{background:var(--color-surface-offset)}
   tocBtn&&tocBtn.addEventListener('click',openDrawer);
   drawerClose&&drawerClose.addEventListener('click',closeDrawer);
   overlay&&overlay.addEventListener('click',closeDrawer);
-  // Close drawer when a link is tapped
   drawer.querySelectorAll('.drawer-item').forEach(function(a){
     a.addEventListener('click',closeDrawer);
   });
 
-  // Active section highlight (sidebar + drawer)
+  // Active section highlight
   var sections=document.querySelectorAll('.section');
   var sidebarLinks=document.querySelectorAll('.sidebar-item');
   var drawerLinks=document.querySelectorAll('.drawer-item');
@@ -729,7 +728,6 @@ tr:hover td{background:var(--color-surface-offset)}
   },{rootMargin:'-20% 0px -70% 0px'});
   sections.forEach(function(s){obs.observe(s);});
 
-  // Escape key closes drawer
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawer();});
 })();
 </script>
