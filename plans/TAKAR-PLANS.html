@@ -26,13 +26,15 @@
   --shadow-lg:0 12px 32px oklch(0.2 0.01 80/0.12);
   --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--radius-full:9999px;
   --transition:180ms cubic-bezier(0.16,1,0.3,1);
-  --font-body:'Inter',sans-serif;--font-display:'Instrument Serif',Georgia,serif;--font-mono:'JetBrains Mono',monospace;
+  --font-body:'Inter',sans-serif;
+  --font-display:'Instrument Serif',Georgia,serif;
+  --font-mono:'JetBrains Mono',monospace;
   --text-xs:clamp(0.75rem,0.7rem + 0.25vw,0.875rem);
   --text-sm:clamp(0.875rem,0.8rem + 0.35vw,1rem);
   --text-base:clamp(1rem,0.95rem + 0.25vw,1.125rem);
   --text-lg:clamp(1.125rem,1rem + 0.75vw,1.5rem);
   --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
-  --text-hero:clamp(2rem,0.5rem + 6vw,5rem);
+  --text-hero:clamp(1.8rem,5vw,5rem);
   --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;
   --space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;--space-20:5rem;
 }
@@ -47,91 +49,301 @@
   --color-orange:#fdab43;--color-orange-highlight:#2e2010;
   --color-error:#d163a7;--color-error-highlight:#2a1828;
   --color-purple:#a86fdf;--color-purple-highlight:#221630;
-  --shadow-sm:0 1px 2px oklch(0 0 0/0.25);--shadow-md:0 4px 12px oklch(0 0 0/0.35);
+  --shadow-sm:0 1px 2px oklch(0 0 0/0.25);
+  --shadow-md:0 4px 12px oklch(0 0 0/0.35);
   --shadow-lg:0 12px 32px oklch(0 0 0/0.5);
 }
+
+/* ===== BASE ===== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;scroll-padding-top:4.5rem}
-body{min-height:100dvh;line-height:1.7;font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg);overflow-x:hidden}
-img,svg{display:block;max-width:100%}
+html{
+  -webkit-font-smoothing:antialiased;
+  scroll-behavior:smooth;
+  scroll-padding-top:56px;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+body{
+  min-height:100dvh;
+  line-height:1.7;
+  font-family:var(--font-body);
+  font-size:var(--text-base);
+  color:var(--color-text);
+  background:var(--color-bg);
+  overflow-x:hidden;
+  word-break:break-word;
+  -webkit-tap-highlight-color:transparent;
+}
+img,svg{display:block;max-width:100%;height:auto}
 h1,h2,h3,h4{text-wrap:balance;line-height:1.2}
-p,li{text-wrap:pretty}
-a,button{transition:color var(--transition),background var(--transition),border-color var(--transition),opacity var(--transition)}
+p,li{text-wrap:pretty;max-width:72ch}
+a,button{
+  transition:color var(--transition),background var(--transition),
+    border-color var(--transition),opacity var(--transition);
+}
 :focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
 
-/* PROGRESS BAR */
-#progress-bar{position:fixed;top:0;left:0;height:2px;background:var(--color-primary);width:0%;z-index:200;transition:width 0.1s linear}
+/* ===== PROGRESS BAR ===== */
+#progress-bar{
+  position:fixed;top:0;left:0;
+  height:2px;background:var(--color-primary);
+  width:0%;z-index:200;transition:width 0.1s linear;
+}
 
-/* TOPBAR */
-.topbar{position:sticky;top:0;z-index:100;background:color-mix(in oklch,var(--color-bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--color-border);padding:0 var(--space-4);height:52px;display:flex;align-items:center;justify-content:space-between;gap:var(--space-3)}
-.topbar-brand{display:flex;align-items:center;gap:var(--space-2);text-decoration:none;color:var(--color-text);flex-shrink:0}
-.topbar-title{font-family:var(--font-display);font-size:1.15rem;font-style:italic;letter-spacing:-0.02em}
-.topbar-nav{display:flex;align-items:center;gap:var(--space-1)}
-.nav-link{font-size:var(--text-xs);color:var(--color-text-muted);text-decoration:none;padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);white-space:nowrap}
+/* ===== TOPBAR ===== */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:color-mix(in oklch,var(--color-bg) 90%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--color-border);
+  padding:0 var(--space-4);
+  height:52px;
+  display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);
+}
+.topbar-brand{
+  display:flex;align-items:center;gap:var(--space-2);
+  text-decoration:none;color:var(--color-text);flex-shrink:0;
+  min-width:0;
+}
+.topbar-title{
+  font-family:var(--font-display);font-size:1.1rem;
+  font-style:italic;letter-spacing:-0.02em;
+  white-space:nowrap;
+}
+.topbar-nav{
+  display:flex;align-items:center;gap:2px;
+  flex:1;justify-content:center;
+  overflow:hidden;
+}
+.nav-link{
+  font-size:0.7rem;color:var(--color-text-muted);
+  text-decoration:none;padding:4px 8px;
+  border-radius:var(--radius-full);white-space:nowrap;
+}
 .nav-link:hover{color:var(--color-text);background:var(--color-surface-offset)}
-.topbar-actions{display:flex;align-items:center;gap:var(--space-2);flex-shrink:0}
-.icon-btn{background:none;border:1px solid var(--color-border);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);cursor:pointer;width:40px;height:40px;flex-shrink:0}
+.topbar-actions{display:flex;align-items:center;gap:var(--space-1);flex-shrink:0}
+.icon-btn{
+  background:none;border:1px solid var(--color-border);
+  border-radius:var(--radius-full);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--color-text-muted);cursor:pointer;
+  width:36px;height:36px;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent;
+}
 .icon-btn:hover{color:var(--color-text);border-color:var(--color-primary)}
+.icon-btn:active{opacity:0.7}
 .hamburger{display:none}
 
-/* DRAWER */
-.drawer-overlay{position:fixed;inset:0;background:oklch(0 0 0 / 0.5);z-index:150;opacity:0;pointer-events:none;transition:opacity var(--transition)}
+/* ===== DRAWER ===== */
+.drawer-overlay{
+  position:fixed;inset:0;
+  background:oklch(0 0 0 / 0.55);
+  z-index:150;opacity:0;pointer-events:none;
+  transition:opacity var(--transition);
+}
 .drawer-overlay.open{opacity:1;pointer-events:all}
-.drawer{position:fixed;top:0;left:-280px;width:280px;height:100%;background:var(--color-surface);border-right:1px solid var(--color-border);z-index:160;transition:left 0.28s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;padding:var(--space-6) var(--space-4)}
+.drawer{
+  position:fixed;top:0;left:-300px;width:280px;
+  max-width:85vw;
+  height:100%;background:var(--color-surface);
+  border-right:1px solid var(--color-border);
+  z-index:160;
+  transition:left 0.28s cubic-bezier(0.16,1,0.3,1);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:var(--space-5) var(--space-4);
+}
 .drawer.open{left:0}
-.drawer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6);padding-bottom:var(--space-4);border-bottom:1px solid var(--color-border)}
-.drawer-brand{font-family:var(--font-display);font-style:italic;font-size:1.15rem;color:var(--color-text)}
-.drawer-close{background:none;border:none;color:var(--color-text-muted);cursor:pointer;padding:var(--space-2);border-radius:var(--radius-md);display:flex;align-items:center}
+.drawer-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:var(--space-5);
+  padding-bottom:var(--space-4);
+  border-bottom:1px solid var(--color-border);
+}
+.drawer-brand{
+  font-family:var(--font-display);font-style:italic;
+  font-size:1.15rem;color:var(--color-text);
+}
+.drawer-close{
+  background:none;border:none;color:var(--color-text-muted);
+  cursor:pointer;padding:var(--space-2);
+  border-radius:var(--radius-md);
+  display:flex;align-items:center;
+  min-width:40px;min-height:40px;
+  justify-content:center;
+}
 .drawer-close:hover{color:var(--color-text);background:var(--color-surface-offset)}
-.drawer-section{margin-bottom:var(--space-5)}
-.drawer-label{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-faint);margin-bottom:var(--space-2);padding:0 var(--space-2)}
-.drawer-item{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3) var(--space-2);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text-muted);text-decoration:none;min-height:44px}
-.drawer-item:hover,.drawer-item:active{color:var(--color-text);background:var(--color-surface-offset)}
-.drawer-item.active{color:var(--color-primary);background:var(--color-primary-highlight)}
-.drawer-num{font-size:10px;font-family:var(--font-mono);background:var(--color-surface-dynamic);color:var(--color-text-faint);padding:1px 5px;border-radius:var(--radius-sm);flex-shrink:0}
+.drawer-section{margin-bottom:var(--space-4)}
+.drawer-label{
+  font-size:0.65rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--color-text-faint);margin-bottom:var(--space-2);
+  padding:0 var(--space-2);
+}
+.drawer-item{
+  display:flex;align-items:center;gap:var(--space-2);
+  padding:var(--space-2) var(--space-2);
+  border-radius:var(--radius-md);
+  font-size:0.875rem;color:var(--color-text-muted);
+  text-decoration:none;min-height:44px;
+}
+.drawer-item:hover,.drawer-item:active{
+  color:var(--color-text);background:var(--color-surface-offset);
+}
+.drawer-item.active{
+  color:var(--color-primary);background:var(--color-primary-highlight);
+}
+.drawer-num{
+  font-size:9px;font-family:var(--font-mono);
+  background:var(--color-surface-dynamic);
+  color:var(--color-text-faint);
+  padding:1px 5px;border-radius:var(--radius-sm);
+  flex-shrink:0;min-width:22px;text-align:center;
+}
 
-/* HERO */
-.hero{padding:clamp(var(--space-10),8vw,var(--space-20)) var(--space-4) var(--space-10);max-width:900px;margin:0 auto;text-align:center}
-.hero-badge{display:inline-flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);font-weight:500;color:var(--color-primary);background:var(--color-primary-highlight);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);margin-bottom:var(--space-5);letter-spacing:0.05em;text-transform:uppercase}
-.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--color-primary);flex-shrink:0}
-.hero h1{font-family:var(--font-display);font-size:var(--text-hero);font-style:italic;letter-spacing:-0.03em;line-height:1.05;margin-bottom:var(--space-5)}
+/* ===== HERO ===== */
+.hero{
+  padding:clamp(var(--space-8),6vw,var(--space-16)) var(--space-4) var(--space-8);
+  max-width:860px;margin:0 auto;text-align:center;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  font-size:0.65rem;font-weight:600;
+  color:var(--color-primary);background:var(--color-primary-highlight);
+  padding:3px var(--space-3);border-radius:var(--radius-full);
+  margin-bottom:var(--space-4);letter-spacing:0.06em;text-transform:uppercase;
+}
+.hero-badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--color-primary);flex-shrink:0;
+}
+.hero h1{
+  font-family:var(--font-display);
+  font-size:var(--text-hero);
+  font-style:italic;letter-spacing:-0.03em;
+  line-height:1.05;margin-bottom:var(--space-4);
+}
 .hero h1 span{color:var(--color-primary)}
-.hero-sub{font-size:clamp(1rem,1rem + 0.25vw,1.2rem);color:var(--color-text-muted);max-width:54ch;margin:0 auto var(--space-6)}
-.hero-meta{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--space-3);font-size:var(--text-xs);color:var(--color-text-faint)}
+.hero-sub{
+  font-size:clamp(0.9rem,0.9rem + 0.3vw,1.15rem);
+  color:var(--color-text-muted);
+  max-width:52ch;margin:0 auto var(--space-5);
+}
+.hero-meta{
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:var(--space-2);
+  font-size:0.7rem;color:var(--color-text-faint);
+}
 
-/* DOC LAYOUT */
-.doc-layout{display:grid;grid-template-columns:220px 1fr;max-width:1200px;margin:0 auto;padding:0 var(--space-4) var(--space-20)}
+/* ===== DOC LAYOUT ===== */
+.doc-layout{
+  display:grid;
+  grid-template-columns:210px 1fr;
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 var(--space-4) var(--space-20);
+}
 
-/* SIDEBAR (desktop only) */
-.sidebar{position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;padding:var(--space-6) var(--space-4) var(--space-6) 0;border-right:1px solid var(--color-border)}
-.sidebar-section{margin-bottom:var(--space-5)}
-.sidebar-label{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-faint);margin-bottom:var(--space-2);padding:0 var(--space-3)}
-.sidebar-item{display:block;padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text-muted);text-decoration:none}
+/* ===== SIDEBAR ===== */
+.sidebar{
+  position:sticky;top:52px;
+  height:calc(100vh - 52px);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:var(--space-5) var(--space-3) var(--space-6) 0;
+  border-right:1px solid var(--color-border);
+  scrollbar-width:none;
+}
+.sidebar::-webkit-scrollbar{display:none}
+.sidebar-section{margin-bottom:var(--space-4)}
+.sidebar-label{
+  font-size:0.6rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.1em;
+  color:var(--color-text-faint);margin-bottom:var(--space-2);
+  padding:0 var(--space-2);
+}
+.sidebar-item{
+  display:block;padding:6px var(--space-2);
+  border-radius:var(--radius-md);
+  font-size:0.8rem;color:var(--color-text-muted);
+  text-decoration:none;line-height:1.4;
+}
 .sidebar-item:hover{color:var(--color-text);background:var(--color-surface-offset)}
-.sidebar-item.active{color:var(--color-primary);background:var(--color-primary-highlight)}
+.sidebar-item.active{
+  color:var(--color-primary);background:var(--color-primary-highlight);
+}
 
-/* CONTENT */
-.content{padding:var(--space-6) 0 var(--space-6) var(--space-10)}
-.section{margin-bottom:var(--space-16);scroll-margin-top:4.5rem}
-.section-header{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-5)}
-.section-number{font-size:var(--text-xs);font-weight:700;color:var(--color-primary);background:var(--color-primary-highlight);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);font-family:var(--font-mono);letter-spacing:0.05em;flex-shrink:0}
-.section h2{font-family:var(--font-display);font-size:var(--text-xl);font-style:italic;letter-spacing:-0.02em}
-.section-intro{font-size:var(--text-base);color:var(--color-text-muted);margin-bottom:var(--space-6);line-height:1.7}
+/* ===== CONTENT ===== */
+.content{
+  padding:var(--space-6) 0 var(--space-6) clamp(var(--space-6),4vw,var(--space-10));
+  min-width:0;
+}
+.section{
+  margin-bottom:var(--space-14, 3.5rem);
+  scroll-margin-top:60px;
+}
+.section-header{
+  display:flex;align-items:center;
+  gap:var(--space-3);margin-bottom:var(--space-4);
+  flex-wrap:wrap;
+}
+.section-number{
+  font-size:0.65rem;font-weight:700;
+  color:var(--color-primary);background:var(--color-primary-highlight);
+  padding:2px 10px;border-radius:var(--radius-full);
+  font-family:var(--font-mono);letter-spacing:0.06em;flex-shrink:0;
+}
+.section h2{
+  font-family:var(--font-display);
+  font-size:clamp(1.3rem,3vw,2rem);
+  font-style:italic;letter-spacing:-0.02em;
+}
+.section-intro{
+  font-size:var(--text-sm);
+  color:var(--color-text-muted);
+  margin-bottom:var(--space-5);line-height:1.75;
+  max-width:65ch;
+}
 
-/* CARDS */
-.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm)}
-.card-grid{display:grid;gap:var(--space-4)}
+/* ===== CARDS ===== */
+.card{
+  background:var(--color-surface);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);
+  padding:var(--space-4);
+  box-shadow:var(--shadow-sm);
+}
+.card-grid{display:grid;gap:var(--space-3)}
 .card-grid.cols-2{grid-template-columns:repeat(2,1fr)}
 .card-grid.cols-3{grid-template-columns:repeat(3,1fr)}
-.card h3{font-size:var(--text-base);font-weight:600;margin-bottom:var(--space-3)}
+.card h3{
+  font-size:0.9rem;font-weight:600;
+  margin-bottom:var(--space-2);
+}
 .card p{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6}
-.card ul{font-size:var(--text-sm);color:var(--color-text-muted);padding-left:var(--space-5);display:flex;flex-direction:column;gap:var(--space-2);margin-top:var(--space-3)}
-.highlight-card{border-left:3px solid var(--color-primary);padding:var(--space-5);background:var(--color-primary-highlight);border-radius:0 var(--radius-lg) var(--radius-lg) 0;margin:var(--space-5) 0}
-.highlight-card p{color:var(--color-text);font-size:var(--text-sm);line-height:1.7}
+.card ul{
+  font-size:0.8rem;color:var(--color-text-muted);
+  padding-left:var(--space-4);
+  display:flex;flex-direction:column;gap:6px;
+  margin-top:var(--space-2);
+}
+.highlight-card{
+  border-left:3px solid var(--color-primary);
+  padding:var(--space-4);
+  background:var(--color-primary-highlight);
+  border-radius:0 var(--radius-lg) var(--radius-lg) 0;
+  margin:var(--space-4) 0;
+}
+.highlight-card p{
+  color:var(--color-text);font-size:var(--text-sm);line-height:1.7;
+}
 .highlight-card strong{color:var(--color-primary)}
 
-/* TAGS */
-.tag{display:inline-flex;align-items:center;font-size:var(--text-xs);font-weight:500;padding:2px var(--space-2);border-radius:var(--radius-sm)}
+/* ===== TAGS ===== */
+.tag{
+  display:inline-flex;align-items:center;
+  font-size:0.65rem;font-weight:600;
+  padding:2px 7px;border-radius:var(--radius-sm);
+  white-space:nowrap;
+}
 .tag-green{background:var(--color-success-highlight);color:var(--color-success)}
 .tag-blue{background:var(--color-blue-highlight);color:var(--color-blue)}
 .tag-orange{background:var(--color-orange-highlight);color:var(--color-orange)}
@@ -140,93 +352,356 @@ a,button{transition:color var(--transition),background var(--transition),border-
 .tag-red{background:var(--color-error-highlight);color:var(--color-error)}
 .tag-teal{background:var(--color-primary-highlight);color:var(--color-primary)}
 
-/* TABLES */
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-lg);border:1px solid var(--color-border);margin:var(--space-5) 0}
-table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
+/* ===== TABLES ===== */
+.table-wrap{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--color-border);
+  margin:var(--space-4) 0;
+  /* hint scroll on mobile */
+  -ms-overflow-style:-ms-autohiding-scrollbar;
+}
+table{
+  width:100%;border-collapse:collapse;
+  font-size:0.8rem;
+  min-width:480px;
+}
 thead{background:var(--color-surface-offset)}
-th{padding:var(--space-3) var(--space-4);text-align:left;font-weight:600;color:var(--color-text-muted);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--color-border);white-space:nowrap}
-td{padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider);color:var(--color-text);vertical-align:top}
+th{
+  padding:10px var(--space-3);
+  text-align:left;font-weight:700;
+  color:var(--color-text-muted);
+  font-size:0.65rem;
+  text-transform:uppercase;letter-spacing:0.07em;
+  border-bottom:1px solid var(--color-border);
+  white-space:nowrap;
+}
+td{
+  padding:10px var(--space-3);
+  border-bottom:1px solid var(--color-divider);
+  color:var(--color-text);vertical-align:top;
+  font-size:0.8rem;
+}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--color-surface-offset)}
-.vocab-table td:first-child{font-family:var(--font-mono);color:var(--color-error);text-decoration:line-through;font-size:var(--text-xs)}
-.vocab-table td:nth-child(2){font-family:var(--font-mono);color:var(--color-primary);font-weight:600;font-size:var(--text-xs)}
+.vocab-table td:first-child{
+  font-family:var(--font-mono);color:var(--color-error);
+  text-decoration:line-through;font-size:0.7rem;
+}
+.vocab-table td:nth-child(2){
+  font-family:var(--font-mono);color:var(--color-primary);
+  font-weight:700;font-size:0.7rem;
+}
 
-/* ARCH DIAGRAM */
-.arch-diagram{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-5);margin:var(--space-5) 0}
-.arch-layers{display:flex;flex-direction:column;gap:var(--space-3)}
-.arch-layer{border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
-.arch-layer-title{padding:var(--space-2) var(--space-4);font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:flex;align-items:center;gap:var(--space-2)}
-.arch-layer-body{padding:var(--space-3) var(--space-4);display:flex;flex-wrap:wrap;gap:var(--space-2)}
-.arch-box{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-1) var(--space-3);font-size:var(--text-xs);font-weight:500;font-family:var(--font-mono)}
+/* ===== ARCH DIAGRAM ===== */
+.arch-diagram{
+  background:var(--color-surface);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);
+  padding:var(--space-4);margin:var(--space-4) 0;
+}
+.arch-layers{display:flex;flex-direction:column;gap:var(--space-2)}
+.arch-layer{
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);overflow:hidden;
+}
+.arch-layer-title{
+  padding:6px var(--space-3);
+  font-size:0.65rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;
+  display:flex;align-items:center;gap:var(--space-2);
+}
+.arch-layer-body{
+  padding:var(--space-2) var(--space-3);
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+.arch-box{
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-md);
+  padding:3px 8px;
+  font-size:0.68rem;font-weight:500;
+  font-family:var(--font-mono);
+  white-space:nowrap;
+}
 .layer-client .arch-layer-title{background:color-mix(in oklch,var(--color-blue) 10%,var(--color-surface));color:var(--color-blue)}
 .layer-api .arch-layer-title{background:color-mix(in oklch,var(--color-primary) 10%,var(--color-surface));color:var(--color-primary)}
 .layer-core .arch-layer-title{background:color-mix(in oklch,var(--color-gold) 10%,var(--color-surface));color:var(--color-gold)}
 .layer-data .arch-layer-title{background:color-mix(in oklch,var(--color-purple) 10%,var(--color-surface));color:var(--color-purple)}
 .layer-infra .arch-layer-title{background:color-mix(in oklch,var(--color-orange) 10%,var(--color-surface));color:var(--color-orange)}
 
-/* TIMELINE */
-.timeline{display:flex;flex-direction:column;position:relative;padding-left:var(--space-8);margin:var(--space-5) 0}
-.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--color-border)}
-.timeline-item{position:relative;padding-bottom:var(--space-8)}
-.timeline-item::before{content:'';position:absolute;left:-32px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--color-primary);border:2px solid var(--color-bg)}
+/* ===== TIMELINE ===== */
+.timeline{
+  display:flex;flex-direction:column;
+  position:relative;
+  padding-left:var(--space-8);
+  margin:var(--space-4) 0;
+}
+.timeline::before{
+  content:'';
+  position:absolute;left:10px;top:0;bottom:0;
+  width:2px;background:var(--color-border);
+}
+.timeline-item{
+  position:relative;padding-bottom:var(--space-6);
+}
+.timeline-item::before{
+  content:'';
+  position:absolute;left:-30px;top:5px;
+  width:10px;height:10px;
+  border-radius:50%;background:var(--color-primary);
+  border:2px solid var(--color-bg);
+}
 .timeline-item:last-child{padding-bottom:0}
-.timeline-phase{font-size:var(--text-xs);font-weight:700;color:var(--color-primary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);font-family:var(--font-mono)}
-.timeline-title{font-size:var(--text-base);font-weight:600;margin-bottom:var(--space-2)}
-.timeline-desc{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6}
-.timeline-tags{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3)}
+.timeline-phase{
+  font-size:0.65rem;font-weight:700;
+  color:var(--color-primary);
+  text-transform:uppercase;letter-spacing:0.08em;
+  margin-bottom:4px;font-family:var(--font-mono);
+}
+.timeline-title{
+  font-size:0.95rem;font-weight:600;margin-bottom:4px;
+}
+.timeline-desc{
+  font-size:0.82rem;color:var(--color-text-muted);line-height:1.6;
+}
+.timeline-tags{
+  display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-2);
+}
 
-/* CODE BLOCK */
-.code-block{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);font-family:var(--font-mono);font-size:0.75rem;overflow-x:auto;-webkit-overflow-scrolling:touch;line-height:1.8;margin:var(--space-3) 0;color:var(--color-text-muted)}
-.code-block .kw{color:var(--color-primary)}.code-block .str{color:var(--color-gold)}.code-block .cm{color:var(--color-text-faint);font-style:italic}.code-block .tp{color:var(--color-blue)}
+/* ===== CODE BLOCK ===== */
+.code-block{
+  background:var(--color-surface-2);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  padding:var(--space-3);
+  font-family:var(--font-mono);font-size:0.7rem;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  line-height:1.8;margin:var(--space-2) 0;
+  color:var(--color-text-muted);white-space:pre;
+  tab-size:2;
+}
+.code-block .kw{color:var(--color-primary)}
+.code-block .str{color:var(--color-gold)}
+.code-block .cm{color:var(--color-text-faint);font-style:italic}
+.code-block .tp{color:var(--color-blue)}
 
-.divider{height:1px;background:var(--color-divider);margin:var(--space-10) 0}
+.divider{
+  height:1px;background:var(--color-divider);
+  margin:var(--space-8) 0;
+}
 
-/* MOBILE NAV (bottom sheet-style TOC trigger) */
-.mobile-toc-btn{display:none;position:fixed;bottom:calc(env(safe-area-inset-bottom) + var(--space-5));right:var(--space-4);z-index:90;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-full);padding:var(--space-3) var(--space-5);font-size:var(--text-sm);font-weight:600;gap:var(--space-2);align-items:center;box-shadow:var(--shadow-lg);cursor:pointer;min-height:48px}
+/* ===== BMC ===== */
+.bmc-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1.4fr 1fr 1fr;
+  gap:var(--space-2);
+  margin:var(--space-4) 0;
+}
+.bmc-cell{
+  background:var(--color-surface);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  padding:var(--space-3);
+}
+.bmc-cell h4{
+  font-size:0.62rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;
+  margin-bottom:var(--space-2);
+}
+.bmc-cell ul{
+  font-size:0.72rem;color:var(--color-text-muted);
+  padding-left:var(--space-3);
+  display:flex;flex-direction:column;
+  gap:3px;list-style:disc;
+}
+.bmc-vp{
+  grid-column:2/4;
+  background:color-mix(in oklch,var(--color-primary) 8%,var(--color-surface));
+  border-color:var(--color-primary);
+}
+.bmc-vp h4{color:var(--color-primary)}
 
-/* ===== MOBILE RESPONSIVE ===== */
-@media(max-width:768px){
-  html{scroll-padding-top:3.5rem}
-  .topbar{padding:0 var(--space-3);height:52px}
+/* ===== MOBILE FAB ===== */
+.mobile-toc-btn{
+  display:none;
+  position:fixed;
+  bottom:calc(env(safe-area-inset-bottom,0px) + var(--space-5));
+  right:var(--space-4);
+  z-index:90;
+  background:var(--color-primary);
+  color:#fff;border:none;
+  border-radius:var(--radius-full);
+  padding:var(--space-3) var(--space-4);
+  font-size:0.82rem;font-weight:600;
+  gap:var(--space-2);align-items:center;
+  box-shadow:var(--shadow-lg);
+  cursor:pointer;
+  min-height:48px;min-width:48px;
+  -webkit-tap-highlight-color:transparent;
+}
+.mobile-toc-btn:active{opacity:0.85;transform:scale(0.97)}
+
+/* ===== SCROLL HINT GRADIENT (table) ===== */
+.table-wrap-outer{
+  position:relative;
+}
+.table-wrap-outer::after{
+  content:'';
+  position:absolute;top:0;right:0;
+  width:32px;height:100%;
+  background:linear-gradient(to right,transparent,var(--color-bg));
+  pointer-events:none;
+  border-radius:0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+/* ============================================
+   RESPONSIVE — TABLET (max 900px)
+   ============================================ */
+@media(max-width:900px){
+  .doc-layout{
+    grid-template-columns:180px 1fr;
+    padding:0 var(--space-3) var(--space-20);
+  }
+  .content{
+    padding-left:var(--space-5);
+  }
+  .topbar-nav .nav-link:nth-child(n+4){display:none}
+  .bmc-grid{
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:auto;
+  }
+  .bmc-vp{
+    grid-column:1/3;
+    grid-row:auto;
+  }
+}
+
+/* ============================================
+   RESPONSIVE — MOBILE (max 640px)
+   ============================================ */
+@media(max-width:640px){
+  html{scroll-padding-top:52px}
+
+  /* Topbar */
+  .topbar{padding:0 var(--space-3);height:52px;gap:var(--space-2)}
   .topbar-nav{display:none}
   .hamburger{display:flex}
-  .doc-layout{grid-template-columns:1fr;padding:0 0 var(--space-20)}
+  .topbar-title{font-size:1rem}
+
+  /* Layout */
+  .doc-layout{
+    display:block;
+    padding:0 0 80px;
+  }
   .sidebar{display:none}
-  .content{padding:var(--space-4) var(--space-4) var(--space-4)}
-  .section{margin-bottom:var(--space-10);scroll-margin-top:3.5rem}
-  .section-header{gap:var(--space-3);margin-bottom:var(--space-4)}
-  .section h2{font-size:clamp(1.3rem,5vw,1.8rem)}
-  .section-intro{margin-bottom:var(--space-4)}
-  .hero{padding:var(--space-8) var(--space-4) var(--space-8)}
-  .hero h1{font-size:clamp(1.8rem,9vw,3.5rem);word-break:keep-all}
-  .hero-sub{font-size:var(--text-base)}
-  .card-grid.cols-2,.card-grid.cols-3{grid-template-columns:1fr}
-  .card{padding:var(--space-4)}
-  .arch-diagram{padding:var(--space-4)}
-  .arch-layer-body{gap:var(--space-2)}
-  .arch-box{font-size:0.7rem;padding:3px var(--space-2)}
-  .highlight-card{padding:var(--space-4)}
-  .code-block{font-size:0.7rem;padding:var(--space-3)}
-  td,th{padding:var(--space-2) var(--space-3);font-size:0.75rem}
+  .content{
+    padding:var(--space-4) var(--space-4) var(--space-4);
+  }
+
+  /* Hero */
+  .hero{
+    padding:var(--space-6) var(--space-4) var(--space-6);
+    text-align:left;
+  }
+  .hero h1{
+    font-size:clamp(1.7rem,8vw,2.8rem);
+    word-break:keep-all;
+  }
+  .hero-sub{
+    font-size:0.9rem;
+    text-align:left;
+  }
+  .hero-badge{font-size:0.6rem}
+  .hero-meta{
+    justify-content:flex-start;
+    font-size:0.65rem;
+  }
+
+  /* Sections */
+  .section{margin-bottom:var(--space-10);scroll-margin-top:52px}
+  .section-header{gap:var(--space-2);margin-bottom:var(--space-3)}
+  .section h2{font-size:clamp(1.15rem,5.5vw,1.5rem)}
+  .section-intro{
+    font-size:0.82rem;
+    margin-bottom:var(--space-4);
+  }
+
+  /* Cards: all single col */
+  .card-grid.cols-2,
+  .card-grid.cols-3{
+    grid-template-columns:1fr;
+  }
+  .card{padding:var(--space-3)}
+  .card h3{font-size:0.85rem}
+  .card ul{font-size:0.78rem}
+  .highlight-card{padding:var(--space-3)}
+
+  /* Arch diagram */
+  .arch-diagram{padding:var(--space-3)}
+  .arch-layer-body{gap:4px}
+  .arch-box{font-size:0.62rem;padding:2px 6px;white-space:nowrap}
+
+  /* Tables */
+  table{min-width:420px}
+  td,th{padding:8px var(--space-2);font-size:0.72rem}
+
+  /* Code blocks */
+  .code-block{font-size:0.65rem;padding:var(--space-2)}
+
+  /* Timeline */
   .timeline{padding-left:var(--space-6)}
-  .timeline-item::before{left:-26px}
+  .timeline-item::before{left:-24px;width:9px;height:9px;top:4px}
+  .timeline-phase{font-size:0.6rem}
+  .timeline-title{font-size:0.88rem}
+  .timeline-desc{font-size:0.78rem}
+
+  /* Divider */
+  .divider{margin:var(--space-6) 0}
+
+  /* BMC */
+  .bmc-grid{
+    grid-template-columns:1fr;
+    gap:var(--space-2);
+  }
+  .bmc-vp{
+    grid-column:1;
+    grid-row:auto;
+  }
+  .bmc-cell{padding:var(--space-3)}
+  .bmc-cell h4{font-size:0.6rem}
+  .bmc-cell ul{font-size:0.72rem}
+
+  /* Mobile FAB */
   .mobile-toc-btn{display:flex}
-  .divider{margin:var(--space-8) 0}
-  .topbar-title{font-size:1.05rem}
+
+  /* Section number small */
+  .section-number{font-size:0.6rem;padding:2px 8px}
+
+  /* Footer card */
+  .footer-card{padding:var(--space-5)!important}
+  .footer-card p{font-size:0.78rem!important}
 }
-@media(max-width:420px){
-  .hero h1{font-size:clamp(1.6rem,8vw,2.5rem)}
-  .hero-meta{gap:var(--space-2);font-size:0.7rem}
-  .section-number{font-size:0.65rem;padding:1px var(--space-2)}
+
+/* ============================================
+   RESPONSIVE — TINY (max 375px)
+   ============================================ */
+@media(max-width:375px){
+  .hero h1{font-size:clamp(1.5rem,7.5vw,2rem)}
+  .content{padding:var(--space-3) var(--space-3)}
+  td,th{padding:6px var(--space-2);font-size:0.68rem}
+  .arch-box{font-size:0.58rem}
+  .code-block{font-size:0.6rem}
 }
 </style>
 </head>
 <body>
 <div id="progress-bar"></div>
 
-<!-- DRAWER OVERLAY -->
+<!-- DRAWER -->
 <div class="drawer-overlay" id="drawer-overlay"></div>
-<div class="drawer" id="drawer" role="dialog" aria-label="Menu Navigasi">
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Menu Navigasi">
   <div class="drawer-header">
     <span class="drawer-brand">TAKAR</span>
     <button class="drawer-close" id="drawer-close" aria-label="Tutup menu">
@@ -236,7 +711,7 @@ tr:hover td{background:var(--color-surface-offset)}
   <div class="drawer-section">
     <div class="drawer-label">Penelitian</div>
     <a class="drawer-item" href="#latar"><span class="drawer-num">01</span>Latar Belakang</a>
-    <a class="drawer-item" href="#masalah"><span class="drawer-num">02</span>Masalah & Peluang</a>
+    <a class="drawer-item" href="#masalah"><span class="drawer-num">02</span>Masalah &amp; Peluang</a>
     <a class="drawer-item" href="#kompetitor"><span class="drawer-num">03</span>Analisis Kompetitor</a>
   </div>
   <div class="drawer-section">
@@ -248,61 +723,70 @@ tr:hover td{background:var(--color-surface-offset)}
   <div class="drawer-section">
     <div class="drawer-label">Teknis</div>
     <a class="drawer-item" href="#arsitektur"><span class="drawer-num">07</span>Arsitektur Sistem</a>
-    <a class="drawer-item" href="#database"><span class="drawer-num">08</span>Database & Data Flow</a>
+    <a class="drawer-item" href="#database"><span class="drawer-num">08</span>Database &amp; Data Flow</a>
     <a class="drawer-item" href="#mekanisme"><span class="drawer-num">09</span>Mekanisme Bobot</a>
     <a class="drawer-item" href="#stack"><span class="drawer-num">10</span>Tech Stack</a>
   </div>
   <div class="drawer-section">
     <div class="drawer-label">Bisnis</div>
-    <a class="drawer-item" href="#monetisasi"><span class="drawer-num">11</span>Model Monetisasi</a>
-    <a class="drawer-item" href="#risiko"><span class="drawer-num">12</span>Analisis Risiko</a>
-    <a class="drawer-item" href="#roadmap"><span class="drawer-num">13</span>Roadmap</a>
+    <a class="drawer-item" href="#bmc"><span class="drawer-num">11</span>Business Model Canvas</a>
+    <a class="drawer-item" href="#monetisasi"><span class="drawer-num">12</span>Model Monetisasi</a>
+    <a class="drawer-item" href="#biaya"><span class="drawer-num">13</span>Estimasi Biaya</a>
+    <a class="drawer-item" href="#risiko"><span class="drawer-num">14</span>Analisis Risiko</a>
+    <a class="drawer-item" href="#roadmap"><span class="drawer-num">15</span>Roadmap</a>
   </div>
 </div>
 
 <header class="topbar">
   <a class="topbar-brand" href="#">
-    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-label="TAKAR">
+    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" aria-label="TAKAR">
       <rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.1"/>
       <path d="M8 10h16M14 10v12M20 10l-4 6 4 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="22" cy="22" r="3" fill="currentColor" fill-opacity="0.5"/>
     </svg>
     <span class="topbar-title">TAKAR</span>
   </a>
-  <nav class="topbar-nav">
+  <nav class="topbar-nav" aria-label="Navigasi utama">
     <a class="nav-link" href="#latar">Latar Belakang</a>
     <a class="nav-link" href="#positioning">Positioning</a>
     <a class="nav-link" href="#fitur">Fitur</a>
     <a class="nav-link" href="#arsitektur">Arsitektur</a>
+    <a class="nav-link" href="#bmc">BMC</a>
     <a class="nav-link" href="#roadmap">Roadmap</a>
   </nav>
   <div class="topbar-actions">
     <button class="icon-btn" data-theme-toggle aria-label="Toggle tema">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
-    <button class="icon-btn hamburger" id="hamburger-btn" aria-label="Buka menu" aria-expanded="false">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <button class="icon-btn hamburger" id="hamburger-btn" aria-label="Buka menu" aria-expanded="false" aria-controls="drawer">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
   </div>
 </header>
 
 <section class="hero">
-  <div class="hero-badge"><span class="hero-badge-dot"></span>Research Document v0.3 &middot; Confidential</div>
+  <div class="hero-badge"><span class="hero-badge-dot"></span>Research Document v0.4 &middot; Confidential</div>
   <h1><span>TAKAR</span> &mdash; Bursa Opini<br>Terukur Indonesia</h1>
   <p class="hero-sub">Platform pertama di Indonesia tempat pengguna menyatakan penilaian terukur atas isu publik. Bobot konsensus terbentuk secara organik &mdash; bukan opini kosong, tapi sinyal yang tercatat dan diverifikasi.</p>
   <div class="hero-meta">
-    <span>&#128197; Mei 2026</span><span>&middot;</span><span>&#128302; Pre-seed Research</span><span>&middot;</span><span>&#127470;&#127465; Indonesia-first</span><span>&middot;</span><span>&#9997;&#65039; VOXIA / SOLUSI-AI</span>
+    <span>&#128197; Mei 2026</span>
+    <span>&middot;</span>
+    <span>&#128302; Pre-seed Research</span>
+    <span>&middot;</span>
+    <span>&#127470;&#127465; Indonesia-first</span>
+    <span>&middot;</span>
+    <span>&#9997;&#65039; VOXIA / SOLUSI-AI</span>
   </div>
 </section>
 
-<!-- Mobile TOC floating button -->
+<!-- Mobile FAB -->
 <button class="mobile-toc-btn" id="mobile-toc-btn" aria-label="Buka daftar isi">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
   Daftar Isi
 </button>
 
 <div class="doc-layout">
-  <aside class="sidebar">
+  <aside class="sidebar" aria-label="Sidebar navigasi">
     <div class="sidebar-section">
       <div class="sidebar-label">Penelitian</div>
       <a class="sidebar-item" href="#latar">Latar Belakang</a>
@@ -324,7 +808,9 @@ tr:hover td{background:var(--color-surface-offset)}
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Bisnis</div>
+      <a class="sidebar-item" href="#bmc">Business Model Canvas</a>
       <a class="sidebar-item" href="#monetisasi">Model Monetisasi</a>
+      <a class="sidebar-item" href="#biaya">Estimasi Biaya</a>
       <a class="sidebar-item" href="#risiko">Analisis Risiko</a>
       <a class="sidebar-item" href="#roadmap">Roadmap</a>
     </div>
@@ -332,20 +818,22 @@ tr:hover td{background:var(--color-surface-offset)}
 
   <main class="content">
 
+    <!-- 01 -->
     <section class="section" id="latar">
       <div class="section-header"><span class="section-number">01</span><h2>Latar Belakang</h2></div>
       <p class="section-intro">TAKAR lahir dari satu observasi sederhana: Indonesia adalah negara dengan populasi terbesar ke-4 di dunia, tapi belum ada platform yang mengukur bobot opini publik secara transparan, terstruktur, dan bertanggung jawab.</p>
       <div class="highlight-card">
         <p><strong>Nama &amp; Konsep:</strong> TAKAR &mdash; dari kata &ldquo;menakar&rdquo;. Pengguna <em>menakar</em> suatu isu: seberapa besar bobot keyakinan mereka terhadap suatu hasil nyata. Ini bukan tebak-tebakan &mdash; ini adalah ekspresi penilaian yang terukur, dicatat, dan diverifikasi secara objektif berdasarkan fakta publik.</p>
       </div>
-      <div class="card-grid cols-3" style="margin-top:var(--space-5)">
+      <div class="card-grid cols-3" style="margin-top:var(--space-4)">
         <div class="card"><h3>&#127759; Pasar Besar</h3><p>270 juta penduduk, 191 juta pengguna media sosial aktif. Setiap siklus Pilkada, Pemilu, dan event nasional besar menciptakan gelombang opini publik yang belum pernah diukur secara sistematis.</p></div>
         <div class="card"><h3>&#128161; Ruang Kosong</h3><p>Belum ada platform legal di Indonesia yang mengagregasi opini publik berbasis insentif akurasi. Yang ada hanya komentar media sosial tanpa akuntabilitas dan lembaga survei tertutup yang tidak transparan.</p></div>
-        <div class="card"><h3>&#9878;&#65039; Celah Regulasi</h3><p>OJK belum mengatur kategori ini &mdash; persis seperti prop trading firm. TAKAR tidak meminta izin untuk kategori yang belum ada; TAKAR <em>mendefinisikan</em> kategori baru dan membangun preseden hukumnya sendiri.</p></div>
+        <div class="card"><h3>&#9878;&#65039; Celah Regulasi</h3><p>OJK belum mengatur kategori ini &mdash; persis seperti prop trading firm. TAKAR mendefinisikan kategori baru dan membangun preseden hukumnya sendiri.</p></div>
       </div>
     </section>
     <div class="divider"></div>
 
+    <!-- 02 -->
     <section class="section" id="masalah">
       <div class="section-header"><span class="section-number">02</span><h2>Masalah &amp; Peluang</h2></div>
       <div class="card-grid cols-2">
@@ -373,34 +861,36 @@ tr:hover td{background:var(--color-surface-offset)}
     </section>
     <div class="divider"></div>
 
+    <!-- 03 -->
     <section class="section" id="kompetitor">
       <div class="section-header"><span class="section-number">03</span><h2>Analisis Kompetitor</h2></div>
       <p class="section-intro">Tidak ada kompetitor langsung di Indonesia. Referensi global ada, tapi semuanya punya hambatan masuk yang membuka ruang bagi TAKAR.</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Platform</th><th>Model</th><th>Hambatan vs TAKAR</th></tr></thead>
+          <thead><tr><th>Platform</th><th>Model</th><th>Volume</th><th>Hambatan vs TAKAR</th></tr></thead>
           <tbody>
-            <tr><td><strong>Polymarket</strong> &#127482;&#127480;</td><td><span class="tag tag-blue">Crypto</span></td><td>Butuh wallet crypto, UI Inggris, tidak hadir lokal</td></tr>
-            <tr><td><strong>Metaculus</strong> &#127482;&#127480;</td><td><span class="tag tag-teal">Poin Virtual</span></td><td>Tidak ada insentif finansial, konten Indonesia nol</td></tr>
-            <tr><td><strong>Manifold</strong> &#127482;&#127480;</td><td><span class="tag tag-teal">Play Money</span></td><td>Tidak ada konteks lokal sama sekali</td></tr>
-            <tr><td><strong>Populix/Jakpat</strong> &#127470;&#127465;</td><td><span class="tag tag-gold">Survey</span></td><td>One-way survey, tanpa bobot keyakinan</td></tr>
-            <tr><td><strong>TAKAR &#127919;</strong> &#127470;&#127465;</td><td><span class="tag tag-gold">IDR + Poin</span></td><td>&mdash; Kategori baru, tanpa kompetitor</td></tr>
+            <tr><td><strong>Polymarket</strong> &#127482;&#127480;</td><td><span class="tag tag-blue">Crypto USDC</span></td><td>$8B+ (2024)</td><td>Butuh wallet crypto, UI Inggris, tidak hadir lokal</td></tr>
+            <tr><td><strong>Metaculus</strong> &#127482;&#127480;</td><td><span class="tag tag-teal">Poin Virtual</span></td><td>50K+ forecasters</td><td>Tidak ada insentif finansial, konten Indonesia nol</td></tr>
+            <tr><td><strong>Manifold</strong> &#127482;&#127480;</td><td><span class="tag tag-teal">Play Money</span></td><td>100K+ users</td><td>Tidak ada konteks lokal sama sekali</td></tr>
+            <tr><td><strong>Populix/Jakpat</strong> &#127470;&#127465;</td><td><span class="tag tag-gold">Survey</span></td><td>1M+ responden</td><td>One-way survey, tanpa bobot keyakinan</td></tr>
+            <tr><td><strong>TAKAR &#127919;</strong> &#127470;&#127465;</td><td><span class="tag tag-gold">IDR + Poin</span></td><td>&mdash; Target</td><td>&mdash; Kategori baru, tanpa kompetitor</td></tr>
           </tbody>
         </table>
       </div>
     </section>
     <div class="divider"></div>
 
+    <!-- 04 -->
     <section class="section" id="positioning">
       <div class="section-header"><span class="section-number">04</span><h2>Positioning Legal</h2></div>
       <p class="section-intro">Strategi TAKAR bukan meminta izin untuk kategori yang belum ada regulasinya. Strategi TAKAR adalah membangun fakta hukum bahwa ini adalah kategori baru yang tidak tercakup regulasi yang ada.</p>
       <div class="highlight-card">
-        <p><strong>Analogi Prop Firm:</strong> OJK tidak pernah secara eksplisit melarang prop trading firm &mdash; mereka beroperasi bebas karena berada di ruang yang belum diatur. TAKAR menggunakan posisi yang sama: <em>bukan broker, bukan exchange efek, bukan perjudian</em> &mdash; melainkan <strong>platform agregasi opini berbasis insentif akurasi</strong>, kategori yang belum diatur OJK maupun Kominfo.</p>
+        <p><strong>Analogi Prop Firm:</strong> OJK tidak pernah secara eksplisit melarang prop trading firm &mdash; mereka beroperasi bebas karena berada di ruang yang belum diatur. TAKAR menggunakan posisi yang sama: <em>bukan broker, bukan exchange efek, bukan perjudian</em> &mdash; melainkan <strong>platform agregasi opini berbasis insentif akurasi</strong>.</p>
       </div>
-      <div class="card-grid cols-2" style="margin-top:var(--space-5)">
+      <div class="card-grid cols-2" style="margin-top:var(--space-4)">
         <div class="card">
           <h3>&#128203; Definisi Legal TAKAR</h3>
-          <p style="margin-bottom:var(--space-3)">TAKAR adalah <strong>platform teknologi informasi</strong> yang:</p>
+          <p style="margin-bottom:var(--space-2)">TAKAR adalah <strong>platform teknologi informasi</strong> yang:</p>
           <ul>
             <li>Menyediakan ruang bagi pengguna untuk menyatakan <em>bobot keyakinan</em> atas isu publik yang resolusinya berdasarkan fakta terverifikasi</li>
             <li>Mengagregasi bobot keyakinan menjadi <em>konsensus terukur</em> untuk data riset</li>
@@ -418,12 +908,13 @@ tr:hover td{background:var(--color-surface-offset)}
           </ul>
         </div>
       </div>
-      <div class="highlight-card" style="border-left-color:var(--color-gold);margin-top:var(--space-5)">
-        <p><strong>Prinsip Utama:</strong> TAKAR tidak pernah memposisikan diri sebagai platform yang &ldquo;memprediksi&rdquo; apapun. TAKAR adalah <em>cermin terukur dari opini publik Indonesia</em>. Resolusi terjadi bukan karena TAKAR memutuskan siapa yang benar &mdash; tapi karena <strong>fakta publik yang terverifikasi</strong> (hasil KPU, data BPS, skor resmi liga) menjadi acuan objektif yang tidak terbantahkan.</p>
+      <div class="highlight-card" style="border-left-color:var(--color-gold);margin-top:var(--space-4)">
+        <p><strong>Prinsip Utama:</strong> TAKAR adalah <em>cermin terukur dari opini publik Indonesia</em>. Resolusi terjadi karena <strong>fakta publik yang terverifikasi</strong> (hasil KPU, data BPS, skor resmi liga) menjadi acuan objektif yang tidak terbantahkan.</p>
       </div>
     </section>
     <div class="divider"></div>
 
+    <!-- 05 -->
     <section class="section" id="vocab">
       <div class="section-header"><span class="section-number">05</span><h2>Kamus Framing TAKAR</h2></div>
       <p class="section-intro">Konsistensi bahasa adalah lini pertahanan pertama TAKAR secara hukum dan komunikasi publik. Kata-kata di bawah ini <strong>tidak boleh pernah digunakan</strong> dalam produk, marketing, maupun dokumentasi publik.</p>
@@ -445,6 +936,7 @@ tr:hover td{background:var(--color-surface-offset)}
     </section>
     <div class="divider"></div>
 
+    <!-- 06 -->
     <section class="section" id="fitur">
       <div class="section-header"><span class="section-number">06</span><h2>Fitur Utama</h2></div>
       <p class="section-intro">TAKAR dirancang berlapis &mdash; dimulai dari poin virtual yang sepenuhnya aman secara regulasi, berkembang ke insentif finansial nyata setelah preseden hukum dan komunitas terbentuk.</p>
@@ -459,6 +951,7 @@ tr:hover td{background:var(--color-surface-offset)}
     </section>
     <div class="divider"></div>
 
+    <!-- 07 -->
     <section class="section" id="arsitektur">
       <div class="section-header"><span class="section-number">07</span><h2>Arsitektur Sistem</h2></div>
       <p class="section-intro">Cloud-native, microservices-ready, berbasis Azure sesuai stack eksisting VOXIA/INVEZTHINK. Estimasi biaya MVP: ~$200&ndash;400/bulan.</p>
@@ -499,13 +992,13 @@ tr:hover td{background:var(--color-surface-offset)}
     </section>
     <div class="divider"></div>
 
+    <!-- 08 -->
     <section class="section" id="database">
       <div class="section-header"><span class="section-number">08</span><h2>Database &amp; Data Flow</h2></div>
       <div class="card-grid cols-2">
         <div class="card">
           <h3>&#128450;&#65039; Schema Utama (PostgreSQL)</h3>
-          <div class="code-block">
-<span class="cm">-- Core entities</span>
+          <div class="code-block"><span class="cm">-- Core entities</span>
 <span class="kw">users</span> (<span class="tp">id</span>, username, email, verified_ktp,
   balance_points, calibration_score,
   brier_score, total_resolutions)
@@ -521,34 +1014,32 @@ tr:hover td{background:var(--color-surface-offset)}
   reference_id, status)
 
 <span class="kw">resolutions</span> (<span class="tp">id</span>, issue_id, outcome,
-  evidence_url, source, resolved_at)
-          </div>
+  evidence_url, source, resolved_at)</div>
         </div>
         <div class="card">
           <h3>&#128260; Position Execution Flow</h3>
-          <div class="code-block">
-<span class="cm">1. User &rarr; POST /api/issues/{id}/position</span>
+          <div class="code-block"><span class="cm">1. User → POST /api/issues/{id}/position</span>
    { stance: <span class="str">"YES"</span>, weight: 50000 }
 
 <span class="cm">2. LMSR Bobot Engine:</span>
-   cost = b &times; ln(e^(q_yes/b) + e^(q_no/b))
+   cost = b × ln(e^(q_yes/b) + e^(q_no/b))
    new_index = e^(q_yes/b) / sum
 
 <span class="cm">3. Atomic DB transaction:</span>
-   Debit wallet &rarr; Allocate weight
+   Debit wallet → Allocate weight
 
 <span class="cm">4. Publish to Event Bus:</span>
-   &rarr; Update Redis (real-time)
-   &rarr; Push WebSocket ke subscribers
-   &rarr; Log to CosmosDB (audit)
+   → Update Redis (real-time)
+   → Push WebSocket ke subscribers
+   → Log to CosmosDB (audit)
 
-<span class="cm">5. Return new index + allocated weight</span>
-          </div>
+<span class="cm">5. Return new index + allocated weight</span></div>
         </div>
       </div>
     </section>
     <div class="divider"></div>
 
+    <!-- 09 -->
     <section class="section" id="mekanisme">
       <div class="section-header"><span class="section-number">09</span><h2>Mekanisme Bobot</h2></div>
       <div class="table-wrap">
@@ -567,6 +1058,7 @@ tr:hover td{background:var(--color-surface-offset)}
     </section>
     <div class="divider"></div>
 
+    <!-- 10 -->
     <section class="section" id="stack">
       <div class="section-header"><span class="section-number">10</span><h2>Tech Stack</h2></div>
       <div class="card-grid cols-3">
@@ -580,11 +1072,66 @@ tr:hover td{background:var(--color-surface-offset)}
     </section>
     <div class="divider"></div>
 
+    <!-- 11 -->
+    <section class="section" id="bmc">
+      <div class="section-header"><span class="section-number">11</span><h2>Business Model Canvas</h2></div>
+      <p class="section-intro">Peta bisnis TAKAR dalam satu halaman &mdash; dari mitra kunci hingga struktur biaya dan aliran pendapatan.</p>
+      <div class="bmc-grid">
+        <div class="card bmc-cell">
+          <h4 style="color:var(--color-blue)">&#128101; Mitra Kunci</h4>
+          <ul><li>Law firm fintech</li><li>KPU / BPS (oracle)</li><li>Media nasional (Kompas, Tempo, Detik)</li><li>Midtrans / Xendit</li><li>OpenAI / Azure</li><li>Komunitas forecaster</li></ul>
+        </div>
+        <div class="card bmc-cell">
+          <h4 style="color:var(--color-gold)">&#9881;&#65039; Aktivitas Kunci</h4>
+          <ul><li>Kurasi &amp; moderasi isu</li><li>Pengembangan LMSR engine</li><li>Resolusi &amp; oracle management</li><li>Komunitas &amp; growth</li><li>B2B sales data</li><li>Legal compliance</li></ul>
+        </div>
+        <div class="card bmc-cell bmc-vp">
+          <h4>&#127919; Value Proposition</h4>
+          <p style="font-size:0.72rem;color:var(--color-text-muted);margin-bottom:var(--space-2)"><strong>Untuk Pengguna:</strong> Ekspresikan penilaian terukur atas isu Indonesia nyata dan bangun reputasi akurasi publik.</p>
+          <p style="font-size:0.72rem;color:var(--color-text-muted);margin-bottom:var(--space-2)"><strong>Untuk Media / Konsultan:</strong> Data bobot konsensus opini publik Indonesia real-time yang tidak bisa didapat dari mana pun.</p>
+          <p style="font-size:0.72rem;color:var(--color-text-muted)"><strong>Untuk Pembuat Kebijakan:</strong> Sinyal opini publik yang terstruktur, terverifikasi, dan dapat diaudit.</p>
+        </div>
+        <div class="card bmc-cell">
+          <h4 style="color:var(--color-primary)">&#128140; Hubungan Pelanggan</h4>
+          <ul><li>Leaderboard &amp; gamifikasi</li><li>Badge &amp; reputasi publik</li><li>Push notifikasi resolusi</li><li>Komunitas Discord/Telegram</li><li>Newsletter mingguan insight</li></ul>
+        </div>
+        <div class="card bmc-cell">
+          <h4 style="color:var(--color-success)">&#128228; Saluran</h4>
+          <ul><li>Web app (SEO &amp; direct)</li><li>Mobile app (iOS/Android)</li><li>Partner media (widget embed)</li><li>Influencer &amp; KOL Indonesia</li><li>B2B direct sales</li></ul>
+        </div>
+        <div class="card bmc-cell">
+          <h4 style="color:var(--color-orange)">&#128230; Sumber Daya Kunci</h4>
+          <ul><li>LMSR bobot engine</li><li>Database opini historis</li><li>Tim legal &amp; compliance</li><li>Brand &amp; reputasi TAKAR</li><li>Azure cloud infra</li><li>Tim kurator isu</li></ul>
+        </div>
+        <div class="card bmc-cell" style="grid-column:span 2">
+          <h4 style="color:var(--color-error)">&#128184; Struktur Biaya</h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);margin-top:var(--space-2)">
+            <ul style="font-size:0.7rem"><li><strong>Azure infra:</strong> $200&ndash;800/bulan</li><li><strong>AI/LLM API:</strong> $50&ndash;300/bulan</li><li><strong>Legal retainer:</strong> ~Rp 10jt/bulan</li></ul>
+            <ul style="font-size:0.7rem"><li><strong>Tim dev:</strong> 2&ndash;3 orang in-house</li><li><strong>Marketing:</strong> Rp 5&ndash;20jt/bulan</li><li><strong>Likuiditas awal:</strong> Rp 50&ndash;100jt</li></ul>
+          </div>
+        </div>
+        <div class="card bmc-cell" style="grid-column:span 2">
+          <h4 style="color:var(--color-gold)">&#128176; Aliran Pendapatan</h4>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-2);margin-top:var(--space-2)">
+            <div><p style="font-size:0.72rem;font-weight:600;color:var(--color-text)">Platform Fee (2%)</p><p style="font-size:0.7rem;color:var(--color-text-muted)">Per alokasi bobot &mdash; sumber utama</p></div>
+            <div><p style="font-size:0.72rem;font-weight:600;color:var(--color-text)">B2B Data API</p><p style="font-size:0.7rem;color:var(--color-text-muted)">Langganan bulanan media &amp; konsultan</p></div>
+            <div><p style="font-size:0.72rem;font-weight:600;color:var(--color-text)">Premium Sub</p><p style="font-size:0.7rem;color:var(--color-text-muted)">Analytics lanjutan &amp; early access</p></div>
+          </div>
+        </div>
+        <div class="card bmc-cell">
+          <h4 style="color:var(--color-purple)">&#128101; Segmen Pelanggan</h4>
+          <ul><li><strong>B2C:</strong> Gen-Z &amp; milenial melek berita</li><li><strong>B2C:</strong> Penggemar politik &amp; olahraga</li><li><strong>B2B:</strong> Media &amp; portal berita</li><li><strong>B2B:</strong> Konsultan politik</li><li><strong>B2B:</strong> Lembaga riset &amp; think tank</li></ul>
+        </div>
+      </div>
+    </section>
+    <div class="divider"></div>
+
+    <!-- 12 -->
     <section class="section" id="monetisasi">
-      <div class="section-header"><span class="section-number">11</span><h2>Model Monetisasi</h2></div>
+      <div class="section-header"><span class="section-number">12</span><h2>Model Monetisasi</h2></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Stream</th><th>Mekanisme</th><th>Fase</th><th>Est.</th></tr></thead>
+          <thead><tr><th>Stream</th><th>Mekanisme</th><th>Fase</th><th>Est. Mix</th></tr></thead>
           <tbody>
             <tr><td><strong>Platform Fee</strong></td><td>2% per alokasi bobot</td><td><span class="tag tag-green">Fase 1</span></td><td>55&ndash;65%</td></tr>
             <tr><td><strong>Creation Fee</strong></td><td>Rp 5k&ndash;50k + deposit</td><td><span class="tag tag-green">Fase 1</span></td><td>10&ndash;15%</td></tr>
@@ -600,26 +1147,55 @@ tr:hover td{background:var(--color-surface-offset)}
     </section>
     <div class="divider"></div>
 
+    <!-- 13 -->
+    <section class="section" id="biaya">
+      <div class="section-header"><span class="section-number">13</span><h2>Estimasi Biaya per Fase</h2></div>
+      <p class="section-intro">Proyeksi biaya operasional bulanan berdasarkan skenario growth realistis. Semua angka dalam USD/bulan kecuali disebutkan lain.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Komponen</th><th>Fase 0</th><th>Fase 1 (1K users)</th><th>Fase 2 (10K users)</th><th>Fase 3 (50K+)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Azure Container Apps</strong></td><td>$0</td><td>$30&ndash;60</td><td>$150&ndash;300</td><td>$500&ndash;1.200</td></tr>
+            <tr><td><strong>Azure PostgreSQL Flex</strong></td><td>$13</td><td>$50&ndash;80</td><td>$150&ndash;250</td><td>$400&ndash;800</td></tr>
+            <tr><td><strong>Azure Redis Cache</strong></td><td>$0</td><td>$16</td><td>$50&ndash;80</td><td>$200&ndash;400</td></tr>
+            <tr><td><strong>Azure Blob + CDN</strong></td><td>$5</td><td>$10&ndash;20</td><td>$30&ndash;60</td><td>$100&ndash;200</td></tr>
+            <tr><td><strong>AI/LLM (OpenAI)</strong></td><td>$10&ndash;20</td><td>$50&ndash;100</td><td>$200&ndash;400</td><td>$500&ndash;1.500</td></tr>
+            <tr><td><strong>Legal Retainer</strong></td><td>Rp 5&ndash;10jt</td><td>Rp 10jt</td><td>Rp 15jt</td><td>Rp 20&ndash;30jt</td></tr>
+            <tr><td><strong>Monitoring</strong></td><td>$0</td><td>$29</td><td>$50&ndash;80</td><td>$100&ndash;200</td></tr>
+            <tr><td><strong>Domain + SSL + Email</strong></td><td>$10</td><td>$15</td><td>$20</td><td>$30</td></tr>
+            <tr><td style="font-weight:700">Total Est. (USD)</td><td style="color:var(--color-success);font-weight:700">~$40&ndash;60</td><td style="color:var(--color-gold);font-weight:700">~$200&ndash;350</td><td style="color:var(--color-orange);font-weight:700">~$650&ndash;1.200</td><td style="color:var(--color-error);font-weight:700">~$1.800&ndash;4.300</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="highlight-card" style="border-left-color:var(--color-success)">
+        <p><strong>Modal Awal:</strong> Untuk 6 bulan Fase 1, estimasi total burn <strong>~$2.000&ndash;3.000 + ~Rp 60&ndash;90jt legal</strong>. Modal seed minimal Rp 150&ndash;200jt sudah cukup untuk validasi penuh sebelum fundraising external.</p>
+      </div>
+    </section>
+    <div class="divider"></div>
+
+    <!-- 14 -->
     <section class="section" id="risiko">
-      <div class="section-header"><span class="section-number">12</span><h2>Analisis Risiko</h2></div>
+      <div class="section-header"><span class="section-number">14</span><h2>Analisis Risiko</h2></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Risiko</th><th>Level</th><th>Mitigasi</th></tr></thead>
           <tbody>
             <tr><td><strong>Salah framing publik</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Kamus framing ketat; tim PR terlatih</td></tr>
-            <tr><td><strong>Regulasi baru</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Monitor OJK/Kominfo; law firm on-retainer</td></tr>
-            <tr><td><strong>Manipulasi bobot</strong></td><td><span class="tag tag-red">TINGGI</span></td><td>Min. bobot, deteksi anomali, rate limiting</td></tr>
-            <tr><td><strong>Cold start</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Subsidi 20 isu unggulan; rekrut seed forecasters</td></tr>
-            <tr><td><strong>Resolusi disengketakan</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Multi-oracle, dispute window 24 jam</td></tr>
-            <tr><td><strong>Churn user tinggi</strong></td><td><span class="tag tag-teal">RENDAH</span></td><td>Gamification kuat, notifikasi resolusi real-time</td></tr>
+            <tr><td><strong>Regulasi baru OJK/Kominfo</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Monitor aktif; law firm on-retainer; PSE terdaftar</td></tr>
+            <tr><td><strong>Manipulasi bobot / wash trading</strong></td><td><span class="tag tag-red">TINGGI</span></td><td>Min. bobot, deteksi anomali ML, rate limiting ketat</td></tr>
+            <tr><td><strong>Cold start &amp; low liquidity</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Subsidi 20 isu unggulan; rekrut 50 seed forecasters</td></tr>
+            <tr><td><strong>Resolusi disengketakan</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>Multi-oracle, dispute window 24 jam, tim arbitrase</td></tr>
+            <tr><td><strong>Churn user tinggi</strong></td><td><span class="tag tag-teal">RENDAH</span></td><td>Gamification kuat, notifikasi resolusi real-time, streak</td></tr>
+            <tr><td><strong>Kompetitor masuk</strong></td><td><span class="tag tag-teal">RENDAH</span></td><td>First mover advantage; data historis sebagai moat</td></tr>
           </tbody>
         </table>
       </div>
     </section>
     <div class="divider"></div>
 
+    <!-- 15 -->
     <section class="section" id="roadmap">
-      <div class="section-header"><span class="section-number">13</span><h2>Roadmap</h2></div>
+      <div class="section-header"><span class="section-number">15</span><h2>Roadmap</h2></div>
       <div class="timeline">
         <div class="timeline-item">
           <div class="timeline-phase">Fase 0 &mdash; Q2 2026 &middot; Sekarang</div>
@@ -655,77 +1231,19 @@ tr:hover td{background:var(--color-surface-offset)}
     </section>
     <div class="divider"></div>
 
-    <div class="card" style="background:var(--color-surface-offset);border-style:dashed;text-align:center;padding:var(--space-8)">
-      <p style="color:var(--color-text-muted);font-size:var(--text-sm);margin:0 auto">
+    <div class="card footer-card" style="background:var(--color-surface-offset);border-style:dashed;text-align:center;padding:var(--space-6)">
+      <p style="color:var(--color-text-muted);font-size:0.82rem;margin:0 auto;max-width:60ch">
         <strong style="color:var(--color-text)">TAKAR</strong> &mdash; Dokumen ini bersifat konfidensial, intellectual property VOXIA / SOLUSI-AI.<br>
-        Versi: v0.3 &middot; Mei 2026 &middot; Status: Pre-seed Research &middot; Framing: Bursa Opini Terukur
+        Versi: v0.4 &middot; Mei 2026 &middot; Status: Pre-seed Research &middot; Framing: Bursa Opini Terukur
       </p>
     </div>
+
   </main>
 </div>
 
 <script>
 (function(){
+  // Progress bar
   var pb=document.getElementById('progress-bar');
-  function updateProgress(){
-    var s=document.documentElement.scrollTop||document.body.scrollTop;
-    var h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
-    pb.style.width=(h>0?(s/h*100):0)+'%';
-  }
-  window.addEventListener('scroll',updateProgress,{passive:true});
-
-  var t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
-  var d=r.getAttribute('data-theme')||'dark';
-  function setThemeIcon(){
-    if(!t)return;
-    t.innerHTML=d==='dark'
-      ?'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
-      :'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-  }
-  setThemeIcon();
-  if(t)t.addEventListener('click',function(){d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);setThemeIcon();});
-
-  var drawer=document.getElementById('drawer');
-  var overlay=document.getElementById('drawer-overlay');
-  var hamburger=document.getElementById('hamburger-btn');
-  var drawerClose=document.getElementById('drawer-close');
-  var tocBtn=document.getElementById('mobile-toc-btn');
-  function openDrawer(){
-    drawer.classList.add('open');
-    overlay.classList.add('open');
-    hamburger&&hamburger.setAttribute('aria-expanded','true');
-    document.body.style.overflow='hidden';
-  }
-  function closeDrawer(){
-    drawer.classList.remove('open');
-    overlay.classList.remove('open');
-    hamburger&&hamburger.setAttribute('aria-expanded','false');
-    document.body.style.overflow='';
-  }
-  hamburger&&hamburger.addEventListener('click',openDrawer);
-  tocBtn&&tocBtn.addEventListener('click',openDrawer);
-  drawerClose&&drawerClose.addEventListener('click',closeDrawer);
-  overlay&&overlay.addEventListener('click',closeDrawer);
-  drawer.querySelectorAll('.drawer-item').forEach(function(a){
-    a.addEventListener('click',closeDrawer);
-  });
-
-  var sections=document.querySelectorAll('.section');
-  var sidebarLinks=document.querySelectorAll('.sidebar-item');
-  var drawerLinks=document.querySelectorAll('.drawer-item');
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        var id='#'+e.target.id;
-        sidebarLinks.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')===id);});
-        drawerLinks.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')===id);});
-      }
-    });
-  },{rootMargin:'-20% 0px -70% 0px'});
-  sections.forEach(function(s){obs.observe(s);});
-
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawer();});
-})();
-</script>
-</body>
-</html>
+  window.addEventListener('scroll',function(){
+    var s=document.
