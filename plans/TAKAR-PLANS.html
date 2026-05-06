@@ -3,1122 +3,649 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAKAR — Bursa Opini Terukur Indonesia</title>
-<meta name="description" content="TAKAR — Dokumen riset & rencana arsitektur platform prediction market pertama Indonesia.">
+<title>TAKAR — Research Plan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ─── DESIGN TOKENS ─── */
-:root, [data-theme="light"] {
-  --bg:             #f7f6f2;
-  --surface:        #ffffff;
-  --surface-2:      #f3f0ec;
-  --border:         #e2ddd8;
-  --divider:        #ece9e4;
+:root,[data-theme="light"]{
+  --bg:#f7f6f2;--surface:#f0efe9;--surface-2:#e8e6df;--border:#d4d0c8;
+  --text:#1a1916;--muted:#6b6960;--faint:#a8a69f;--inv:#f9f8f4;
+  --primary:#01696f;--primary-h:#0c4e54;--primary-hl:#cedcd8;
+  --gold:#b07800;--gold-hl:#e8dfc5;
+  --blue:#005a8a;--blue-hl:#c6d8e4;
+  --purple:#6b30aa;--purple-hl:#dacfde;
+  --green:#3a6e1a;--green-hl:#d4dfcc;
+  --red:#a12c7b;--red-hl:#e0ced7;
+  --orange:#c45f00;--orange-hl:#e7d7c4;
+  --code-bg:#1e1c1a;--code-text:#e8e4df;
+  --shadow:0 4px 16px rgba(0,0,0,.08);
+  --r:0.5rem;
+}
+[data-theme="dark"]{
+  --bg:#111110;--surface:#1a1917;--surface-2:#222120;--border:#333230;
+  --text:#d8d6d2;--muted:#787570;--faint:#484644;--inv:#1a1917;
+  --primary:#4f98a3;--primary-h:#3a8490;--primary-hl:#1e3235;
+  --gold:#e8af34;--gold-hl:#2e2618;
+  --blue:#5591c7;--blue-hl:#1a2535;
+  --purple:#a86fdf;--purple-hl:#281840;
+  --green:#6daa45;--green-hl:#1a2a10;
+  --red:#d163a7;--red-hl:#2a1020;
+  --orange:#fdab43;--orange-hl:#2a1a08;
+  --code-bg:#0d0c0b;--code-text:#c8c4be;
+  --shadow:0 4px 24px rgba(0,0,0,.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;min-height:100dvh;display:flex}
 
-  --text:           #1c1a16;
-  --text-muted:     #6e6b65;
-  --text-faint:     #b0ada7;
+/* SIDEBAR */
+.sidebar{width:260px;min-width:260px;background:var(--surface);border-right:1px solid var(--border);height:100dvh;position:sticky;top:0;overflow-y:auto;display:flex;flex-direction:column;padding:1.5rem 0}
+.logo{padding:0 1.5rem 1.5rem;border-bottom:1px solid var(--border)}
+.logo-mark{display:flex;align-items:center;gap:.625rem;font-size:.875rem;font-weight:700;letter-spacing:.12em;color:var(--primary)}
+.logo-sub{font-size:.6875rem;color:var(--muted);margin-top:.25rem;letter-spacing:.04em}
+nav{padding:1rem 0;flex:1}
+.nav-section{font-size:.625rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding:.75rem 1.5rem .375rem}
+.nav-item{display:flex;align-items:center;gap:.625rem;padding:.4375rem 1.5rem;font-size:.8125rem;color:var(--muted);text-decoration:none;cursor:pointer;transition:all .15s;border-left:2px solid transparent}
+.nav-item:hover,.nav-item.active{color:var(--primary);background:var(--primary-hl);border-left-color:var(--primary)}
+.nav-item .num{font-size:.625rem;font-weight:700;font-family:'JetBrains Mono',monospace;background:var(--surface-2);color:var(--faint);padding:.125rem .3125rem;border-radius:.25rem;min-width:1.375rem;text-align:center}
+.nav-item.active .num{background:var(--primary-hl);color:var(--primary)}
+.sidebar-footer{padding:1rem 1.5rem;border-top:1px solid var(--border)}
+.version-badge{font-size:.6875rem;font-family:'JetBrains Mono',monospace;background:var(--surface-2);color:var(--muted);padding:.25rem .625rem;border-radius:var(--r);display:inline-block}
 
-  --primary:        #01696f;
-  --primary-hover:  #0c4e54;
-  --primary-bg:     #e4f0ef;
+/* MAIN */
+.main{flex:1;overflow-y:auto;max-width:900px;padding:3rem 3.5rem}
+.section{display:none}
+.section.active{display:block}
 
-  --success:        #3a6e1a;
-  --success-bg:     #dff0d2;
-  --blue:           #005e8c;
-  --blue-bg:        #d6eaf7;
-  --gold:           #b88000;
-  --gold-bg:        #faf0cc;
-  --orange:         #c55800;
-  --orange-bg:      #fdebd6;
-  --error:          #9b1a68;
-  --error-bg:       #f5dced;
-  --purple:         #6b2eb3;
-  --purple-bg:      #ecdff9;
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem}
+.section-tag{display:flex;align-items:center;gap:.75rem}
+.tag-num{font-size:.6875rem;font-weight:700;font-family:'JetBrains Mono',monospace;background:var(--primary-hl);color:var(--primary);border:1px solid var(--primary);padding:.1875rem .5rem;border-radius:.25rem}
+.section-title{font-size:1.625rem;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+.theme-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--muted);padding:.4375rem .875rem;border-radius:var(--r);font-size:.75rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.375rem}
+.theme-btn:hover{color:var(--text);border-color:var(--primary)}
 
-  --shadow-sm:      0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md:      0 4px 16px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.05);
+/* TYPOGRAPHY */
+h2{font-size:1.1875rem;font-weight:600;color:var(--text);margin:2rem 0 .875rem;letter-spacing:-.015em}
+h3{font-size:.9375rem;font-weight:600;color:var(--text);margin:1.5rem 0 .625rem}
+p{font-size:.9375rem;color:var(--muted);line-height:1.7;margin-bottom:1rem;max-width:72ch}
+strong{color:var(--text)}
+.lead{font-size:1.0625rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem;max-width:68ch}
 
-  --r-sm: .375rem; --r-md: .5rem; --r-lg: .75rem; --r-xl: 1rem; --r-full: 9999px;
-  --ease: 180ms cubic-bezier(.16,1,.3,1);
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.stat-num{font-size:1.875rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--primary);letter-spacing:-.02em}
+.stat-label{font-size:.75rem;color:var(--muted);margin-top:.25rem}
+.stat-sub{font-size:.6875rem;color:var(--faint);margin-top:.125rem}
 
-  --font-body:    'Inter', sans-serif;
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-mono:    'JetBrains Mono', monospace;
+/* BADGE */
+.badge{display:inline-flex;align-items:center;font-size:.6875rem;font-weight:600;padding:.1875rem .5rem;border-radius:.25rem;letter-spacing:.03em}
+.badge-primary{background:var(--primary-hl);color:var(--primary)}
+.badge-gold{background:var(--gold-hl);color:var(--gold)}
+.badge-blue{background:var(--blue-hl);color:var(--blue)}
+.badge-purple{background:var(--purple-hl);color:var(--purple)}
+.badge-green{background:var(--green-hl);color:var(--green)}
+.badge-red{background:var(--red-hl);color:var(--red)}
+.badge-orange{background:var(--orange-hl);color:var(--orange)}
 
-  --ts-xs:   clamp(.75rem,  .7rem  + .25vw, .875rem);
-  --ts-sm:   clamp(.875rem, .8rem  + .35vw, 1rem);
-  --ts-base: clamp(1rem,    .95rem + .25vw, 1.125rem);
-  --ts-lg:   clamp(1.125rem,1rem   + .75vw, 1.5rem);
-  --ts-xl:   clamp(1.5rem,  1.2rem + 1.25vw,2.25rem);
-  --ts-hero: clamp(2.5rem,  .5rem  + 6vw,  5rem);
+/* TABLE */
+.table-wrap{overflow-x:auto;margin-bottom:1.5rem;border:1px solid var(--border);border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+thead tr{background:var(--surface-2)}
+th{font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:.6875rem 1rem;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top;font-size:.875rem}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface-2)}
 
-  --sp-1:.25rem; --sp-2:.5rem; --sp-3:.75rem; --sp-4:1rem;
-  --sp-5:1.25rem; --sp-6:1.5rem; --sp-8:2rem; --sp-10:2.5rem;
-  --sp-12:3rem; --sp-16:4rem; --sp-20:5rem;
-}
+/* CODE BLOCKS */
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:1rem;font-family:'JetBrains Mono',monospace;font-size:.8125rem;line-height:1.75}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border)}
+.code-lang{font-size:.625rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.code-title{font-size:.6875rem;color:var(--muted)}
+.code-body{padding:1.125rem 1.25rem;overflow-x:auto;color:var(--code-text)}
+.kw{color:#7ec8d4;font-weight:500}
+.kw2{color:#a8d8a8}
+.dt{color:#f4b942}
+.cm{color:#5a5852;font-style:italic}
+.str{color:#c8a87e}
+.num{color:#d4a0d4}
 
-[data-theme="dark"] {
-  --bg:             #111009;
-  --surface:        #1a1916;
-  --surface-2:      #222019;
-  --border:         #333028;
-  --divider:        #2a2820;
+/* MATH BLOCKS */
+.math-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.math-label{font-size:.625rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:.625rem}
+.math-formula{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--text);line-height:1.6}
+.math-formula .fn{color:var(--gold)}
+.math-formula .op{color:var(--muted)}
+.math-desc{font-size:.8125rem;color:var(--muted);margin-top:.75rem;line-height:1.6}
 
-  --text:           #d4d2ce;
-  --text-muted:     #7d7a74;
-  --text-faint:     #4e4c47;
+/* ARCH DIAGRAM */
+.arch{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem}
+.arch-layer{border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.arch-label{font-size:.6875rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.5rem 1rem;border-bottom:1px solid var(--border)}
+.arch-items{display:flex;flex-wrap:wrap;gap:.5rem;padding:.875rem 1rem}
+.arch-item{font-size:.75rem;padding:.3125rem .75rem;border-radius:.25rem;font-family:'JetBrains Mono',monospace}
+.layer-client .arch-label{background:rgba(79,152,163,.12);color:var(--primary)}
+.layer-client .arch-item{background:var(--primary-hl);color:var(--primary)}
+.layer-api .arch-label{background:rgba(232,175,52,.12);color:var(--gold)}
+.layer-api .arch-item{background:var(--gold-hl);color:var(--gold)}
+.layer-core .arch-label{background:rgba(85,145,199,.12);color:var(--blue)}
+.layer-core .arch-item{background:var(--blue-hl);color:var(--blue)}
+.layer-data .arch-label{background:rgba(168,111,223,.12);color:var(--purple)}
+.layer-data .arch-item{background:var(--purple-hl);color:var(--purple)}
+.layer-infra .arch-label{background:rgba(109,170,69,.12);color:var(--green)}
+.layer-infra .arch-item{background:var(--green-hl);color:var(--green)}
 
-  --primary:        #4facb7;
-  --primary-hover:  #2d8e9c;
-  --primary-bg:     #1a3035;
+/* TIMELINE */
+.timeline{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.phase-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;position:relative;overflow:hidden}
+.phase-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.phase-1::before{background:var(--primary)}
+.phase-2::before{background:var(--gold)}
+.phase-3::before{background:var(--blue)}
+.phase-4::before{background:var(--purple)}
+.phase-period{font-size:.6875rem;font-weight:700;letter-spacing:.08em;font-family:'JetBrains Mono',monospace;color:var(--muted);margin-bottom:.375rem}
+.phase-name{font-size:.9375rem;font-weight:700;color:var(--text);margin-bottom:.75rem}
+.phase-items{list-style:none;display:flex;flex-direction:column;gap:.375rem}
+.phase-items li{font-size:.8125rem;color:var(--muted);display:flex;align-items:flex-start;gap:.5rem}
+.phase-items li::before{content:'→';color:var(--faint);flex-shrink:0;margin-top:.1rem}
 
-  --success:        #62a83a;
-  --success-bg:     #1e3018;
-  --blue:           #4d90cc;
-  --blue-bg:        #152033;
-  --gold:           #d4a020;
-  --gold-bg:        #2e2508;
-  --orange:         #f0933a;
-  --orange-bg:      #2e1a08;
-  --error:          #cc6aad;
-  --error-bg:       #2c1225;
-  --purple:         #a86fdf;
-  --purple-bg:      #221240;
+/* INFO / WARN BOX */
+.info-box{border-left:3px solid var(--primary);background:var(--primary-hl);padding:1rem 1.25rem;border-radius:0 var(--r) var(--r) 0;margin-bottom:1.25rem}
+.info-box p{margin:0;font-size:.875rem;color:var(--text)}
+.warn-box{border-left:3px solid var(--gold);background:var(--gold-hl);padding:1rem 1.25rem;border-radius:0 var(--r) var(--r) 0;margin-bottom:1.25rem}
+.warn-box p{margin:0;font-size:.875rem;color:var(--text)}
 
-  --shadow-sm:      0 1px 3px rgba(0,0,0,.35);
-  --shadow-md:      0 4px 16px rgba(0,0,0,.45);
-}
+/* FLOW */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem}
+.flow-item{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r);padding:.5rem .875rem;font-size:.8125rem;font-family:'JetBrains Mono',monospace;color:var(--text)}
+.flow-arrow{color:var(--faint);font-size:.875rem}
 
-/* ─── RESET ─── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
-body { min-height: 100dvh; font-family: var(--font-body); font-size: var(--ts-base); color: var(--text); background: var(--bg); line-height: 1.7; }
-img, svg { display: block; max-width: 100%; }
-h1,h2,h3,h4 { text-wrap: balance; line-height: 1.2; }
-p, li { text-wrap: pretty; max-width: 72ch; }
-a, button { transition: color var(--ease), background var(--ease), border-color var(--ease), box-shadow var(--ease); }
-:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: var(--r-sm); }
+.mono{font-family:'JetBrains Mono',monospace;font-size:.8125rem;background:var(--surface-2);padding:.125rem .3125rem;border-radius:.25rem;color:var(--text)}
 
-/* ─── TOPBAR ─── */
-.topbar {
-  position: sticky; top: 0; z-index: 100;
-  background: color-mix(in oklch, var(--bg) 88%, transparent);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border);
-  height: 56px;
-  padding: 0 var(--sp-6);
-  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
-}
-.topbar-brand { display: flex; align-items: center; gap: var(--sp-3); text-decoration: none; color: var(--text); }
-.topbar-wordmark { font-family: var(--font-display); font-size: 1.2rem; font-style: italic; letter-spacing: -.02em; }
-.topbar-nav { display: flex; align-items: center; gap: var(--sp-1); }
-.nav-link {
-  font-size: var(--ts-xs); color: var(--text-muted); text-decoration: none;
-  padding: var(--sp-1) var(--sp-3); border-radius: var(--r-full);
-}
-.nav-link:hover { color: var(--text); background: var(--surface-2); }
-.theme-btn {
-  width: 34px; height: 34px; border-radius: var(--r-full);
-  border: 1px solid var(--border); background: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text-muted);
-}
-.theme-btn:hover { color: var(--text); border-color: var(--primary); }
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-/* ─── HERO ─── */
-.hero {
-  max-width: 860px; margin: 0 auto;
-  padding: var(--sp-20) var(--sp-6) var(--sp-12);
-  text-align: center;
-}
-.hero-badge {
-  display: inline-flex; align-items: center; gap: var(--sp-2);
-  font-size: var(--ts-xs); font-weight: 600;
-  color: var(--primary); background: var(--primary-bg);
-  padding: 4px var(--sp-3); border-radius: var(--r-full);
-  margin-bottom: var(--sp-6);
-  text-transform: uppercase; letter-spacing: .06em;
-}
-.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
-.hero h1 {
-  font-family: var(--font-display);
-  font-size: var(--ts-hero);
-  font-style: italic;
-  letter-spacing: -.03em;
-  line-height: 1.06;
-  margin-bottom: var(--sp-6);
-  color: var(--text);
-}
-.hero h1 em { color: var(--primary); font-style: inherit; }
-.hero-sub {
-  font-size: var(--ts-lg);
-  color: var(--text-muted);
-  max-width: 56ch;
-  margin: 0 auto var(--sp-8);
-  line-height: 1.6;
-}
-.hero-meta {
-  display: flex; align-items: center; justify-content: center;
-  flex-wrap: wrap; gap: var(--sp-3);
-  font-size: var(--ts-xs); color: var(--text-faint);
-}
-.hero-meta span { display: flex; align-items: center; gap: var(--sp-2); }
-
-/* ─── LAYOUT ─── */
-.doc-layout {
-  display: grid;
-  grid-template-columns: 216px 1fr;
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 0 var(--sp-4) var(--sp-20);
-  gap: 0;
-}
-
-/* ─── SIDEBAR ─── */
-.sidebar {
-  position: sticky;
-  top: 56px;
-  height: calc(100vh - 56px);
-  overflow-y: auto;
-  padding: var(--sp-8) var(--sp-4) var(--sp-8) 0;
-  border-right: 1px solid var(--border);
-  scrollbar-width: thin;
-}
-.sidebar::-webkit-scrollbar { width: 4px; }
-.sidebar::-webkit-scrollbar-track { background: transparent; }
-.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-.sidebar-section { margin-bottom: var(--sp-6); }
-.sidebar-label {
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .1em;
-  color: var(--text-faint);
-  padding: 0 var(--sp-3);
-  margin-bottom: var(--sp-2);
-  display: block;
-}
-.sidebar-link {
-  display: flex; align-items: center; gap: var(--sp-2);
-  padding: 7px var(--sp-3);
-  border-radius: var(--r-md);
-  font-size: var(--ts-sm);
-  color: var(--text-muted);
-  text-decoration: none;
-  line-height: 1.3;
-}
-.sidebar-link:hover { color: var(--text); background: var(--surface-2); }
-.sidebar-link.active { color: var(--primary); background: var(--primary-bg); font-weight: 500; }
-.sidebar-link .num {
-  font-family: var(--font-mono); font-size: 10px;
-  color: var(--text-faint); flex-shrink: 0; width: 16px;
-}
-.sidebar-link.active .num { color: var(--primary); }
-
-/* ─── CONTENT ─── */
-.content {
-  min-width: 0;
-  padding: var(--sp-8) 0 var(--sp-8) var(--sp-10);
-}
-
-/* ─── SECTION ─── */
-.section { margin-bottom: var(--sp-16); scroll-margin-top: 4.5rem; }
-.section-header { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-5); }
-.section-tag {
-  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
-  color: var(--primary); background: var(--primary-bg);
-  padding: 3px 10px; border-radius: var(--r-full);
-  letter-spacing: .05em; flex-shrink: 0;
-}
-.section h2 {
-  font-family: var(--font-display);
-  font-size: var(--ts-xl);
-  font-style: italic;
-  letter-spacing: -.02em;
-  color: var(--text);
-}
-.section-intro {
-  font-size: var(--ts-base);
-  color: var(--text-muted);
-  margin-bottom: var(--sp-8);
-  line-height: 1.7;
-  max-width: 65ch;
-}
-.divider { border: none; border-top: 1px solid var(--divider); margin: var(--sp-12) 0; }
-
-/* ─── STAT GRID ─── */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: var(--sp-3);
-  margin-bottom: var(--sp-8);
-}
-.stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-xl);
-  padding: var(--sp-5) var(--sp-4);
-  text-align: center;
-  box-shadow: var(--shadow-sm);
-}
-.stat-val {
-  font-family: var(--font-mono);
-  font-size: var(--ts-xl);
-  font-weight: 700;
-  color: var(--primary);
-  display: block;
-  margin-bottom: var(--sp-1);
-  line-height: 1.1;
-}
-.stat-label { font-size: var(--ts-xs); color: var(--text-muted); line-height: 1.3; }
-
-/* ─── CARDS ─── */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: var(--sp-4);
-}
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-xl);
-  padding: var(--sp-5) var(--sp-6);
-  box-shadow: var(--shadow-sm);
-}
-.card-solo { margin-bottom: var(--sp-4); }
-.card h3 {
-  font-size: var(--ts-sm);
-  font-weight: 600;
-  margin-bottom: var(--sp-2);
-  color: var(--text);
-}
-.card p { font-size: var(--ts-sm); color: var(--text-muted); line-height: 1.65; }
-
-/* ─── TABLE ─── */
-.table-wrap { overflow-x: auto; border-radius: var(--r-xl); border: 1px solid var(--border); box-shadow: var(--shadow-sm); margin: var(--sp-4) 0; }
-table { width: 100%; border-collapse: collapse; font-size: var(--ts-sm); }
-thead { background: var(--surface-2); }
-th {
-  text-align: left;
-  font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .06em;
-  color: var(--text-muted);
-  padding: var(--sp-3) var(--sp-4);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-td {
-  padding: var(--sp-3) var(--sp-4);
-  border-bottom: 1px solid var(--divider);
-  color: var(--text);
-  vertical-align: top;
-}
-tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover td { background: color-mix(in oklch, var(--surface-2) 60%, transparent); }
-
-/* ─── BADGES ─── */
-.badge {
-  display: inline-flex; align-items: center;
-  font-size: 11px; font-weight: 600;
-  padding: 2px 8px; border-radius: var(--r-full);
-  white-space: nowrap;
-}
-.b-primary { color: var(--primary);  background: var(--primary-bg); }
-.b-success { color: var(--success);  background: var(--success-bg); }
-.b-blue    { color: var(--blue);     background: var(--blue-bg); }
-.b-gold    { color: var(--gold);     background: var(--gold-bg); }
-.b-orange  { color: var(--orange);   background: var(--orange-bg); }
-.b-error   { color: var(--error);    background: var(--error-bg); }
-.b-purple  { color: var(--purple);   background: var(--purple-bg); }
-
-/* ─── ARCH DIAGRAM ─── */
-.arch-diagram {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-xl);
-  padding: var(--sp-8);
-  box-shadow: var(--shadow-sm);
-  margin: var(--sp-4) 0 var(--sp-6);
-}
-.arch-layer { margin-bottom: var(--sp-5); }
-.arch-layer:last-child { margin-bottom: 0; }
-.arch-layer-label {
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .1em;
-  color: var(--text-faint);
-  margin-bottom: var(--sp-3);
-}
-.arch-boxes { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
-.arch-box {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 6px var(--sp-4);
-  font-size: var(--ts-xs); font-weight: 500;
-  color: var(--text);
-}
-.arch-box.c-primary { background: var(--primary-bg); border-color: var(--primary); color: var(--primary); }
-.arch-box.c-blue    { background: var(--blue-bg);    border-color: var(--blue);    color: var(--blue); }
-.arch-box.c-gold    { background: var(--gold-bg);    border-color: var(--gold);    color: var(--gold); }
-.arch-box.c-success { background: var(--success-bg); border-color: var(--success); color: var(--success); }
-.arch-box.c-orange  { background: var(--orange-bg);  border-color: var(--orange);  color: var(--orange); }
-.arch-arrow {
-  text-align: center;
-  color: var(--text-faint);
-  font-size: 1.2rem;
-  margin: var(--sp-1) 0;
-  user-select: none;
-}
-
-/* ─── CODE BLOCK ─── */
-.code-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-xl);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  margin: var(--sp-4) 0;
-}
-.code-wrap-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: var(--sp-3) var(--sp-5);
-  border-bottom: 1px solid var(--border);
-  background: var(--surface-2);
-}
-.code-lang {
-  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
-  color: var(--text-faint); text-transform: uppercase; letter-spacing: .08em;
-}
-.code-dots { display: flex; gap: 6px; }
-.code-dots span {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--border);
-}
-pre.code-block {
-  margin: 0;
-  padding: var(--sp-6);
-  font-family: var(--font-mono);
-  font-size: .8rem;
-  line-height: 1.85;
-  overflow-x: auto;
-  color: var(--text);
-  white-space: pre;
-  tab-size: 2;
-  background: transparent;
-  max-width: 100%;
-}
-pre.code-block .c  { color: var(--text-faint); font-style: italic; }
-pre.code-block .kw { color: var(--primary); font-weight: 600; }
-pre.code-block .st { color: var(--success); }
-pre.code-block .tp { color: var(--blue); font-weight: 500; }
-pre.code-block .fn { color: var(--gold); }
-
-/* ─── FORMULA ─── */
-.formula-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--primary);
-  border-radius: 0 var(--r-lg) var(--r-lg) 0;
-  padding: var(--sp-4) var(--sp-5);
-  margin: var(--sp-4) 0;
-  font-family: var(--font-mono);
-  font-size: var(--ts-sm);
-}
-.formula-label {
-  font-size: var(--ts-xs); color: var(--text-faint);
-  text-transform: uppercase; letter-spacing: .07em;
-  margin-bottom: var(--sp-2);
-}
-.formula-expr { color: var(--text); }
-
-/* ─── HIGHLIGHT BOX ─── */
-.highlight-box {
-  background: color-mix(in oklch, var(--primary) 8%, var(--surface));
-  border: 1px solid color-mix(in oklch, var(--primary) 30%, var(--border));
-  border-radius: var(--r-lg);
-  padding: var(--sp-5) var(--sp-6);
-  font-size: var(--ts-sm);
-  color: var(--text-muted);
-  line-height: 1.65;
-  margin: var(--sp-6) 0;
-}
-.highlight-box strong { color: var(--text); }
-
-/* ─── TIMELINE ─── */
-.timeline {
-  position: relative;
-  padding-left: var(--sp-8);
-  margin: var(--sp-4) 0;
-}
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: calc(var(--sp-3) - 1px);
-  top: 8px; bottom: 8px;
-  width: 2px;
-  background: var(--border);
-  border-radius: 2px;
-}
-.timeline-item { position: relative; margin-bottom: var(--sp-8); }
-.timeline-item:last-child { margin-bottom: 0; }
-.timeline-dot {
-  position: absolute;
-  left: calc(-1 * var(--sp-8) + var(--sp-3) - 5px);
-  top: 5px;
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--primary);
-  border: 2px solid var(--bg);
-  box-shadow: 0 0 0 2px var(--primary-bg);
-}
-.timeline-phase {
-  font-size: var(--ts-xs); font-weight: 700;
-  text-transform: uppercase; letter-spacing: .06em;
-  color: var(--primary);
-  margin-bottom: var(--sp-1);
-}
-.timeline-title {
-  font-size: var(--ts-base); font-weight: 600;
-  color: var(--text);
-  margin-bottom: var(--sp-3);
-}
-.timeline-list { list-style: none; padding: 0; }
-.timeline-list li {
-  font-size: var(--ts-sm);
-  color: var(--text-muted);
-  padding: 3px 0;
-  display: flex; gap: var(--sp-2); align-items: flex-start;
-}
-.timeline-list li::before {
-  content: '→';
-  color: var(--primary);
-  flex-shrink: 0;
-  margin-top: 2px;
-  font-size: .875rem;
-}
-
-/* ─── RISK COLORS ─── */
-.risk-hi  { color: var(--error); font-weight: 600; }
-.risk-med { color: var(--gold);  font-weight: 600; }
-.risk-lo  { color: var(--success); font-weight: 600; }
-
-/* ─── FOOTER ─── */
-.footer {
-  border-top: 1px solid var(--border);
-  padding: var(--sp-8) var(--sp-6);
-  text-align: center;
-  font-size: var(--ts-xs);
-  color: var(--text-faint);
-}
-
-/* ─── RESPONSIVE ─── */
-@media (max-width: 800px) {
-  .doc-layout { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-  .content { padding: var(--sp-6) 0; }
-  .hero { padding: var(--sp-12) var(--sp-4) var(--sp-8); }
-  .topbar { padding: 0 var(--sp-4); }
-  .topbar-nav .nav-link { display: none; }
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  pre.code-block { font-size: .72rem; }
+@media(max-width:768px){
+  body{flex-direction:column}
+  .sidebar{width:100%;height:auto;min-width:unset;position:static;padding:1rem 0}
+  .main{padding:1.5rem 1.25rem;max-width:100%}
+  .card-grid,.timeline{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
-<header class="topbar">
-  <a href="#" class="topbar-brand">
-    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-label="TAKAR">
-      <rect width="30" height="30" rx="7" fill="var(--primary)" opacity=".15"/>
-      <path d="M9 22 L15 9 L21 22" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M11.5 16.5 H18.5" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-    <span class="topbar-wordmark">TAKAR</span>
-  </a>
-  <nav class="topbar-nav">
-    <a href="#latar-belakang" class="nav-link">Latar Belakang</a>
-    <a href="#arsitektur" class="nav-link">Arsitektur</a>
-    <a href="#mekanisme" class="nav-link">Mekanisme</a>
-    <a href="#regulasi" class="nav-link">Regulasi</a>
-    <a href="#roadmap" class="nav-link">Roadmap</a>
-    <button class="theme-btn" data-theme-toggle aria-label="Toggle tema">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <polygon points="12,2 22,8 22,16 12,22 2,16 2,8" stroke="currentColor" stroke-width="1.5"/>
+        <polygon points="12,7 17,10 17,14 12,17 7,14 7,10" fill="currentColor" opacity=".4"/>
+        <circle cx="12" cy="12" r="2" fill="currentColor"/>
+      </svg>
+      TAKAR
+    </div>
+    <div class="logo-sub">Prediction Market · Indonesia · v0.1</div>
+  </div>
+  <nav>
+    <div class="nav-section">Riset &amp; Pasar</div>
+    <a class="nav-item active" onclick="show('s01')"><span class="num">01</span>Overview</a>
+    <a class="nav-item" onclick="show('s02')"><span class="num">02</span>Analisis Pasar</a>
+    <a class="nav-item" onclick="show('s03')"><span class="num">03</span>Kompetitor</a>
+    <div class="nav-section">Teknis</div>
+    <a class="nav-item" onclick="show('s04')"><span class="num">04</span>Arsitektur Sistem</a>
+    <a class="nav-item" onclick="show('s05')"><span class="num">05</span>Database Schema</a>
+    <a class="nav-item" onclick="show('s06')"><span class="num">06</span>Mekanisme LMSR</a>
+    <div class="nav-section">Bisnis</div>
+    <a class="nav-item" onclick="show('s07')"><span class="num">07</span>Regulasi &amp; Hukum</a>
+    <a class="nav-item" onclick="show('s08')"><span class="num">08</span>Monetisasi</a>
+    <a class="nav-item" onclick="show('s09')"><span class="num">09</span>Analisis Risiko</a>
+    <a class="nav-item" onclick="show('s10')"><span class="num">10</span>Roadmap</a>
   </nav>
-</header>
+  <div class="sidebar-footer"><div class="version-badge">Research Plan · 2026</div></div>
+</aside>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge"><span class="badge-dot"></span>Research Document · v2.1</div>
-  <h1><em>TAKAR</em> — Bursa Opini<br>Terukur Indonesia</h1>
-  <p class="hero-sub">Dokumen riset awal dan rencana arsitektur untuk membangun platform prediction market pertama Indonesia berbasis probabilitas terukur.</p>
-  <div class="hero-meta">
-    <span>📅 Mei 2026</span>
-    <span style="color:var(--border)">·</span>
-    <span>🔬 Pre-seed Research</span>
-    <span style="color:var(--border)">·</span>
-    <span>🇮🇩 Indonesia-first</span>
+<main class="main">
+
+<!-- 01 -->
+<section class="section active" id="s01">
+  <div class="topbar">
+    <div class="section-tag"><span class="tag-num">01</span><h1 class="section-title">Overview</h1></div>
+    <button class="theme-btn" onclick="toggleTheme()">
+      <svg id="theme-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span id="theme-label">Light</span>
+    </button>
+  </div>
+  <p class="lead">TAKAR adalah platform <strong>prediction market</strong> pertama di Indonesia — memungkinkan pengguna berdagang kontrak berdasarkan outcome kejadian nyata, dari politik hingga olahraga.</p>
+  <div class="card-grid">
+    <div class="stat-card"><div class="stat-num">$8B+</div><div class="stat-label">Volume Polymarket 2024</div><div class="stat-sub">Referensi pasar global</div></div>
+    <div class="stat-card"><div class="stat-num">277M</div><div class="stat-label">Populasi Indonesia</div><div class="stat-sub">Potensi TAM terbesar di ASEAN</div></div>
+    <div class="stat-card"><div class="stat-num">IDR</div><div class="stat-label">Mata uang native</div><div class="stat-sub">Non-crypto, KYC wajib</div></div>
+    <div class="stat-card"><div class="stat-num">LMSR</div><div class="stat-label">Market mechanism</div><div class="stat-sub">Automated Market Maker</div></div>
+  </div>
+  <h2>Visi &amp; Misi</h2>
+  <div class="card"><p style="margin:0"><strong>Visi:</strong> Menjadi infrastruktur agregasi pengetahuan kolektif Indonesia — mengubah opini publik menjadi sinyal probabilitas yang actionable bagi media, lembaga survei, dan pengambil keputusan.</p></div>
+  <div class="card"><p style="margin:0"><strong>Misi:</strong> Membangun pasar prediksi yang legal, liquid, dan mudah diakses oleh seluruh lapisan masyarakat Indonesia dengan barrier entry minimum dan mekanisme yang adil.</p></div>
+  <h2>Apa itu Prediction Market?</h2>
+  <p>Prediction market adalah bursa di mana peserta membeli dan menjual kontrak atas kemungkinan suatu kejadian terjadi atau tidak. Harga kontrak mencerminkan probabilitas kolektif — jika kontrak "YES" diperdagangkan di 0.65, artinya pasar memperkirakan kemungkinan 65%.</p>
+  <div class="info-box"><p>Penelitian dari <strong>Mellers et al. (2015)</strong> membuktikan prediction market secara konsisten lebih akurat dari polling dan model statistik konvensional dalam forecasting jangka pendek.</p></div>
+</section>
+
+<!-- 02 -->
+<section class="section" id="s02">
+  <div class="topbar"><div class="section-tag"><span class="tag-num">02</span><h1 class="section-title">Analisis Pasar</h1></div></div>
+  <p class="lead">Indonesia memiliki ekosistem yang ideal — political engagement tinggi, penetrasi smartphone masif, dan pasar prediksi yang <strong>belum tersentuh</strong> oleh pemain lokal.</p>
+  <div class="card-grid">
+    <div class="stat-card"><div class="stat-num">185M</div><div class="stat-label">Pengguna internet aktif</div><div class="stat-sub">67% dari populasi (2025)</div></div>
+    <div class="stat-card"><div class="stat-num">Rp 450T</div><div class="stat-label">Pasar perjudian informal</div><div class="stat-sub">Estimasi tahunan underground</div></div>
+    <div class="stat-card"><div class="stat-num">71M</div><div class="stat-label">Pengguna saham &amp; reksadana</div><div class="stat-sub">Basis user finansial (KSEI 2024)</div></div>
+    <div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Pemain prediction market lokal</div><div class="stat-sub">Blue ocean opportunity</div></div>
+  </div>
+  <h2>Segmen Target</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Segmen</th><th>Ukuran</th><th>Behavior</th><th>Use Case</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-primary">Investor Ritel</span></td><td>15–25 juta</td><td>Aktif di saham &amp; kripto</td><td>Hedging informasi, alpha signal</td></tr>
+      <tr><td><span class="badge badge-blue">Political Analyst</span></td><td>500 ribu</td><td>Pemerhati politik aktif</td><td>Validasi prediksi Pemilu</td></tr>
+      <tr><td><span class="badge badge-gold">Sports Enthusiast</span></td><td>80 juta</td><td>Penonton bola, badminton</td><td>Prediksi pertandingan</td></tr>
+      <tr><td><span class="badge badge-purple">Media &amp; Jurnalis</span></td><td>100 ribu</td><td>Butuh sinyal pasar</td><td>Data agregasi opini publik</td></tr>
+      <tr><td><span class="badge badge-green">Lembaga Riset</span></td><td>2 ribu</td><td>B2B, volume tinggi</td><td>API data forecasting</td></tr>
+    </tbody>
+  </table></div>
+  <h2>TAM / SAM / SOM</h2>
+  <div class="card"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem">
+    <div><div style="font-size:.6875rem;font-weight:700;letter-spacing:.08em;color:var(--faint);margin-bottom:.5rem">TAM</div><div style="font-size:1.375rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text)">Rp 2.1T</div><div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Total pasar informal prediksi + betting + trading spekulatif</div></div>
+    <div><div style="font-size:.6875rem;font-weight:700;letter-spacing:.08em;color:var(--faint);margin-bottom:.5rem">SAM</div><div style="font-size:1.375rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--gold)">Rp 420B</div><div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Segmen yang bisa dijangkau secara digital &amp; legal</div></div>
+    <div><div style="font-size:.6875rem;font-weight:700;letter-spacing:.08em;color:var(--faint);margin-bottom:.5rem">SOM (Y3)</div><div style="font-size:1.375rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--primary)">Rp 42B</div><div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">Target realistis 10% SAM dalam 3 tahun</div></div>
+  </div></div>
+</section>
+
+<!-- 03 -->
+<section class="section" id="s03">
+  <div class="topbar"><div class="section-tag"><span class="tag-num">03</span><h1 class="section-title">Kompetitor</h1></div></div>
+  <p class="lead">Semua pemain global <strong>tidak melayani pasar Indonesia</strong> — karena pembatasan geografis, barrier bahasa, maupun kebutuhan kripto.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Platform</th><th>Fokus</th><th>Mekanisme</th><th>Mata Uang</th><th>Indonesia</th><th>Kelemahan</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Polymarket</strong></td><td>Berita global</td><td>CLOB + AMM</td><td>USDC (Polygon)</td><td><span class="badge badge-red">Blocked</span></td><td>Butuh kripto, VPN, tidak legal</td></tr>
+      <tr><td><strong>Metaculus</strong></td><td>Forecasting sains</td><td>Aggregasi opini</td><td>Non-monetary</td><td><span class="badge badge-gold">Terbatas</span></td><td>Tidak ada insentif finansial nyata</td></tr>
+      <tr><td><strong>Manifold</strong></td><td>Any topic</td><td>LMSR + points</td><td>Mana (virtual)</td><td><span class="badge badge-gold">Terbatas</span></td><td>Virtual currency, tidak regulated</td></tr>
+      <tr><td><strong>Betway/1xBet</strong></td><td>Olahraga</td><td>Odds fixed</td><td>Multi-currency</td><td><span class="badge badge-red">Ilegal</span></td><td>Odds diset house, bukan pasar</td></tr>
+      <tr><td><strong style="color:var(--primary)">TAKAR ✦</strong></td><td>Indonesia-first</td><td>LMSR AMM</td><td>IDR (Rupiah)</td><td><span class="badge badge-green">Native</span></td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <h2>Keunggulan Kompetitif</h2>
+  <div class="card-grid">
+    <div class="card" style="margin:0"><span class="badge badge-primary">Lokal</span><h3 style="margin-top:.5rem">IDR Native</h3><p style="margin:0">Tidak perlu kripto. Deposit via transfer bank, GoPay, OVO, QRIS.</p></div>
+    <div class="card" style="margin:0"><span class="badge badge-gold">Konten</span><h3 style="margin-top:.5rem">Indonesia-Centric</h3><p style="margin:0">Market tentang Pemilu, Pilkada, IHSG, Liga 1 — konten yang relevan.</p></div>
+    <div class="card" style="margin:0"><span class="badge badge-blue">Legal</span><h3 style="margin-top:.5rem">Compliance-First</h3><p style="margin:0">OJK sandbox, KYC mandatory, framing skill-based dari hari pertama.</p></div>
+    <div class="card" style="margin:0"><span class="badge badge-purple">Teknis</span><h3 style="margin-top:.5rem">Fair AMM</h3><p style="margin:0">LMSR memastikan likuiditas selalu tersedia tanpa counterparty langsung.</p></div>
   </div>
 </section>
 
-<div class="doc-layout">
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <span class="sidebar-label">Riset</span>
-      <a href="#latar-belakang" class="sidebar-link active"><span class="num">01</span>Latar Belakang</a>
-      <a href="#pasar"          class="sidebar-link"><span class="num">02</span>Analisis Pasar</a>
-      <a href="#kompetitor"     class="sidebar-link"><span class="num">03</span>Kompetitor</a>
-    </div>
-    <div class="sidebar-section">
-      <span class="sidebar-label">Teknis</span>
-      <a href="#arsitektur"     class="sidebar-link"><span class="num">04</span>Arsitektur Sistem</a>
-      <a href="#database"       class="sidebar-link"><span class="num">05</span>Database Schema</a>
-      <a href="#mekanisme"      class="sidebar-link"><span class="num">06</span>Mekanisme Pasar</a>
-      <a href="#techstack"      class="sidebar-link"><span class="num">07</span>Tech Stack</a>
-    </div>
-    <div class="sidebar-section">
-      <span class="sidebar-label">Bisnis</span>
-      <a href="#regulasi"       class="sidebar-link"><span class="num">08</span>Regulasi &amp; Hukum</a>
-      <a href="#bisnis"         class="sidebar-link"><span class="num">09</span>Model Bisnis</a>
-      <a href="#risiko"         class="sidebar-link"><span class="num">10</span>Analisis Risiko</a>
-      <a href="#roadmap"        class="sidebar-link"><span class="num">11</span>Roadmap</a>
-    </div>
-  </aside>
+<!-- 04 -->
+<section class="section" id="s04">
+  <div class="topbar"><div class="section-tag"><span class="tag-num">04</span><h1 class="section-title">Arsitektur Sistem</h1></div></div>
+  <p class="lead">Stack berbasis <strong>Azure</strong> — dipilih karena compliance data residency Indonesia, SLA enterprise, dan integrasi native dengan tooling yang sudah digunakan.</p>
+  <div class="arch">
+    <div class="arch-layer layer-client"><div class="arch-label">Layer 1 — Client</div><div class="arch-items"><span class="arch-item">Next.js 15 (App Router)</span><span class="arch-item">React 19</span><span class="arch-item">TailwindCSS v4</span><span class="arch-item">TanStack Query</span><span class="arch-item">Recharts</span><span class="arch-item">Zustand</span></div></div>
+    <div class="arch-layer layer-api"><div class="arch-label">Layer 2 — API Gateway</div><div class="arch-items"><span class="arch-item">tRPC v11</span><span class="arch-item">Zod validation</span><span class="arch-item">JWT + refresh token</span><span class="arch-item">Rate limiting</span><span class="arch-item">Azure API Management</span></div></div>
+    <div class="arch-layer layer-core"><div class="arch-label">Layer 3 — Core Services</div><div class="arch-items"><span class="arch-item">Market Engine (LMSR)</span><span class="arch-item">Trade Execution</span><span class="arch-item">Resolution Service</span><span class="arch-item">Wallet / Ledger</span><span class="arch-item">Notification Service</span><span class="arch-item">KYC / Identity</span></div></div>
+    <div class="arch-layer layer-data"><div class="arch-label">Layer 4 — Data</div><div class="arch-items"><span class="arch-item">PostgreSQL (primary)</span><span class="arch-item">CosmosDB (event log)</span><span class="arch-item">Redis (cache + realtime)</span><span class="arch-item">Azure Blob (media)</span><span class="arch-item">Azure Service Bus</span></div></div>
+    <div class="arch-layer layer-infra"><div class="arch-label">Layer 5 — Infrastructure</div><div class="arch-items"><span class="arch-item">Azure Container Apps</span><span class="arch-item">Azure Static Web Apps</span><span class="arch-item">Azure CDN</span><span class="arch-item">GitHub Actions CI/CD</span><span class="arch-item">Sentry monitoring</span><span class="arch-item">Datadog APM</span></div></div>
+  </div>
+  <h2>Trade Execution Flow</h2>
+  <div class="flow">
+    <div class="flow-item">User Submit</div><div class="flow-arrow">→</div>
+    <div class="flow-item">Validate (Zod)</div><div class="flow-arrow">→</div>
+    <div class="flow-item">Check Balance</div><div class="flow-arrow">→</div>
+    <div class="flow-item">LMSR Compute</div><div class="flow-arrow">→</div>
+    <div class="flow-item">DB Transaction</div><div class="flow-arrow">→</div>
+    <div class="flow-item">Event → CosmosDB</div><div class="flow-arrow">→</div>
+    <div class="flow-item">Realtime Push</div>
+  </div>
+  <h2>Security Model</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Layer</th><th>Kontrol</th><th>Implementasi</th></tr></thead>
+    <tbody>
+      <tr><td>Auth</td><td>MFA + device fingerprint</td><td>Azure AD B2C + TOTP</td></tr>
+      <tr><td>Transport</td><td>TLS 1.3 minimum</td><td>Azure Front Door</td></tr>
+      <tr><td>Data at rest</td><td>AES-256 encryption</td><td>Azure managed keys</td></tr>
+      <tr><td>API</td><td>Rate limit + IP whitelist</td><td>Azure API Management</td></tr>
+      <tr><td>Financial</td><td>Atomic transaction</td><td>PostgreSQL ACID + row lock</td></tr>
+      <tr><td>Audit</td><td>Immutable event log</td><td>CosmosDB append-only</td></tr>
+    </tbody>
+  </table></div>
+</section>
 
-  <!-- MAIN CONTENT -->
-  <main class="content">
-
-    <!-- 01 LATAR BELAKANG -->
-    <section class="section" id="latar-belakang">
-      <div class="section-header">
-        <span class="section-tag">01</span>
-        <h2>Latar Belakang</h2>
-      </div>
-      <p class="section-intro">Polymarket mencatatkan volume trading $8 miliar di 2024. Belum ada platform sejenis untuk pasar Indonesia — padahal kebutuhan akan informasi terukur dan prediksi probabilistik sangat tinggi.</p>
-
-      <div class="stat-grid">
-        <div class="stat-card"><span class="stat-val">$8B</span><span class="stat-label">Volume Polymarket 2024</span></div>
-        <div class="stat-card"><span class="stat-val">270M</span><span class="stat-label">Populasi Indonesia</span></div>
-        <div class="stat-card"><span class="stat-val">0</span><span class="stat-label">Platform sejenis di ID</span></div>
-        <div class="stat-card"><span class="stat-val">204M</span><span class="stat-label">Pengguna Internet ID</span></div>
-      </div>
-
-      <div class="card-grid">
-        <div class="card">
-          <h3>🎯 Visi</h3>
-          <p>Membangun platform <em>prediction market</em> pertama Indonesia — TAKAR — di mana siapapun bisa memperdagangkan opini mereka tentang hasil kejadian nyata secara terukur, transparan, dan bertanggung jawab.</p>
-        </div>
-        <div class="card">
-          <h3>❓ Masalah yang Dipecahkan</h3>
-          <p>Opini publik di Indonesia tersebar tanpa ukuran probabilitas yang jelas. Tidak ada mekanisme price discovery untuk prediksi kejadian — politik, ekonomi, olahraga, teknologi. TAKAR mengisi gap ini.</p>
-        </div>
-        <div class="card">
-          <h3>💡 Inspirasi &amp; Diferensiasi</h3>
-          <p>Terinspirasi Polymarket, namun dibangun khusus untuk konteks Indonesia: Rupiah, konten lokal (Pilkada, IHSG, Liga 1, startup unicorn), antarmuka Bahasa Indonesia, dan jalur regulasi sesuai hukum RI.</p>
-        </div>
-      </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- 02 ANALISIS PASAR -->
-    <section class="section" id="pasar">
-      <div class="section-header">
-        <span class="section-tag">02</span>
-        <h2>Analisis Pasar</h2>
-      </div>
-      <p class="section-intro">Indonesia memiliki fundamental kuat: populasi besar, penetrasi internet tinggi, dan budaya diskusi opini yang sangat aktif di media sosial.</p>
-
-      <div class="card-grid">
-        <div class="card">
-          <h3>🎯 Target Segmen Awal</h3>
-          <p>Trader &amp; investor ritel, mahasiswa ekonomi/politik, penggemar olahraga kompetitif, konten kreator analisis. Estimasi TAM awal: 2–5 juta pengguna potensial.</p>
-        </div>
-        <div class="card">
-          <h3>📊 Kategori Pasar Utama</h3>
-          <p>Politik &amp; Pemilu (Pilkada, DPR), Ekonomi (kurs IDR, IHSG, BI rate), Olahraga (Liga 1, Timnas, MotoGP), Teknologi &amp; Startup (IPO, unicorn baru), Sosial &amp; Budaya.</p>
-        </div>
-        <div class="card">
-          <h3>🚀 Timing yang Tepat</h3>
-          <p>2025–2026 adalah golden window: awareness Polymarket naik global, Gen-Z Indonesia semakin melek fintech, dan OJK mulai membuka regulatory sandbox untuk produk inovatif.</p>
-        </div>
-        <div class="card">
-          <h3>💰 Potensi Revenue</h3>
-          <p>50.000 active users, volume Rp 500M/bulan, fee 2% → estimasi ~Rp 10M/bulan. Scale ke Rp 1T/bulan volume → Rp 20M revenue/bulan dari fee saja.</p>
-        </div>
-      </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- 03 KOMPETITOR -->
-    <section class="section" id="kompetitor">
-      <div class="section-header">
-        <span class="section-tag">03</span>
-        <h2>Analisis Kompetitor</h2>
-      </div>
-      <p class="section-intro">Tidak ada kompetitor langsung di Indonesia. Kompetitor global memiliki keterbatasan signifikan untuk pasar lokal.</p>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Platform</th><th>Asal</th><th>Mekanisme</th>
-              <th>Mata Uang</th><th>Konten ID</th><th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Polymarket</strong></td>
-              <td>🇺🇸 USA</td><td>CLOB (crypto)</td><td>USDC</td>
-              <td><span class="badge b-error">Tidak Ada</span></td>
-              <td><span class="badge b-success">Aktif</span></td>
-            </tr>
-            <tr>
-              <td><strong>Metaculus</strong></td>
-              <td>🇺🇸 USA</td><td>Agregasi prediksi</td><td>Poin virtual</td>
-              <td><span class="badge b-error">Tidak Ada</span></td>
-              <td><span class="badge b-success">Aktif</span></td>
-            </tr>
-            <tr>
-              <td><strong>Manifold Markets</strong></td>
-              <td>🇺🇸 USA</td><td>AMM (Mana)</td><td>Virtual Mana</td>
-              <td><span class="badge b-error">Minimal</span></td>
-              <td><span class="badge b-success">Aktif</span></td>
-            </tr>
-            <tr>
-              <td><strong>Betway / 1xBet</strong></td>
-              <td>🌍 Global</td><td>Sportsbook</td><td>IDR (via VPN)</td>
-              <td><span class="badge b-gold">Sebagian</span></td>
-              <td><span class="badge b-error">Ilegal di ID</span></td>
-            </tr>
-            <tr>
-              <td><strong>TAKAR ✦</strong></td>
-              <td>🇮🇩 Indonesia</td><td>AMM / LMSR</td><td>IDR / Poin</td>
-              <td><span class="badge b-primary">100% Lokal</span></td>
-              <td><span class="badge b-orange">Pre-build</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- 04 ARSITEKTUR -->
-    <section class="section" id="arsitektur">
-      <div class="section-header">
-        <span class="section-tag">04</span>
-        <h2>Arsitektur Sistem</h2>
-      </div>
-      <p class="section-intro">Cloud-native, microservices-ready, berbasis Azure sesuai stack eksisting VOXIA / INVEZTHINK. Estimasi biaya MVP: ~$200–400/bulan.</p>
-
-      <div class="arch-diagram">
-        <div class="arch-layer">
-          <div class="arch-layer-label">🖥️ Client Layer</div>
-          <div class="arch-boxes">
-            <div class="arch-box c-primary">Next.js 15 Web App</div>
-            <div class="arch-box c-primary">React Native Mobile (Phase 2)</div>
-            <div class="arch-box c-blue">CDN: Azure Static Web Apps</div>
-          </div>
-        </div>
-        <div class="arch-arrow">↕</div>
-        <div class="arch-layer">
-          <div class="arch-layer-label">🔀 API Gateway Layer</div>
-          <div class="arch-boxes">
-            <div class="arch-box c-gold">Azure API Management</div>
-            <div class="arch-box c-gold">tRPC / REST Endpoints</div>
-            <div class="arch-box c-gold">WebSocket (live prices)</div>
-            <div class="arch-box c-gold">Rate Limiting + Auth</div>
-          </div>
-        </div>
-        <div class="arch-arrow">↕</div>
-        <div class="arch-layer">
-          <div class="arch-layer-label">⚙️ Core Services Layer</div>
-          <div class="arch-boxes">
-            <div class="arch-box c-primary">Market Service</div>
-            <div class="arch-box c-primary">Trade Engine (LMSR)</div>
-            <div class="arch-box c-primary">User &amp; Auth Service</div>
-            <div class="arch-box c-primary">Wallet &amp; Ledger</div>
-            <div class="arch-box c-blue">Resolution Engine</div>
-            <div class="arch-box c-blue">Notification Service</div>
-            <div class="arch-box c-success">Analytics Engine</div>
-          </div>
-        </div>
-        <div class="arch-arrow">↕</div>
-        <div class="arch-layer">
-          <div class="arch-layer-label">🗃️ Data Layer</div>
-          <div class="arch-boxes">
-            <div class="arch-box c-gold">PostgreSQL (Azure DB)</div>
-            <div class="arch-box c-gold">Redis (Cache + Sessions)</div>
-            <div class="arch-box c-gold">Azure CosmosDB (Event Log)</div>
-            <div class="arch-box c-gold">Azure Blob Storage</div>
-          </div>
-        </div>
-        <div class="arch-arrow">↕</div>
-        <div class="arch-layer">
-          <div class="arch-layer-label">🏗️ Infrastructure Layer</div>
-          <div class="arch-boxes">
-            <div class="arch-box c-orange">Azure Container Apps</div>
-            <div class="arch-box c-orange">Azure Service Bus (Queue)</div>
-            <div class="arch-box c-orange">Azure Monitor + Alerts</div>
-            <div class="arch-box c-orange">GitHub Actions CI/CD</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="highlight-box">
-        <strong>Kenapa Azure?</strong> Konsisten dengan infrastruktur INVEZTHINK yang sudah berjalan. Tim sudah familiar dengan Azure Container Apps, CosmosDB, dan Static Web Apps. Biaya dikontrol dengan serverless auto-scaling.
-      </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- 05 DATABASE -->
-    <section class="section" id="database">
-      <div class="section-header">
-        <span class="section-tag">05</span>
-        <h2>Database Schema</h2>
-      </div>
-      <p class="section-intro">PostgreSQL sebagai primary database dengan event sourcing via CosmosDB untuk audit trail lengkap setiap transaksi.</p>
-
-      <div class="code-wrap">
-        <div class="code-wrap-header">
-          <span class="code-lang">SQL — PostgreSQL</span>
-          <div class="code-dots"><span></span><span></span><span></span></div>
-        </div>
-        <pre class="code-block"><span class="c">-- ─────────────────────────────────────────
--- Core Tables · TAKAR Platform
--- ─────────────────────────────────────────</span>
-
-<span class="kw">CREATE TABLE</span> <span class="tp">users</span> (
-  id          UUID         <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
-  username    VARCHAR(50)  <span class="kw">UNIQUE NOT NULL</span>,
-  email       VARCHAR(255) <span class="kw">UNIQUE NOT NULL</span>,
-  balance_idr BIGINT       <span class="kw">DEFAULT</span> <span class="st">0</span>,        <span class="c">-- dalam sen (IDR × 100)</span>
-  kyc_level   SMALLINT     <span class="kw">DEFAULT</span> <span class="st">0</span>,        <span class="c">-- 0=anon, 1=email, 2=KTP</span>
-  created_at  TIMESTAMPTZ  <span class="kw">DEFAULT</span> <span class="fn">now</span>()
+<!-- 05 -->
+<section class="section" id="s05">
+  <div class="topbar"><div class="section-tag"><span class="tag-num">05</span><h1 class="section-title">Database Schema</h1></div></div>
+  <p class="lead">PostgreSQL sebagai primary database dengan event sourcing via CosmosDB. Semua nilai finansial disimpan dalam <strong>sen (BIGINT)</strong> untuk menghindari floating-point error.</p>
+  <div class="info-box"><p><strong>Konvensi:</strong> Nilai uang dalam <span class="mono">BIGINT</span> satuan sen (IDR × 100). Contoh: Rp 10.000 = <span class="mono">1.000.000</span>.</p></div>
+  <h2>Core Tables</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">SQL</span><span class="code-title">users · markets · positions · trades</span></div>
+    <div class="code-body"><pre><span class="cm">-- ═══════════════════════════════
+-- TABLE: users
+-- ═══════════════════════════════</span>
+<span class="kw">CREATE TABLE</span> users (
+  id           <span class="dt">UUID</span>         <span class="kw2">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  username     <span class="dt">VARCHAR</span>(50)  <span class="kw2">UNIQUE NOT NULL</span>,
+  email        <span class="dt">VARCHAR</span>(255) <span class="kw2">UNIQUE NOT NULL</span>,
+  balance_idr  <span class="dt">BIGINT</span>       <span class="kw2">DEFAULT</span> <span class="num">0</span>,       <span class="cm">-- dalam sen (IDR × 100)</span>
+  kyc_level    <span class="dt">SMALLINT</span>     <span class="kw2">DEFAULT</span> <span class="num">0</span>,       <span class="cm">-- 0=anon, 1=email, 2=KTP</span>
+  created_at   <span class="dt">TIMESTAMPTZ</span>  <span class="kw2">DEFAULT</span> now()
 );
 
-<span class="kw">CREATE TABLE</span> <span class="tp">markets</span> (
-  id            UUID        <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
-  title         TEXT        <span class="kw">NOT NULL</span>,
-  description   TEXT,
-  category      VARCHAR(50),                    <span class="c">-- politik, ekonomi, olahraga</span>
-  resolution_at TIMESTAMPTZ <span class="kw">NOT NULL</span>,
-  resolved_at   TIMESTAMPTZ,
-  outcome       BOOLEAN,                        <span class="c">-- null = belum resolved</span>
-  liquidity_b   BIGINT      <span class="kw">DEFAULT</span> <span class="st">1000000</span>,  <span class="c">-- LMSR parameter b (sen)</span>
-  status        VARCHAR(20) <span class="kw">DEFAULT</span> <span class="st">'active'</span>,
-  created_by    UUID        <span class="kw">REFERENCES</span> <span class="tp">users</span>(id),
-  created_at    TIMESTAMPTZ <span class="kw">DEFAULT</span> <span class="fn">now</span>()
+<span class="cm">-- ═══════════════════════════════
+-- TABLE: markets
+-- ═══════════════════════════════</span>
+<span class="kw">CREATE TABLE</span> markets (
+  id            <span class="dt">UUID</span>         <span class="kw2">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  title         <span class="dt">TEXT</span>         <span class="kw2">NOT NULL</span>,
+  description   <span class="dt">TEXT</span>,
+  category      <span class="dt">VARCHAR</span>(50),             <span class="cm">-- politik, ekonomi, olahraga</span>
+  resolution_at <span class="dt">TIMESTAMPTZ</span>  <span class="kw2">NOT NULL</span>,
+  resolved_at   <span class="dt">TIMESTAMPTZ</span>,
+  outcome       <span class="dt">BOOLEAN</span>,                 <span class="cm">-- null = belum resolved</span>
+  liquidity_b   <span class="dt">BIGINT</span>       <span class="kw2">DEFAULT</span> <span class="num">1000000</span>, <span class="cm">-- LMSR param b (sen)</span>
+  status        <span class="dt">VARCHAR</span>(20)  <span class="kw2">DEFAULT</span> <span class="str">'active'</span>,
+  created_by    <span class="dt">UUID</span>         <span class="kw2">REFERENCES</span> users(id),
+  created_at    <span class="dt">TIMESTAMPTZ</span>  <span class="kw2">DEFAULT</span> now()
 );
 
-<span class="kw">CREATE TABLE</span> <span class="tp">positions</span> (
-  id         UUID    <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
-  user_id    UUID    <span class="kw">REFERENCES</span> <span class="tp">users</span>(id),
-  market_id  UUID    <span class="kw">REFERENCES</span> <span class="tp">markets</span>(id),
-  outcome    BOOLEAN <span class="kw">NOT NULL</span>,              <span class="c">-- YES or NO</span>
-  shares     BIGINT  <span class="kw">NOT NULL</span>,              <span class="c">-- jumlah shares</span>
-  avg_cost   BIGINT  <span class="kw">NOT NULL</span>,              <span class="c">-- harga rata-rata beli (sen/share)</span>
-  updated_at TIMESTAMPTZ <span class="kw">DEFAULT</span> <span class="fn">now</span>()
+<span class="cm">-- ═══════════════════════════════
+-- TABLE: positions
+-- ═══════════════════════════════</span>
+<span class="kw">CREATE TABLE</span> positions (
+  id         <span class="dt">UUID</span>        <span class="kw2">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  user_id    <span class="dt">UUID</span>        <span class="kw2">REFERENCES</span> users(id),
+  market_id  <span class="dt">UUID</span>        <span class="kw2">REFERENCES</span> markets(id),
+  outcome    <span class="dt">BOOLEAN</span>     <span class="kw2">NOT NULL</span>,  <span class="cm">-- YES=true / NO=false</span>
+  shares     <span class="dt">BIGINT</span>      <span class="kw2">NOT NULL</span>,
+  avg_cost   <span class="dt">BIGINT</span>      <span class="kw2">NOT NULL</span>,  <span class="cm">-- harga rata-rata beli (sen/share)</span>
+  updated_at <span class="dt">TIMESTAMPTZ</span> <span class="kw2">DEFAULT</span> now(),
+  <span class="kw2">UNIQUE</span>(user_id, market_id, outcome)
 );
 
-<span class="kw">CREATE TABLE</span> <span class="tp">trades</span> (
-  id         UUID       <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">gen_random_uuid</span>(),
-  user_id    UUID       <span class="kw">REFERENCES</span> <span class="tp">users</span>(id),
-  market_id  UUID       <span class="kw">REFERENCES</span> <span class="tp">markets</span>(id),
-  side       VARCHAR(4) <span class="kw">NOT NULL</span>,           <span class="c">-- 'BUY' or 'SELL'</span>
-  outcome    BOOLEAN    <span class="kw">NOT NULL</span>,
-  shares     BIGINT     <span class="kw">NOT NULL</span>,
-  price      BIGINT     <span class="kw">NOT NULL</span>,           <span class="c">-- total cost in sen</span>
-  fee        BIGINT     <span class="kw">NOT NULL</span>,           <span class="c">-- platform fee in sen</span>
-  created_at TIMESTAMPTZ <span class="kw">DEFAULT</span> <span class="fn">now</span>()
-);</pre>
-      </div>
-    </section>
+<span class="cm">-- ═══════════════════════════════
+-- TABLE: trades
+-- ═══════════════════════════════</span>
+<span class="kw">CREATE TABLE</span> trades (
+  id         <span class="dt">UUID</span>        <span class="kw2">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  user_id    <span class="dt">UUID</span>        <span class="kw2">REFERENCES</span> users(id),
+  market_id  <span class="dt">UUID</span>        <span class="kw2">REFERENCES</span> markets(id),
+  side       <span class="dt">VARCHAR</span>(4)  <span class="kw2">NOT NULL</span>,  <span class="cm">-- 'BUY' or 'SELL'</span>
+  outcome    <span class="dt">BOOLEAN</span>     <span class="kw2">NOT NULL</span>,
+  shares     <span class="dt">BIGINT</span>      <span class="kw2">NOT NULL</span>,
+  price      <span class="dt">BIGINT</span>      <span class="kw2">NOT NULL</span>,  <span class="cm">-- total cost in sen</span>
+  fee        <span class="dt">BIGINT</span>      <span class="kw2">NOT NULL</span>,  <span class="cm">-- platform fee in sen</span>
+  created_at <span class="dt">TIMESTAMPTZ</span> <span class="kw2">DEFAULT</span> now()
+);</pre></div>
+  </div>
+  <h2>Indexes</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">SQL</span><span class="code-title">Performance indexes</span></div>
+    <div class="code-body"><pre><span class="kw">CREATE INDEX</span> idx_positions_user_market <span class="kw2">ON</span> positions(user_id, market_id);
+<span class="kw">CREATE INDEX</span> idx_trades_market_time    <span class="kw2">ON</span> trades(market_id, created_at <span class="kw2">DESC</span>);
+<span class="kw">CREATE INDEX</span> idx_markets_status        <span class="kw2">ON</span> markets(status, category)
+  <span class="kw2">WHERE</span> status = <span class="str">'active'</span>;
+<span class="kw">CREATE INDEX</span> idx_markets_unresolved    <span class="kw2">ON</span> markets(resolution_at)
+  <span class="kw2">WHERE</span> resolved_at <span class="kw2">IS NULL</span>;</pre></div>
+  </div>
+</section>
 
-    <hr class="divider">
+<!-- 06 -->
+<section class="section" id="s06">
+  <div class="topbar"><div class="section-tag"><span class="tag-num">06</span><h1 class="section-title">Mekanisme LMSR</h1></div></div>
+  <p class="lead">TAKAR menggunakan <strong>Logarithmic Market Scoring Rule (LMSR)</strong> — mekanisme AMM yang terbukti efisien untuk prediction market tanpa memerlukan counterparty langsung.</p>
 
-    <!-- 06 MEKANISME -->
-    <section class="section" id="mekanisme">
-      <div class="section-header">
-        <span class="section-tag">06</span>
-        <h2>Mekanisme Pasar (LMSR)</h2>
-      </div>
-      <p class="section-intro">TAKAR menggunakan Logarithmic Market Scoring Rule (LMSR) — mekanisme AMM yang terbukti efisien untuk prediction market tanpa memerlukan counterparty langsung.</p>
+  <h2>Cost Function</h2>
+  <div class="math-block">
+    <div class="math-label">Cost Function — LMSR</div>
+    <div class="math-formula">
+      C(q<sub>yes</sub>, q<sub>no</sub>) &nbsp;=&nbsp;
+      <span class="fn">b</span> &nbsp;×&nbsp;
+      <span class="fn">ln</span>(&thinsp;<span class="fn">e</span><sup>(q<sub>yes</sub> / b)</sup>
+      &nbsp;<span class="op">+</span>&nbsp;
+      <span class="fn">e</span><sup>(q<sub>no</sub> / b)</sup>&thinsp;)
+    </div>
+    <div class="math-desc"><strong>b</strong> = parameter likuiditas (semakin besar b → harga lebih stabil, modal awal lebih besar). <strong>q<sub>yes</sub></strong>, <strong>q<sub>no</sub></strong> = jumlah shares outstanding masing-masing outcome.</div>
+  </div>
 
-      <div class="formula-block">
-        <div class="formula-label">Cost Function (LMSR)</div>
-        <div class="formula-expr">C(q_yes, q_no) = b × ln( e^(q_yes/b) + e^(q_no/b) )</div>
-      </div>
-      <div class="formula-block">
-        <div class="formula-label">Harga Probabilitas YES</div>
-        <div class="formula-expr">P(YES) = e^(q_yes/b) / ( e^(q_yes/b) + e^(q_no/b) )</div>
-      </div>
-      <div class="formula-block">
-        <div class="formula-label">Biaya Pembelian Δq Shares</div>
-        <div class="formula-expr">cost = C(q_yes + Δq, q_no) − C(q_yes, q_no)</div>
-      </div>
+  <h2>Harga Probabilitas</h2>
+  <div class="math-block">
+    <div class="math-label">Implied Probability — YES</div>
+    <div class="math-formula">
+      P(YES) &nbsp;=&nbsp;
+      <span class="fn">e</span><sup>(q<sub>yes</sub> / b)</sup>
+      &nbsp;<span class="op">/</span>&nbsp;
+      (&thinsp;<span class="fn">e</span><sup>(q<sub>yes</sub> / b)</sup>
+      &nbsp;<span class="op">+</span>&nbsp;
+      <span class="fn">e</span><sup>(q<sub>no</sub> / b)</sup>&thinsp;)
+    </div>
+    <div class="math-desc">P(YES) selalu di rentang (0, 1) dan P(YES) + P(NO) = 1 secara otomatis — ini adalah softmax dari log-quantities, memberikan probabilitas yang well-calibrated.</div>
+  </div>
 
-      <div class="card-grid" style="margin-top:var(--sp-6)">
-        <div class="card">
-          <h3>✅ Keunggulan LMSR</h3>
-          <p>Selalu ada likuiditas (tidak perlu matching buyer-seller), harga mencerminkan probabilitas pasar secara natural, maksimum loss platform terbatas pada nilai parameter <em>b</em>.</p>
-        </div>
-        <div class="card">
-          <h3>⚙️ Parameter b</h3>
-          <p>Semakin besar <em>b</em>, semakin likuid pasar tapi semakin besar modal yang dikunci. MVP: b = Rp 1.000.000 per pasar. Scaling berdasarkan interest &amp; volume historis tiap kategori.</p>
-        </div>
-        <div class="card">
-          <h3>🔮 Resolusi</h3>
-          <p>Outcome ditentukan oleh panel oracle internal + data sumber terpercaya (BPS, KPU, PSSI, Reuters). Pemenang mendapat 1 share = Rp 1.000. Platform mengambil fee 2% dari setiap trade.</p>
-        </div>
-      </div>
-    </section>
+  <h2>Biaya Pembelian</h2>
+  <div class="math-block">
+    <div class="math-label">Trade Cost — Beli Δq Shares YES</div>
+    <div class="math-formula">
+      cost &nbsp;=&nbsp;
+      C(q<sub>yes</sub> <span class="op">+</span> Δq,&nbsp; q<sub>no</sub>)
+      &nbsp;<span class="op">−</span>&nbsp;
+      C(q<sub>yes</sub>,&nbsp; q<sub>no</sub>)
+    </div>
+    <div class="math-desc">Biaya adalah selisih cost function sebelum dan sesudah trade. Semakin besar Δq dibandingkan b, semakin tinggi price impact — mencegah manipulasi dengan single large order.</div>
+  </div>
 
-    <hr class="divider">
+  <h2>Implementasi TypeScript</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">TypeScript</span><span class="code-title">lmsr.ts — Market Engine</span></div>
+    <div class="code-body"><pre><span class="kw">export class</span> <span class="dt">LMSREngine</span> {
+  <span class="kw">private</span> b: <span class="dt">number</span>;
 
-    <!-- 07 TECH STACK -->
-    <section class="section" id="techstack">
-      <div class="section-header">
-        <span class="section-tag">07</span>
-        <h2>Tech Stack</h2>
-      </div>
-      <p class="section-intro">Stack yang familiar dengan tim VOXIA / INVEZTHINK, dipilih untuk kecepatan development dan kemampuan scaling.</p>
-
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Layer</th><th>Teknologi</th><th>Alasan</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Frontend</strong></td><td>Next.js 15 + TypeScript + Tailwind</td><td>Familiar, SSR untuk SEO, App Router</td></tr>
-            <tr><td><strong>API Layer</strong></td><td>tRPC + Zod</td><td>Type-safe E2E, tidak perlu REST docs manual</td></tr>
-            <tr><td><strong>Auth</strong></td><td>NextAuth.js v5 + JWT</td><td>Mudah integrasi Google / email / OTP</td></tr>
-            <tr><td><strong>ORM</strong></td><td>Prisma + PostgreSQL</td><td>Schema migration aman, type-safe queries</td></tr>
-            <tr><td><strong>Cache / Realtime</strong></td><td>Redis (Upstash) + SSE</td><td>Live price updates tanpa WebSocket overhead</td></tr>
-            <tr><td><strong>Queue</strong></td><td>Azure Service Bus</td><td>Async trade processing, konsisten dengan infra</td></tr>
-            <tr><td><strong>Hosting</strong></td><td>Azure Container Apps</td><td>Auto-scaling, sudah digunakan di INVEZTHINK</td></tr>
-            <tr><td><strong>Payment</strong></td><td>Midtrans / Xendit</td><td>Integrasi bank lokal, VA, GoPay, OVO</td></tr>
-            <tr><td><strong>Email</strong></td><td>Resend</td><td>Sudah dipakai di VOXIA stack</td></tr>
-            <tr><td><strong>Monitoring</strong></td><td>Azure Monitor + Sentry</td><td>Infra monitoring + error tracking</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- 08 REGULASI -->
-    <section class="section" id="regulasi">
-      <div class="section-header">
-        <span class="section-tag">08</span>
-        <h2>Regulasi &amp; Kerangka Hukum</h2>
-      </div>
-      <p class="section-intro">Tantangan terbesar. Strategi utama: framing sebagai <em>"skill-based forecasting"</em> bukan perjudian, dimulai dengan virtual currency.</p>
-
-      <div class="card card-solo">
-        <h3>⚠️ Risiko Regulasi Utama</h3>
-        <p><strong>UU No.7 Tahun 1974</strong> tentang Penertiban Perjudian dan <strong>KUHP Pasal 303</strong> melarang aktivitas yang dapat dikategorikan judi. Platform perlu struktur legal yang secara jelas memisahkan diri dari definisi tersebut.</p>
-      </div>
-
-      <div class="card-grid">
-        <div class="card">
-          <h3>🛡️ Strategi Mitigasi Legal</h3>
-          <p>1) Mulai dengan virtual currency (tidak ada uang nyata di fase awal). 2) Framing sebagai platform edukasi &amp; riset opini. 3) Daftarkan ke OJK Regulatory Sandbox. 4) Konsultasi kuasa hukum spesialis fintech.</p>
-        </div>
-        <div class="card">
-          <h3>📋 Jalur Regulasi Bertahap</h3>
-          <p><strong>Phase 1:</strong> Virtual points only (tidak perlu izin khusus). <strong>Phase 2:</strong> OJK Sandbox sebagai inovasi keuangan digital. <strong>Phase 3:</strong> Guidance resmi dari OJK dan Kemenkominfo.</p>
-        </div>
-        <div class="card">
-          <h3>🏦 Aspek Keuangan</h3>
-          <p>Jika melibatkan uang nyata: perlu izin sebagai Penyelenggara Sistem Pembayaran atau kerjasama dengan lisensi eksisting. Model escrow via bank partner dapat menjadi solusi jangka menengah.</p>
-        </div>
-      </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- 09 BISNIS -->
-    <section class="section" id="bisnis">
-      <div class="section-header">
-        <span class="section-tag">09</span>
-        <h2>Model Bisnis</h2>
-      </div>
-      <p class="section-intro">Revenue diversified — tidak hanya bergantung pada trading fee agar platform tetap viable di fase awal dengan volume rendah.</p>
-
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>#</th><th>Stream</th><th>Mekanisme</th><th>Estimasi (Fase 1)</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><span class="badge b-primary">01</span></td>
-              <td><strong>Trading Fee</strong></td>
-              <td>2% dari setiap transaksi</td>
-              <td>Rp 5–20 juta/bulan</td>
-            </tr>
-            <tr>
-              <td><span class="badge b-blue">02</span></td>
-              <td><strong>Market Creation Fee</strong></td>
-              <td>Biaya pembuatan market oleh user</td>
-              <td>Rp 50k–500k/market</td>
-            </tr>
-            <tr>
-              <td><span class="badge b-gold">03</span></td>
-              <td><strong>B2B Data API</strong></td>
-              <td>Data prediksi untuk media, riset, konsultan</td>
-              <td>Rp 5–50 juta/bulan</td>
-            </tr>
-            <tr>
-              <td><span class="badge b-success">04</span></td>
-              <td><strong>Premium Subscription</strong></td>
-              <td>Advanced analytics, early market access</td>
-              <td>Rp 99k–299k/bulan/user</td>
-            </tr>
-            <tr>
-              <td><span class="badge b-orange">05</span></td>
-              <td><strong>Sponsored Markets</strong></td>
-              <td>Brand / lembaga bayar untuk market branded</td>
-              <td>Rp 10–100 juta/campaign</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- 10 RISIKO -->
-    <section class="section" id="risiko">
-      <div class="section-header">
-        <span class="section-tag">10</span>
-        <h2>Analisis Risiko</h2>
-      </div>
-      <p class="section-intro">Setiap risiko material dipetakan dengan level, dampak, dan strategi mitigasinya.</p>
-
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Risiko</th><th>Level</th><th>Dampak</th><th>Mitigasi</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Regulasi / Legal</strong></td><td><span class="risk-hi">🔴 Tinggi</span></td><td>Shutdown paksa</td><td>OJK Sandbox, virtual currency first, legal counsel</td></tr>
-            <tr><td><strong>Likuiditas rendah</strong></td><td><span class="risk-hi">🔴 Tinggi</span></td><td>Harga tidak akurat, UX buruk</td><td>LMSR AMM, seeding likuiditas awal, komunitas aktif</td></tr>
-            <tr><td><strong>Manipulasi pasar</strong></td><td><span class="risk-med">🟡 Sedang</span></td><td>Reputasi rusak</td><td>Limit posisi, monitoring anomali, KYC bertahap</td></tr>
-            <tr><td><strong>Oracle manipulation</strong></td><td><span class="risk-med">🟡 Sedang</span></td><td>Resolusi salah, dispute</td><td>Multi-source verification, appeal mechanism</td></tr>
-            <tr><td><strong>Security breach</strong></td><td><span class="risk-med">🟡 Sedang</span></td><td>Kehilangan dana user</td><td>Audit keamanan, penetration testing, insurance</td></tr>
-            <tr><td><strong>Kompetitor global masuk</strong></td><td><span class="risk-lo">🟢 Rendah</span></td><td>Market share turun</td><td>Konten lokal, Bahasa Indonesia, trust komunitas</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <hr class="divider">
-
-    <!-- 11 ROADMAP -->
-    <section class="section" id="roadmap">
-      <div class="section-header">
-        <span class="section-tag">11</span>
-        <h2>Roadmap</h2>
-      </div>
-      <p class="section-intro">4 fase dari riset hingga scaling nasional. Setiap fase memiliki milestone jelas dan go/no-go decision point.</p>
-
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-phase">Phase 0 — Q2 2026 · Sekarang</div>
-          <div class="timeline-title">Research &amp; Validation</div>
-          <ul class="timeline-list">
-            <li>Riset regulasi mendalam dengan kuasa hukum</li>
-            <li>User interview 50+ target pengguna</li>
-            <li>Prototype desain (Figma) + user testing</li>
-            <li>Setup legal entity &amp; konsultasi OJK</li>
-            <li>Finalisasi arsitektur &amp; tech stack</li>
-          </ul>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-phase">Phase 1 — Q3 2026</div>
-          <div class="timeline-title">MVP Build (Virtual Points)</div>
-          <ul class="timeline-list">
-            <li>Core platform: auth, markets, LMSR trade engine</li>
-            <li>10–20 markets percontohan (IHSG, isu nasional)</li>
-            <li>Closed beta: 500 undangan komunitas</li>
-            <li>Tidak ada uang nyata — virtual points saja</li>
-            <li>Feedback loop &amp; iterasi cepat</li>
-          </ul>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-phase">Phase 2 — Q4 2026 – Q1 2027</div>
-          <div class="timeline-title">Public Beta + Payment</div>
-          <ul class="timeline-list">
-            <li>Integrasi Midtrans / Xendit (top-up &amp; withdrawal)</li>
-            <li>KYC level 1 (email verification)</li>
-            <li>Open registration — target 10.000 users</li>
-            <li>OJK Sandbox application</li>
-            <li>Launch B2B data API (media partner pertama)</li>
-          </ul>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-phase">Phase 3 — Q2–Q3 2027</div>
-          <div class="timeline-title">Growth &amp; Monetization</div>
-          <ul class="timeline-list">
-            <li>Target 100.000 registered users</li>
-            <li>Mobile app (React Native)</li>
-            <li>Sponsored markets dengan brand &amp; media besar</li>
-            <li>Premium subscription launch</li>
-            <li>Fundraising seed round</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <strong style="color:var(--text)">TAKAR</strong> — Dokumen ini bersifat konfidensial. Dilarang disebarluaskan tanpa izin tertulis.
-  &nbsp;©&nbsp;2026 TAKAR / VOXIA-ICS.
-</footer>
-
-<script>
-(function () {
-  const html = document.documentElement;
-  const btn  = document.querySelector('[data-theme-toggle]');
-
-  let theme = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
-  html.setAttribute('data-theme', theme);
-
-  const MOON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-  const SUN  = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
-
-  if (btn) {
-    btn.innerHTML = theme === 'dark' ? MOON : SUN;
-    btn.addEventListener('click', () => {
-      theme = theme === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', theme);
-      btn.innerHTML = theme === 'dark' ? MOON : SUN;
-    });
+  <span class="kw">constructor</span>(liquidityB: <span class="dt">bigint</span>) {
+    <span class="kw">this</span>.b = <span class="dt">Number</span>(liquidityB) / <span class="num">100</span>; <span class="cm">// convert sen → unit</span>
   }
 
-  const sections = document.querySelectorAll('.section[id]');
-  const links    = document.querySelectorAll('.sidebar-link');
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        links.forEach(l => l.classList.remove('active'));
-        const a = document.querySelector('.sidebar-link[href="#' + e.target.id + '"]');
-        if (a) a.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-15% 0px -75% 0px' });
-  sections.forEach(s => obs.observe(s));
-})();
+  cost(qYes: <span class="dt">number</span>, qNo: <span class="dt">number</span>): <span class="dt">number</span> {
+    <span class="kw">return</span> <span class="kw">this</span>.b * <span class="dt">Math</span>.log(
+      <span class="dt">Math</span>.exp(qYes / <span class="kw">this</span>.b) + <span class="dt">Math</span>.exp(qNo / <span class="kw">this</span>.b)
+    );
+  }
+
+  probability(qYes: <span class="dt">number</span>, qNo: <span class="dt">number</span>): <span class="dt">number</span> {
+    <span class="kw">const</span> eY = <span class="dt">Math</span>.exp(qYes / <span class="kw">this</span>.b);
+    <span class="kw">const</span> eN = <span class="dt">Math</span>.exp(qNo  / <span class="kw">this</span>.b);
+    <span class="kw">return</span> eY / (eY + eN);
+  }
+
+  tradeCost(
+    qYes: <span class="dt">number</span>, qNo: <span class="dt">number</span>,
+    outcome: <span class="str">'YES'</span> | <span class="str">'NO'</span>,
+    delta: <span class="dt">number</span>
+  ): <span class="dt">bigint</span> {
+    <span class="kw">const</span> before = <span class="kw">this</span>.cost(qYes, qNo);
+    <span class="kw">const</span> after  = outcome === <span class="str">'YES'</span>
+      ? <span class="kw">this</span>.cost(qYes + delta, qNo)
+      : <span class="kw">this</span>.cost(qYes, qNo + delta);
+    <span class="kw">return</span> <span class="dt">BigInt</span>(<span class="dt">Math</span>.round((after - before) * <span class="num">100</span>));
+  }
+}</pre></div>
+  </div>
+
+  <h2>Panduan Kalibrasi Parameter b</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Nilai b (sen)</th><th>Modal Awal</th><th>Price Impact</th><th>Cocok Untuk</th></tr></thead>
+    <tbody>
+      <tr><td><span class="mono">100,000</span></td><td>Rp 1.000</td><td>Tinggi</td><td>Test / low-stakes market</td></tr>
+      <tr><td><span class="mono">1,000,000</span></td><td>Rp 10.000</td><td>Sedang</td><td>Market reguler</td></tr>
+      <tr><td><span class="mono">10,000,000</span></td><td>Rp 100.000</td><td>Rendah</td><td>High-traffic market (Pemilu)</td></tr>
+      <tr><td><span class="mono">100,000,000</span></td><td>Rp 1.000.000</td><td>Sangat rendah</td><td>Market institusional / B2B</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 07 -->
+<section class="section" id="s07">
+  <div class="topbar"><div class="section-tag"><span class="tag-num">07</span><h1 class="section-title">Regulasi &amp; Hukum</h1></div></div>
+  <p class="lead">Regulasi adalah <strong>tantangan terbesar</strong> TAKAR. Pendekatan bukan menghindari hukum, tapi membangun framework compliance yang pre-emptive dan transparan.</p>
+  <div class="warn-box"><p><strong>⚠ Disclaimer:</strong> Analisis ini bukan legal advice. Konsultasi dengan firma hukum fintech Indonesia wajib sebelum launch.</p></div>
+  <h2>Regulasi Relevan</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Regulasi</th><th>Isi</th><th>Relevansi</th><th>Mitigasi</th></tr></thead>
+    <tbody>
+      <tr><td><span class="mono">UU No.7/1974</span></td><td>Penertiban perjudian</td><td>Tinggi</td><td>Framing skill-based</td></tr>
+      <tr><td><span class="mono">KUHP Pasal 303</span></td><td>Larangan perjudian</td><td>Tinggi</td><td>Legal opinion + OJK sandbox</td></tr>
+      <tr><td><span class="mono">UU No.7/1992</span></td><td>Perbankan &amp; pengelolaan dana</td><td>Sedang</td><td>Kerjasama bank/e-money licensed</td></tr>
+      <tr><td><span class="mono">POJK No.13/2018</span></td><td>Inovasi keuangan digital</td><td>Positif</td><td>Daftar OJK regulatory sandbox</td></tr>
+      <tr><td><span class="mono">UU PDP No.27/2022</span></td><td>Perlindungan data pribadi</td><td>Sedang</td><td>Data residency Indonesia, enkripsi</td></tr>
+    </tbody>
+  </table></div>
+  <h2>Strategi Legal</h2>
+  <div class="card-grid">
+    <div class="card" style="margin:0"><span class="badge badge-gold">Framing</span><h3 style="margin:.5rem 0 .375rem">Skill vs. Chance</h3><p style="margin:0">Positioning sebagai platform forecasting berbasis pengetahuan — bukan gambling. Referensi: trading saham juga mengandung probabilitas.</p></div>
+    <div class="card" style="margin:0"><span class="badge badge-primary">Sandbox</span><h3 style="margin:.5rem 0 .375rem">OJK Regulatory Sandbox</h3><p style="margin:0">Daftar POJK No.13/2018 untuk beroperasi dalam lingkungan terkontrol dengan jalur menuju lisensi resmi.</p></div>
+    <div class="card" style="margin:0"><span class="badge badge-blue">KYC</span><h3 style="margin:.5rem 0 .375rem">Strict Identity Verification</h3><p style="margin:0">KYC 3 tier — email, NIK, biometric. Limit transaksi per tier. Reporting ke PPATK untuk transaksi &gt;Rp 100 juta.</p></div>
+    <div class="card" style="margin:0"><span class="badge badge-purple">Konten</span><h3 style="margin:.5rem 0 .375rem">Market Curation</h3><p style="margin:0">Kurasi ketat jenis market. Hindari konten sensitif SARA. Fokus pada verifiable public events dengan sumber data resmi.</p></div>
+  </div>
+</section>
+
+<!-- 08 -->
+<section class="section" id="s08">
+  <div class="topbar"><div class="section-tag"><span class="tag-num">08</span><h1 class="section-title">Monetisasi</h1></div></div>
+  <p class="lead">Revenue TAKAR dari platform fee yang transparan dan produk data B2B — bukan dari manipulasi odds seperti sportsbook konvensional.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Stream</th><th>Mekanisme</th><th>Rate</th><th>Target Y1</th><th>Prioritas</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Trading Fee</strong></td><td>Dipotong otomatis setiap trade</td><td>1–2% per trade</td><td>Rp 2.4B</td><td><span class="badge badge-primary">Core</span></td></tr>
+      <tr><td><strong>Spread Revenue</strong></td><td>LMSR liquidity provision margin</td><td>Embedded in price</td><td>Rp 800M</td><td><span class="badge badge-primary">Core</span></td></tr>
+      <tr><td><strong>Premium Subscription</strong></td><td>Fitur advanced, analytics, API</td><td>Rp 99K–499K/bln</td><td>Rp 600M</td><td><span class="badge badge-gold">Growth</span></td></tr>
+      <tr><td><strong>B2B Data API</strong></td><td>Feed probabilitas ke media/lembaga</td><td>Rp 5M–50M/bln</td><td>Rp 300M</td><td><span class="badge badge-blue">Strategic</span></td></tr>
+      <tr><td><strong>Market Creation Fee</strong></td><td>Organisasi/media buat market branded</td><td>Rp 500K–5M/market</td><td>Rp 150M</td><td><span class="badge badge-purple">Upsell</span></td></tr>
+    </tbody>
+  </table></div>
+  <h2>Proyeksi Revenue</h2>
+  <div class="card"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem">
+    <div><div style="font-size:.6875rem;font-weight:700;letter-spacing:.08em;color:var(--faint);margin-bottom:.5rem">TAHUN 1</div><div style="font-size:1.5rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text)">Rp 4.25B</div><div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">10.000 MAU aktif</div></div>
+    <div><div style="font-size:.6875rem;font-weight:700;letter-spacing:.08em;color:var(--faint);margin-bottom:.5rem">TAHUN 2</div><div style="font-size:1.5rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--gold)">Rp 18B</div><div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">50.000 MAU · 5 klien B2B</div></div>
+    <div><div style="font-size:.6875rem;font-weight:700;letter-spacing:.08em;color:var(--faint);margin-bottom:.5rem">TAHUN 3</div><div style="font-size:1.5rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--primary)">Rp 65B</div><div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">200.000 MAU · 20 klien B2B</div></div>
+  </div></div>
+</section>
+
+<!-- 09 -->
+<section class="section" id="s09">
+  <div class="topbar"><div class="section-tag"><span class="tag-num">09</span><h1 class="section-title">Analisis Risiko</h1></div></div>
+  <p class="lead">Risk register komprehensif mencakup dimensi regulasi, teknis, pasar, dan operasional dengan rencana mitigasi konkret.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Risiko</th><th>Kategori</th><th>Level</th><th>Mitigasi</th></tr></thead>
+    <tbody>
+      <tr><td>Platform dikategorikan sebagai judi</td><td>Regulasi</td><td><span class="badge badge-red">TINGGI</span></td><td>OJK sandbox, legal counsel, framing skill-based</td></tr>
+      <tr><td>Pemblokiran oleh Kominfo</td><td>Regulasi</td><td><span class="badge badge-orange">SEDANG</span></td><td>Daftar PSE, comply UU ITE, transparansi</td></tr>
+      <tr><td>Market manipulation</td><td>Teknis</td><td><span class="badge badge-orange">SEDANG</span></td><td>LMSR price impact, per-user position limits</td></tr>
+      <tr><td>Financial bug / exploit</td><td>Teknis</td><td><span class="badge badge-orange">SEDANG</span></td><td>Audit kode eksternal, ACID transactions</td></tr>
+      <tr><td>Low liquidity market baru</td><td>Pasar</td><td><span class="badge badge-orange">SEDANG</span></td><td>Liquidity seeding oleh platform</td></tr>
+      <tr><td>User trust &amp; fraud</td><td>Operasional</td><td><span class="badge badge-gold">RENDAH</span></td><td>KYC berlapis, fraud detection, insurance fund</td></tr>
+      <tr><td>Data breach</td><td>Keamanan</td><td><span class="badge badge-gold">RENDAH</span></td><td>Enkripsi E2E, security audit, bug bounty</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 10 -->
+<section class="section" id="s10">
+  <div class="topbar"><div class="section-tag"><span class="tag-num">10</span><h1 class="section-title">Roadmap</h1></div></div>
+  <p class="lead">Roadmap 4 fase dari <strong>Q2 2026 hingga Q4 2027</strong> — dari validasi konsep hingga ekspansi regional ASEAN.</p>
+  <div class="timeline">
+    <div class="phase-card phase-1">
+      <div class="phase-period">Q2–Q3 2026 · ~6 bln</div>
+      <div class="phase-name">Fase 1 — Foundation</div>
+      <ul class="phase-items">
+        <li>Core LMSR engine + unit tests</li>
+        <li>Auth system (KYC level 1 &amp; 2)</li>
+        <li>Market CRUD + resolution flow</li>
+        <li>Basic trading UI (Next.js)</li>
+        <li>PostgreSQL schema + migrations</li>
+        <li>Azure infra baseline</li>
+        <li>Legal opinion &amp; OJK sandbox apply</li>
+      </ul>
+    </div>
+    <div class="phase-card phase-2">
+      <div class="phase-period">Q4 2026 · ~3 bln</div>
+      <div class="phase-name">Fase 2 — Beta Launch</div>
+      <ul class="phase-items">
+        <li>Closed beta 500 invited users</li>
+        <li>Payment gateway (VA + e-wallet)</li>
+        <li>Real-time price chart (WebSocket)</li>
+        <li>Market: Politik &amp; Ekonomi</li>
+        <li>Referral &amp; leaderboard system</li>
+        <li>Mobile-responsive PWA</li>
+        <li>Monitoring &amp; alerting</li>
+      </ul>
+    </div>
+    <div class="phase-card phase-3">
+      <div class="phase-period">Q1–Q2 2027 · ~6 bln</div>
+      <div class="phase-name">Fase 3 — Public Launch</div>
+      <ul class="phase-items">
+        <li>Open registration + full KYC</li>
+        <li>Olahraga &amp; entertainment markets</li>
+        <li>Premium subscription tier</li>
+        <li>B2B API v1 (data feed)</li>
+        <li>iOS &amp; Android app</li>
+        <li>Market creation tools (curator)</li>
+        <li>Seed funding round</li>
+      </ul>
+    </div>
+    <div class="phase-card phase-4">
+      <div class="phase-period">Q3–Q4 2027 · ~6 bln</div>
+      <div class="phase-name">Fase 4 — Scale &amp; Expand</div>
+      <ul class="phase-items">
+        <li>Institutional / B2B market tier</li>
+        <li>ASEAN expansion (Malaysia, PH)</li>
+        <li>AI-assisted market resolution</li>
+        <li>Advanced analytics dashboard</li>
+        <li>Series A fundraising</li>
+        <li>Full license OJK</li>
+        <li>White-label API for media</li>
+      </ul>
+    </div>
+  </div>
+  <h2>Tech Milestones</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Milestone</th><th>Target</th><th>KPI</th></tr></thead>
+    <tbody>
+      <tr><td>MVP engine passing all tests</td><td>Jul 2026</td><td>100% test coverage LMSR functions</td></tr>
+      <tr><td>Beta launch</td><td>Okt 2026</td><td>500 MAU, &lt;200ms latency p95</td></tr>
+      <tr><td>Payment live</td><td>Nov 2026</td><td>Deposit &amp; withdrawal sukses &gt;99%</td></tr>
+      <tr><td>Public launch</td><td>Feb 2027</td><td>5.000 MAU, Rp 1B/bulan volume</td></tr>
+      <tr><td>B2B API</td><td>Apr 2027</td><td>3 klien signed, uptime 99.9%</td></tr>
+      <tr><td>Mobile app</td><td>Jun 2027</td><td>50% traffic dari mobile</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+</main>
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`[onclick="show('${id}')"]`).classList.add('active');
+  document.querySelector('.main').scrollTop=0;
+}
+function toggleTheme(){
+  const h=document.documentElement, d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('theme-label').textContent=d?'Dark':'Light';
+  document.getElementById('theme-icon').innerHTML=d
+    ?'<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>'
+    :'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+}
 </script>
 </body>
 </html>
