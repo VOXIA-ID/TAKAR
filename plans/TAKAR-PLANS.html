@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAKAR — Pasar Prediksi Indonesia</title>
-<meta name="description" content="TAKAR — Platform Pasar Prediksi pertama Indonesia. Research & Architecture Plan.">
+<title>TAKAR — Bursa Opini Terukur Indonesia</title>
+<meta name="description" content="TAKAR — Platform Bursa Opini Terukur pertama Indonesia. Research & Architecture Plan.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -131,6 +131,8 @@ tr:hover td{background:var(--color-surface-offset)}
 .timeline-tags{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3)}
 .code-block{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);font-family:var(--font-mono);font-size:var(--text-xs);overflow-x:auto;line-height:1.8;margin:var(--space-4) 0;color:var(--color-text-muted)}
 .code-block .kw{color:var(--color-primary)}.code-block .str{color:var(--color-gold)}.code-block .cm{color:var(--color-text-faint);font-style:italic}.code-block .tp{color:var(--color-blue)}
+.vocab-table td:first-child{font-family:var(--font-mono);color:var(--color-error);text-decoration:line-through}
+.vocab-table td:nth-child(2){font-family:var(--font-mono);color:var(--color-primary);font-weight:600}
 .divider{height:1px;background:var(--color-divider);margin:var(--space-12) 0}
 @media(max-width:768px){.doc-layout{grid-template-columns:1fr}.sidebar{display:none}.content{padding:var(--space-4) 0}.card-grid.cols-2,.card-grid.cols-3{grid-template-columns:1fr}.topbar-nav{display:none}}
 </style>
@@ -147,9 +149,9 @@ tr:hover td{background:var(--color-surface-offset)}
   </a>
   <nav class="topbar-nav">
     <a class="nav-link" href="#latar">Latar Belakang</a>
+    <a class="nav-link" href="#positioning">Positioning</a>
     <a class="nav-link" href="#fitur">Fitur</a>
     <a class="nav-link" href="#arsitektur">Arsitektur</a>
-    <a class="nav-link" href="#regulasi">Regulasi</a>
     <a class="nav-link" href="#roadmap">Roadmap</a>
   </nav>
   <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
@@ -158,9 +160,9 @@ tr:hover td{background:var(--color-surface-offset)}
 </header>
 
 <section class="hero">
-  <div class="hero-badge"><span class="hero-badge-dot"></span>Research Document v0.1 · Confidential</div>
-  <h1><span>TAKAR</span> — Pasar Prediksi<br>Indonesia</h1>
-  <p class="hero-sub">Platform prediksi berbasis pasar pertama di Indonesia. Pengguna memasang posisi pada hasil kejadian nyata: politik, ekonomi, olahraga, budaya. Harga pasar mencerminkan probabilitas kolektif — bukan opini, tapi sinyal.</p>
+  <div class="hero-badge"><span class="hero-badge-dot"></span>Research Document v0.2 · Confidential</div>
+  <h1><span>TAKAR</span> — Bursa Opini<br>Terukur Indonesia</h1>
+  <p class="hero-sub">Platform pertama di Indonesia tempat pengguna menyatakan penilaian terukur atas isu publik. Bobot konsensus terbentuk secara organik — bukan opini kosong, tapi sinyal yang tercatat dan diverifikasi.</p>
   <div class="hero-meta">
     <span>📅 Mei 2026</span><span>·</span><span>🔬 Pre-seed Research</span><span>·</span><span>🇮🇩 Indonesia-first</span><span>·</span><span>✍️ VOXIA / SOLUSI-AI</span>
   </div>
@@ -173,18 +175,22 @@ tr:hover td{background:var(--color-surface-offset)}
       <a class="sidebar-item" href="#latar">Latar Belakang</a>
       <a class="sidebar-item" href="#masalah">Masalah & Peluang</a>
       <a class="sidebar-item" href="#kompetitor">Analisis Kompetitor</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Strategi</div>
+      <a class="sidebar-item" href="#positioning">Positioning Legal</a>
+      <a class="sidebar-item" href="#vocab">Kamus Framing</a>
       <a class="sidebar-item" href="#fitur">Fitur Utama</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Teknis</div>
       <a class="sidebar-item" href="#arsitektur">Arsitektur Sistem</a>
       <a class="sidebar-item" href="#database">Database & Data Flow</a>
-      <a class="sidebar-item" href="#mekanisme">Mekanisme Pasar</a>
+      <a class="sidebar-item" href="#mekanisme">Mekanisme Bobot</a>
       <a class="sidebar-item" href="#stack">Tech Stack</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Bisnis</div>
-      <a class="sidebar-item" href="#regulasi">Regulasi & Legalitas</a>
       <a class="sidebar-item" href="#monetisasi">Model Monetisasi</a>
       <a class="sidebar-item" href="#risiko">Analisis Risiko</a>
       <a class="sidebar-item" href="#roadmap">Roadmap</a>
@@ -193,42 +199,44 @@ tr:hover td{background:var(--color-surface-offset)}
 
   <main class="content">
 
+    <!-- 01 LATAR BELAKANG -->
     <section class="section" id="latar">
       <div class="section-header"><span class="section-number">01</span><h2>Latar Belakang</h2></div>
-      <p class="section-intro">TAKAR lahir dari satu observasi sederhana: Indonesia adalah negara dengan populasi terbesar ke-4 di dunia, tapi belum ada pasar prediksi yang serius dan legal di sini.</p>
+      <p class="section-intro">TAKAR lahir dari satu observasi sederhana: Indonesia adalah negara dengan populasi terbesar ke-4 di dunia, tapi belum ada platform yang mengukur bobot opini publik secara transparan, terstruktur, dan bertanggung jawab.</p>
       <div class="highlight-card">
-        <p><strong>Inspirasi:</strong> Polymarket (AS) berhasil membuktikan bahwa pasar prediksi adalah cara paling akurat untuk mengukur probabilitas kejadian nyata. Pada Pemilu AS 2024, Polymarket lebih akurat dari hampir semua lembaga survei. TAKAR adalah versi Indonesia dari konsep ini — disesuaikan dengan regulasi, budaya, dan konteks lokal.</p>
+        <p><strong>Nama & Konsep:</strong> TAKAR — dari kata "menakar". Pengguna <em>menakar</em> suatu isu: seberapa besar bobot keyakinan mereka terhadap suatu hasil nyata. Ini bukan tebak-tebakan — ini adalah ekspresi penilaian yang terukur, dicatat, dan diverifikasi secara objektif berdasarkan fakta publik.</p>
       </div>
       <div class="card-grid cols-3" style="margin-top:var(--space-6)">
-        <div class="card"><h3>🌏 Pasar Besar</h3><p>270 juta penduduk, penetrasi internet 80%+, 191 juta pengguna media sosial aktif. Setiap siklus Pemilu, Pilkada, dan event olahraga besar menciptakan demand prediksi masif.</p></div>
-        <div class="card"><h3>💡 Kesenjangan</h3><p>Belum ada platform legal dan terpercaya untuk mengekspresikan prediksi dengan uang. Yang ada hanya komentar media sosial tanpa pertanggungjawaban dan judi ilegal tidak terstruktur.</p></div>
-        <div class="card"><h3>📊 Validasi Global</h3><p>Polymarket mencapai $8 miliar volume trading di 2024. Manifold Markets punya 100K+ pengguna aktif. Proof of concept global sudah ada — tinggal adaptasi lokal.</p></div>
+        <div class="card"><h3>🌏 Pasar Besar</h3><p>270 juta penduduk, 191 juta pengguna media sosial aktif. Setiap siklus Pilkada, Pemilu, dan event nasional besar menciptakan gelombang opini publik yang belum pernah diukur secara sistematis.</p></div>
+        <div class="card"><h3>💡 Ruang Kosong</h3><p>Belum ada platform legal di Indonesia yang mengagregasi opini publik berbasis insentif akurasi. Yang ada hanya komentar media sosial tanpa akuntabilitas dan lembaga survei tertutup yang tidak transparan.</p></div>
+        <div class="card"><h3>⚖️ Celah Regulasi</h3><p>OJK belum mengatur kategori ini — persis seperti prop trading firm. TAKAR tidak meminta izin untuk kategori yang belum ada; TAKAR <em>mendefinisikan</em> kategori baru dan membangun preseden hukumnya sendiri.</p></div>
       </div>
     </section>
 
     <div class="divider"></div>
 
+    <!-- 02 MASALAH & PELUANG -->
     <section class="section" id="masalah">
       <div class="section-header"><span class="section-number">02</span><h2>Masalah & Peluang</h2></div>
       <div class="card-grid cols-2">
         <div class="card">
           <h3 style="color:var(--color-error)">❌ Masalah Saat Ini</h3>
           <ul>
-            <li>Prediksi publik tidak ada mekanisme akuntabilitas</li>
-            <li>Warga ingin "bertaruh" pada outcome politik/olahraga tapi tak ada jalur legal</li>
-            <li>Judi online ilegal beroperasi besar-besaran (est. Rp 600T/tahun)</li>
-            <li>Lembaga survei sering bias dan tidak transparan metodologinya</li>
-            <li>Informasi probabilistik tersebar dan tidak terkurasi</li>
+            <li>Opini publik tidak memiliki mekanisme akuntabilitas apapun</li>
+            <li>Lembaga survei sering bias, metodologi tidak transparan</li>
+            <li>Tidak ada cara mengukur "seberapa yakin" seseorang pada suatu isu</li>
+            <li>Judi online ilegal (est. Rp 600T/tahun) membuktikan demand ekspresi posisi atas outcome nyata</li>
+            <li>Informasi tentang kemungkinan suatu kejadian tersebar dan tidak terstruktur</li>
           </ul>
         </div>
         <div class="card">
           <h3 style="color:var(--color-success)">✅ Peluang TAKAR</h3>
           <ul>
-            <li>Posisikan sebagai "bursa opini" — bukan judi, tapi instrumen informasi</li>
-            <li>Moment Pilkada 2027 dan Pemilu 2029 sebagai katalis utama</li>
-            <li>Regulasi OJK sedang berkembang untuk fintech inovatif</li>
-            <li>Gen-Z & Milenial familiar dengan prediction & fantasy leagues</li>
-            <li>B2B angle: media, think tank, konsultan politik butuh data prediksi</li>
+            <li>Posisikan sebagai <strong>platform riset & agregasi opini</strong> — instrumen informasi, bukan hiburan</li>
+            <li>Pilkada 2027 dan Pemilu 2029 sebagai katalis traction awal</li>
+            <li>Gen-Z & Milenial familiar dengan fantasy league, trivia berhadiah, dan platform opini berbayar</li>
+            <li>B2B angle kuat: media, think tank, konsultan politik, dan lembaga riset butuh data bobot opini</li>
+            <li>Tidak ada kompetitor lokal di ruang ini — first mover advantage penuh</li>
           </ul>
         </div>
       </div>
@@ -236,17 +244,19 @@ tr:hover td{background:var(--color-surface-offset)}
 
     <div class="divider"></div>
 
+    <!-- 03 KOMPETITOR -->
     <section class="section" id="kompetitor">
       <div class="section-header"><span class="section-number">03</span><h2>Analisis Kompetitor</h2></div>
+      <p class="section-intro">Tidak ada kompetitor langsung di Indonesia. Referensi global ada, tapi semuanya punya hambatan masuk yang membuka ruang bagi TAKAR.</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Platform</th><th>Negara</th><th>Model</th><th>Kelemahan vs TAKAR</th></tr></thead>
+          <thead><tr><th>Platform</th><th>Negara</th><th>Model</th><th>Hambatan vs TAKAR</th></tr></thead>
           <tbody>
-            <tr><td><strong>Polymarket</strong></td><td>🇺🇸 AS</td><td><span class="tag tag-blue">Crypto (USDC)</span></td><td>Tidak legal di Indonesia, butuh wallet crypto, bahasa Inggris</td></tr>
-            <tr><td><strong>Metaculus</strong></td><td>🇺🇸 AS</td><td><span class="tag tag-teal">Play Money</span></td><td>Tidak ada uang nyata, kurang engaging untuk mass market Indonesia</td></tr>
-            <tr><td><strong>Manifold Markets</strong></td><td>🇺🇸 AS</td><td><span class="tag tag-teal">Play Money</span></td><td>Play money only, konten Indonesia sangat sedikit</td></tr>
-            <tr><td><strong>Betway / 1xBet</strong></td><td>🌐 Global</td><td><span class="tag tag-red">Ilegal di ID</span></td><td>Ilegal, bukan prediction market sejati, tidak edukatif</td></tr>
-            <tr><td><strong>TAKAR 🎯</strong></td><td>🇮🇩 Indonesia</td><td><span class="tag tag-gold">IDR + Poin</span></td><td>—</td></tr>
+            <tr><td><strong>Polymarket</strong></td><td>🇺🇸 AS</td><td><span class="tag tag-blue">Crypto (USDC)</span></td><td>Butuh wallet crypto, UI bahasa Inggris, tidak hadir secara lokal</td></tr>
+            <tr><td><strong>Metaculus</strong></td><td>🇺🇸 AS</td><td><span class="tag tag-teal">Poin Virtual</span></td><td>Tidak ada insentif finansial nyata, konten Indonesia hampir nol</td></tr>
+            <tr><td><strong>Manifold Markets</strong></td><td>🇺🇸 AS</td><td><span class="tag tag-teal">Poin Virtual</span></td><td>Play money only, tidak ada konteks lokal sama sekali</td></tr>
+            <tr><td><strong>Populix / Jakpat</strong></td><td>🇮🇩 ID</td><td><span class="tag tag-gold">Survey</span></td><td>One-way survey — user tidak menyatakan bobot keyakinan, hanya memilih opsi</td></tr>
+            <tr><td><strong>TAKAR 🎯</strong></td><td>🇮🇩 Indonesia</td><td><span class="tag tag-gold">IDR + Poin</span></td><td>— Platform kategori baru, tanpa kompetitor langsung</td></tr>
           </tbody>
         </table>
       </div>
@@ -254,24 +264,87 @@ tr:hover td{background:var(--color-surface-offset)}
 
     <div class="divider"></div>
 
-    <section class="section" id="fitur">
-      <div class="section-header"><span class="section-number">04</span><h2>Fitur Utama</h2></div>
-      <p class="section-intro">TAKAR dirancang berlapis — mulai dari fitur play money yang aman secara regulasi, hingga real-money dengan lisensi penuh.</p>
-      <div class="card-grid cols-2">
-        <div class="card"><h3>🏛️ Pasar Prediksi</h3><p>Pengguna bisa membuat, menjelajahi, dan berpartisipasi dalam pasar prediksi. Setiap pasar punya pertanyaan biner (Ya/Tidak) atau multi-outcome dengan tanggal resolusi.</p><ul><li>Market builder dengan validasi pertanyaan AI</li><li>Auto-resolve via trusted oracle (KPU, berita resmi, dsb.)</li><li>Kategori: Politik, Ekonomi, Olahraga, Teknologi, Budaya Pop</li></ul></div>
-        <div class="card"><h3>📈 Mekanisme Harga LMSR</h3><p>Logarithmic Market Scoring Rule — automated market maker yang memastikan likuiditas tersedia tanpa perlu peer-to-peer match.</p><ul><li>Harga bergerak otomatis saat ada posisi baru</li><li>Platform sediakan likuiditas awal (subsidized)</li><li>Pengguna bisa masuk/keluar kapan saja</li></ul></div>
-        <div class="card"><h3>👤 Profil & Reputasi</h3><p>Setiap forecaster punya track record publik. Akurasi historis tercatat — menciptakan insentif untuk prediksi yang jujur dan terkalkulasi.</p><ul><li>Calibration score & Brier score per kategori</li><li>Leaderboard mingguan/bulanan</li><li>Badge sistem berbasis akurasi</li></ul></div>
-        <div class="card"><h3>🤖 AI Assistant</h3><p>Integrasi LLM untuk membantu pengguna membuat keputusan prediksi yang lebih baik — memberikan konteks dan data relevan.</p><ul><li>Ringkasan berita terkini terkait market</li><li>Historical base rate dari kejadian serupa</li><li>Sentiment analysis dari media sosial Indonesia</li></ul></div>
-        <div class="card"><h3>📰 News Feed Terintegrasi</h3><p>Setiap market punya feed berita otomatis dari sumber terpercaya Indonesia (Kompas, Tempo, CNBC Indonesia) via RSS dan scraping terstruktur.</p></div>
-        <div class="card"><h3>💳 Wallet & Transaksi</h3><p>Dompet digital dengan top-up via transfer bank, QRIS, dan e-wallet (GoPay, OVO, DANA). Fase 1: poin virtual. Fase 2+: IDR real money dengan lisensi OJK.</p></div>
+    <!-- 04 POSITIONING LEGAL -->
+    <section class="section" id="positioning">
+      <div class="section-header"><span class="section-number">04</span><h2>Positioning Legal</h2></div>
+      <p class="section-intro">Strategi TAKAR bukan meminta izin untuk kategori yang belum ada regulasinya. Strategi TAKAR adalah membangun fakta hukum bahwa ini adalah kategori baru yang tidak tercakup regulasi yang ada.</p>
+
+      <div class="highlight-card">
+        <p><strong>Analogi Prop Firm:</strong> OJK tidak pernah secara eksplisit melarang prop trading firm — mereka beroperasi bebas karena berada di ruang yang belum diatur. TAKAR menggunakan posisi yang sama: <em>bukan broker, bukan exchange efek, bukan perjudian</em> — melainkan <strong>platform agregasi opini berbasis insentif akurasi</strong>, kategori yang belum diatur OJK maupun Kominfo.</p>
+      </div>
+
+      <div class="card-grid cols-2" style="margin-top:var(--space-6)">
+        <div class="card">
+          <h3>📋 Definisi Legal TAKAR</h3>
+          <p style="margin-bottom:var(--space-3)">TAKAR adalah <strong>platform teknologi informasi</strong> yang:</p>
+          <ul>
+            <li>Menyediakan ruang bagi pengguna untuk menyatakan <em>bobot keyakinan</em> atas isu publik yang resolusinya berdasarkan fakta terverifikasi</li>
+            <li>Mengagregasi bobot keyakinan tersebut menjadi <em>konsensus terukur</em> yang dapat digunakan sebagai data riset</li>
+            <li>Memberikan insentif berupa poin/reward kepada pengguna yang akurasi penilaiannya konsisten tinggi</li>
+            <li>Menjual data agregat konsensus kepada pihak ketiga (B2B) sebagai produk informasi</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>⚖️ Preseden Hukum Relevan</h3>
+          <ul>
+            <li><strong>Dream11 (India)</strong> — Fantasy sports diklasifikasikan sebagai "game of skill", bukan gambling. Supreme Court India mengakui perbedaan ini</li>
+            <li><strong>Prop Firm Global</strong> — Beroperasi tanpa lisensi broker karena tidak memegang dana klien secara tradisional</li>
+            <li><strong>Google Opinion Rewards</strong> — Membayar pengguna untuk opini tanpa tergolong perjudian apapun</li>
+            <li><strong>Populix/Jakpat</strong> — Membayar responden survei — TAKAR adalah evolusi dari model ini dengan verifikasi objektif</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="highlight-card" style="border-left-color:var(--color-gold);margin-top:var(--space-6)">
+        <p><strong>Prinsip Utama:</strong> TAKAR tidak pernah memposisikan diri sebagai platform yang "memprediksi" apapun. TAKAR adalah <em>cermin terukur dari opini publik Indonesia</em>. Resolusi terjadi bukan karena TAKAR memutuskan siapa yang benar — tapi karena <strong>fakta publik yang terverifikasi</strong> (hasil KPU, data BPS, skor resmi liga) menjadi acuan objektif yang tidak terbantahkan.</p>
       </div>
     </section>
 
     <div class="divider"></div>
 
+    <!-- 05 KAMUS FRAMING -->
+    <section class="section" id="vocab">
+      <div class="section-header"><span class="section-number">05</span><h2>Kamus Framing TAKAR</h2></div>
+      <p class="section-intro">Konsistensi bahasa adalah lini pertahanan pertama TAKAR secara hukum dan komunikasi publik. Kata-kata di bawah ini <strong>tidak boleh pernah digunakan</strong> dalam produk, marketing, maupun dokumentasi publik.</p>
+      <div class="table-wrap">
+        <table class="vocab-table">
+          <thead><tr><th>❌ Jangan Gunakan</th><th>✅ Gunakan Ini</th><th>Alasan</th></tr></thead>
+          <tbody>
+            <tr><td>Prediksi / Memprediksi</td><td>Penilaian / Menaksir</td><td>Prediksi berkonotasi spekulasi; taksiran berkonotasi proses analisis</td></tr>
+            <tr><td>Pasar Prediksi</td><td>Bursa Opini Terukur</td><td>Hindari asosiasi langsung dengan platform serupa di luar negeri</td></tr>
+            <tr><td>Taruhan / Betting</td><td>Posisi / Menyatakan Bobot</td><td>Betting langsung masuk definisi perjudian UU No.7/1974</td></tr>
+            <tr><td>Menang / Kalah</td><td>Resolusi Akurat / Tidak Akurat</td><td>Framing kompetisi skill, bukan gambling outcome</td></tr>
+            <tr><td>Probabilitas</td><td>Bobot Konsensus</td><td>Konsensus terdengar lebih seperti riset opini</td></tr>
+            <tr><td>Odds</td><td>Indeks Keyakinan</td><td>Odds identik dengan sportsbook ilegal</td></tr>
+            <tr><td>Profit / Cuan dari posisi</td><td>Reward akurasi / Poin resolusi</td><td>Framing insentif skill, bukan return finansial</td></tr>
+            <tr><td>Market</td><td>Topik / Isu Aktif</td><td>Untuk komunikasi publik — market boleh dipakai internal/teknis</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 06 FITUR -->
+    <section class="section" id="fitur">
+      <div class="section-header"><span class="section-number">06</span><h2>Fitur Utama</h2></div>
+      <p class="section-intro">TAKAR dirancang berlapis — dimulai dari poin virtual yang sepenuhnya aman secara regulasi, berkembang ke insentif finansial nyata setelah preseden hukum dan komunitas terbentuk.</p>
+      <div class="card-grid cols-2">
+        <div class="card"><h3>🏛️ Bursa Isu Publik</h3><p>Pengguna menjelajahi dan berpartisipasi dalam isu-isu aktif. Setiap isu memiliki pertanyaan dengan hasil terverifikasi dan tanggal resolusi berbasis fakta publik.</p><ul><li>Isu dibuat oleh user atau dikurasi tim TAKAR</li><li>Auto-resolve via oracle tepercaya (KPU, BPS, skor resmi)</li><li>Kategori: Politik, Ekonomi, Olahraga, Teknologi, Sosial</li></ul></div>
+        <div class="card"><h3>⚖️ Sistem Bobot Keyakinan</h3><p>Pengguna menyatakan seberapa besar bobot keyakinan mereka — bukan sekedar memilih Ya/Tidak, tapi mengalokasikan bobot yang mencerminkan tingkat kepercayaan diri mereka.</p><ul><li>Mekanisme AMM (LMSR) — bobot bergerak dinamis</li><li>Platform sediakan likuiditas awal</li><li>Pengguna bisa keluar kapan saja sebelum resolusi</li></ul></div>
+        <div class="card"><h3>👤 Profil Akurasi</h3><p>Setiap pengguna memiliki track record akurasi publik. Ini menciptakan insentif kuat untuk memberi penilaian yang jujur dan terkalkulasi — bukan asal.</p><ul><li>Calibration score & Brier score per kategori</li><li>Leaderboard mingguan/bulanan</li><li>Sistem badge berbasis konsistensi akurasi</li></ul></div>
+        <div class="card"><h3>🤖 Asisten Konteks AI</h3><p>LLM terintegrasi membantu pengguna membuat penilaian yang lebih baik — memberikan latar belakang isu, data historis, dan ringkasan berita terkini.</p><ul><li>Ringkasan berita terkait isu dari media Indonesia</li><li>Base rate historis dari kejadian serupa di masa lalu</li><li>Analisis sentimen dari media sosial Indonesia</li></ul></div>
+        <div class="card"><h3>📰 Feed Berita Terintegrasi</h3><p>Setiap isu aktif punya feed berita otomatis dari Kompas, Tempo, CNBC Indonesia via RSS — sehingga pengguna selalu punya konteks terbaru saat menentukan bobot.</p></div>
+        <div class="card"><h3>💳 Wallet & Reward</h3><p>Dompet poin virtual di Fase 1. Top-up via transfer bank, QRIS, e-wallet di Fase 2+. Reward akurasi dikreditkan otomatis saat resolusi terkonfirmasi.</p></div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 07 ARSITEKTUR -->
     <section class="section" id="arsitektur">
-      <div class="section-header"><span class="section-number">05</span><h2>Arsitektur Sistem</h2></div>
-      <p class="section-intro">Cloud-native, microservices-ready, berbasis Azure sesuai stack eksisting VOXIA/INVEZTHINK.</p>
+      <div class="section-header"><span class="section-number">07</span><h2>Arsitektur Sistem</h2></div>
+      <p class="section-intro">Cloud-native, microservices-ready, berbasis Azure sesuai stack eksisting VOXIA/INVEZTHINK. Estimasi biaya MVP: ~$200–400/bulan.</p>
       <div class="arch-diagram">
         <div class="arch-layers">
           <div class="arch-layer layer-client">
@@ -283,13 +356,13 @@ tr:hover td{background:var(--color-surface-offset)}
           <div class="arch-layer layer-api">
             <div class="arch-layer-title">⚡ API GATEWAY & AUTH</div>
             <div class="arch-layer-body">
-              <span class="arch-box">Azure API Management</span><span class="arch-box">JWT Auth (Azure AD B2C)</span><span class="arch-box">Rate Limiting</span><span class="arch-box">WebSocket (Real-time prices)</span><span class="arch-box">REST + tRPC</span>
+              <span class="arch-box">Azure API Management</span><span class="arch-box">JWT Auth (Azure AD B2C)</span><span class="arch-box">Rate Limiting</span><span class="arch-box">WebSocket (Real-time bobot)</span><span class="arch-box">REST + tRPC</span>
             </div>
           </div>
           <div class="arch-layer layer-core">
             <div class="arch-layer-title">🧠 CORE SERVICES</div>
             <div class="arch-layer-body">
-              <span class="arch-box">Market Service</span><span class="arch-box">Pricing Engine (LMSR)</span><span class="arch-box">Resolution Oracle</span><span class="arch-box">User Service</span><span class="arch-box">Wallet Service</span><span class="arch-box">Notification Service</span><span class="arch-box">AI/LLM Service</span><span class="arch-box">News Aggregator</span>
+              <span class="arch-box">Isu Service</span><span class="arch-box">Bobot Engine (LMSR)</span><span class="arch-box">Resolution Oracle</span><span class="arch-box">User Service</span><span class="arch-box">Wallet Service</span><span class="arch-box">Notification Service</span><span class="arch-box">AI/LLM Service</span><span class="arch-box">News Aggregator</span>
             </div>
           </div>
           <div class="arch-layer layer-data">
@@ -306,56 +379,55 @@ tr:hover td{background:var(--color-surface-offset)}
           </div>
         </div>
       </div>
-      <div class="highlight-card">
-        <p><strong>Why Azure?</strong> Infrastruktur VOXIA dan INVEZTHINK sudah berjalan di Azure. Reuse existing pipelines, familiarity tim, dan region Southeast Asia memberikan latency rendah. Estimasi biaya awal: ~$200–400/bulan untuk MVP.</p>
-      </div>
     </section>
 
     <div class="divider"></div>
 
+    <!-- 08 DATABASE -->
     <section class="section" id="database">
-      <div class="section-header"><span class="section-number">06</span><h2>Database & Data Flow</h2></div>
+      <div class="section-header"><span class="section-number">08</span><h2>Database & Data Flow</h2></div>
       <div class="card-grid cols-2">
         <div class="card">
           <h3>🗂️ Schema Utama (PostgreSQL)</h3>
           <div class="code-block">
 <span class="cm">-- Core entities</span>
 <span class="kw">users</span> (<span class="tp">id</span>, username, email, verified_ktp,
-  balance_points, calibration_score)
+  balance_points, calibration_score,
+  brier_score, total_resolutions)
 
-<span class="kw">markets</span> (<span class="tp">id</span>, title, category, creator_id,
+<span class="kw">issues</span> (<span class="tp">id</span>, title, category, creator_id,
   resolution_date, status, yes_pool,
-  no_pool, lmsr_b)
+  no_pool, lmsr_b, source_oracle)
 
-<span class="kw">positions</span> (<span class="tp">id</span>, user_id, market_id, outcome,
-  shares, cost_basis, created_at)
+<span class="kw">positions</span> (<span class="tp">id</span>, user_id, issue_id, stance,
+  weight_allocated, cost_basis, created_at)
 
-<span class="kw">transactions</span> (<span class="tp">id</span>, user_id, type, amount,
+<span class="kw">transactions</span> (<span class="tp">id</span>, user_id, type, points,
   reference_id, status)
 
-<span class="kw">resolutions</span> (<span class="tp">id</span>, market_id, outcome,
-  evidence_url, resolved_at)
+<span class="kw">resolutions</span> (<span class="tp">id</span>, issue_id, outcome,
+  evidence_url, source, resolved_at)
           </div>
         </div>
         <div class="card">
-          <h3>🔄 Trade Execution Flow</h3>
+          <h3>🔄 Position Execution Flow</h3>
           <div class="code-block">
-<span class="cm">1. User → POST /api/markets/{id}/trade</span>
-   { outcome: <span class="str">"YES"</span>, amount: 50000 }
+<span class="cm">1. User → POST /api/issues/{id}/position</span>
+   { stance: <span class="str">"YES"</span>, weight: 50000 }
 
-<span class="cm">2. LMSR Pricing Engine:</span>
+<span class="cm">2. LMSR Bobot Engine:</span>
    cost = b × ln(e^(q_yes/b) + e^(q_no/b))
-   new_price = e^(q_yes/b) / sum
+   new_index = e^(q_yes/b) / sum
 
 <span class="cm">3. Atomic DB transaction:</span>
-   Debit wallet → Mint shares
+   Debit wallet → Allocate weight
 
 <span class="cm">4. Publish to Event Bus:</span>
-   → Update Redis (real-time)
+   → Update Redis (real-time index)
    → Push WebSocket to subscribers
-   → Log to CosmosDB (audit)
+   → Log to CosmosDB (audit trail)
 
-<span class="cm">5. Return new price + shares</span>
+<span class="cm">5. Return new index + allocated weight</span>
           </div>
         </div>
       </div>
@@ -363,18 +435,19 @@ tr:hover td{background:var(--color-surface-offset)}
 
     <div class="divider"></div>
 
+    <!-- 09 MEKANISME BOBOT -->
     <section class="section" id="mekanisme">
-      <div class="section-header"><span class="section-number">07</span><h2>Mekanisme Pasar</h2></div>
+      <div class="section-header"><span class="section-number">09</span><h2>Mekanisme Bobot</h2></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Aspek</th><th>Detail</th><th>Catatan</th></tr></thead>
           <tbody>
-            <tr><td><strong>Model AMM</strong></td><td>LMSR (Hanson 2003)</td><td>Terbukti optimal untuk binary prediction markets</td></tr>
-            <tr><td><strong>Liquidity Parameter (b)</strong></td><td>Default: b = 100</td><td>b kecil = sensitif; b besar = stabil</td></tr>
-            <tr><td><strong>Market Creation</strong></td><td>Deposit likuiditas minimum Rp 50.000 poin</td><td>TAKAR juga buat featured markets yang disubsidi</td></tr>
-            <tr><td><strong>Resolution</strong></td><td>Auto (oracle) atau manual (admin + 2 moderator)</td><td>Dispute mechanism: challenge resolusi dalam 24 jam</td></tr>
-            <tr><td><strong>Platform Fee</strong></td><td>2% per trade</td><td>Kompetitif vs Polymarket (2%), lebih murah dari sportsbook</td></tr>
-            <tr><td><strong>Minimum Trade</strong></td><td>Rp 1.000 (poin) / Rp 10.000 (real money)</td><td>Rendah untuk akses mass market</td></tr>
+            <tr><td><strong>Model AMM</strong></td><td>LMSR (Hanson 2003)</td><td>Optimal untuk agregasi opini biner — menghasilkan distribusi keyakinan kolektif</td></tr>
+            <tr><td><strong>Liquidity Parameter (b)</strong></td><td>Default: b = 100, disesuaikan per isu</td><td>b kecil = sensitif terhadap perubahan bobot; b besar = stabil</td></tr>
+            <tr><td><strong>Pembuatan Isu</strong></td><td>Deposit likuiditas min. 50.000 poin</td><td>TAKAR juga kurasi "isu unggulan" yang disubsidi likuiditasnya</td></tr>
+            <tr><td><strong>Resolusi</strong></td><td>Auto (oracle) atau manual (admin + 2 moderator)</td><td>Dispute window: 24 jam setelah resolusi dikumandangkan</td></tr>
+            <tr><td><strong>Platform Fee</strong></td><td>2% per alokasi bobot</td><td>Digunakan untuk subsidi likuiditas isu unggulan dan operasional</td></tr>
+            <tr><td><strong>Minimum Bobot</strong></td><td>1.000 poin (virtual) / Rp 10.000 (real)</td><td>Rendah untuk memastikan akses mass market</td></tr>
           </tbody>
         </table>
       </div>
@@ -382,81 +455,56 @@ tr:hover td{background:var(--color-surface-offset)}
 
     <div class="divider"></div>
 
+    <!-- 10 TECH STACK -->
     <section class="section" id="stack">
-      <div class="section-header"><span class="section-number">08</span><h2>Tech Stack</h2></div>
+      <div class="section-header"><span class="section-number">10</span><h2>Tech Stack</h2></div>
       <div class="card-grid cols-3">
-        <div class="card"><h3><span class="tag tag-blue">Frontend</span></h3><ul><li><strong>Next.js 15</strong> — App Router, SSR/SSG</li><li><strong>TypeScript</strong> strict mode</li><li><strong>Tailwind CSS v4</strong></li><li><strong>Recharts / D3</strong> — price charts</li><li><strong>Zustand</strong> + TanStack Query</li></ul></div>
-        <div class="card"><h3><span class="tag tag-teal">Backend</span></h3><ul><li><strong>Node.js + tRPC</strong> — type-safe API</li><li><strong>Prisma ORM</strong> — PostgreSQL</li><li><strong>BullMQ</strong> — job queues</li><li><strong>Socket.io</strong> — real-time</li><li><strong>Azure Functions</strong> — serverless</li></ul></div>
+        <div class="card"><h3><span class="tag tag-blue">Frontend</span></h3><ul><li><strong>Next.js 15</strong> — App Router, SSR/SSG</li><li><strong>TypeScript</strong> strict mode</li><li><strong>Tailwind CSS v4</strong></li><li><strong>Recharts / D3</strong> — indeks bobot charts</li><li><strong>Zustand</strong> + TanStack Query</li></ul></div>
+        <div class="card"><h3><span class="tag tag-teal">Backend</span></h3><ul><li><strong>Node.js + tRPC</strong> — type-safe API</li><li><strong>Prisma ORM</strong> — PostgreSQL</li><li><strong>BullMQ</strong> — job queues</li><li><strong>Socket.io</strong> — real-time bobot</li><li><strong>Azure Functions</strong> — serverless jobs</li></ul></div>
         <div class="card"><h3><span class="tag tag-orange">Infrastructure</span></h3><ul><li><strong>Azure Container Apps</strong></li><li><strong>Azure PostgreSQL Flexible</strong></li><li><strong>Azure Cache for Redis</strong></li><li><strong>Azure Service Bus</strong></li><li><strong>GitHub Actions</strong> + Terraform</li></ul></div>
-        <div class="card"><h3><span class="tag tag-purple">AI / ML</span></h3><ul><li><strong>OpenAI GPT-4o</strong> — summaries</li><li><strong>Azure Cognitive Search</strong></li><li><strong>Custom NLP</strong> — auto-categorization</li><li><strong>Sentiment API</strong> — X/Twitter ID</li></ul></div>
-        <div class="card"><h3><span class="tag tag-gold">Payment</span></h3><ul><li><strong>Midtrans</strong> — QRIS, transfer, e-wallet</li><li><strong>Xendit</strong> — disbursement</li><li>Fase 1: Virtual poin saja</li><li>Fase 2: IDR real money + OJK</li></ul></div>
-        <div class="card"><h3><span class="tag tag-teal">Monitoring</span></h3><ul><li><strong>Azure Monitor + App Insights</strong></li><li><strong>Sentry</strong> — error tracking</li><li><strong>Grafana</strong> — dashboards</li><li><strong>Uptime Robot</strong> — alerts</li></ul></div>
+        <div class="card"><h3><span class="tag tag-purple">AI / ML</span></h3><ul><li><strong>OpenAI GPT-4o</strong> — konteks & ringkasan isu</li><li><strong>Azure Cognitive Search</strong> — semantic news</li><li><strong>Custom NLP</strong> — auto-kategorisasi isu</li><li><strong>Sentiment API</strong> — X/Twitter Indonesia</li></ul></div>
+        <div class="card"><h3><span class="tag tag-gold">Payment</span></h3><ul><li><strong>Midtrans</strong> — QRIS, VA, e-wallet</li><li><strong>Xendit</strong> — disbursement/withdrawal</li><li>Fase 1: Virtual poin saja</li><li>Fase 2+: IDR real money</li></ul></div>
+        <div class="card"><h3><span class="tag tag-teal">Monitoring</span></h3><ul><li><strong>Azure Monitor + App Insights</strong></li><li><strong>Sentry</strong> — error tracking</li><li><strong>Grafana</strong> — custom dashboards</li><li><strong>Uptime Robot</strong> — availability alerts</li></ul></div>
       </div>
     </section>
 
     <div class="divider"></div>
 
-    <section class="section" id="regulasi">
-      <div class="section-header"><span class="section-number">09</span><h2>Regulasi & Legalitas</h2></div>
-      <p class="section-intro">Tantangan terbesar TAKAR. Prediction market bisa dikonstruksikan sebagai instrumen informasi yang berbeda secara hukum dari perjudian konvensional.</p>
-      <div class="card-grid cols-2">
-        <div class="card">
-          <h3 style="color:var(--color-error)">⚠️ Risiko Regulasi</h3>
-          <ul>
-            <li>UU No. 7 Tahun 1974 tentang Penertiban Perjudian — definisi luas</li>
-            <li>KUHP Pasal 303 — perjudian dengan uang nyata dilarang</li>
-            <li>UU ITE menjangkau platform digital yang memfasilitasi taruhan</li>
-            <li>Kominfo bisa memblokir tanpa proses hukum panjang</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3 style="color:var(--color-success)">✅ Strategi Mitigasi</h3>
-          <ul>
-            <li><strong>Fase 1:</strong> Virtual currency saja — tidak masuk definisi perjudian</li>
-            <li>Engage law firm spesialis fintech Indonesia sejak awal</li>
-            <li>Positioning: "Bursa Opini" / "Platform Informasi Probabilistik"</li>
-            <li>Daftar OJK Regulatory Sandbox untuk fintech inovatif</li>
-            <li>Daftarkan PSE Kominfo sebelum launch publik</li>
-          </ul>
-        </div>
-      </div>
-      <div class="highlight-card" style="border-left-color:var(--color-gold)">
-        <p><strong>Preseden:</strong> Fantasy sports di India (Dream11) berhasil diposisikan sebagai "game of skill" bukan gambling. TAKAR bisa menggunakan strategi serupa — menekankan riset, analisis, dan calibration sebagai skill yang diukur secara objektif.</p>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
+    <!-- 11 MONETISASI -->
     <section class="section" id="monetisasi">
-      <div class="section-header"><span class="section-number">10</span><h2>Model Monetisasi</h2></div>
+      <div class="section-header"><span class="section-number">11</span><h2>Model Monetisasi</h2></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Stream</th><th>Mekanisme</th><th>Fase</th><th>Kontribusi Est.</th></tr></thead>
           <tbody>
-            <tr><td><strong>Trading Fee</strong></td><td>2% per transaksi trade</td><td><span class="tag tag-green">Fase 1</span></td><td>60–70%</td></tr>
-            <tr><td><strong>Market Creation Fee</strong></td><td>Rp 5.000–50.000 + deposit likuiditas</td><td><span class="tag tag-green">Fase 1</span></td><td>10–15%</td></tr>
-            <tr><td><strong>Premium Subscription</strong></td><td>Analytics lanjutan, API data, early access</td><td><span class="tag tag-blue">Fase 2</span></td><td>15–20%</td></tr>
-            <tr><td><strong>B2B Data API</strong></td><td>Aggregated prediction data untuk media & konsultan</td><td><span class="tag tag-blue">Fase 2</span></td><td>10–15%</td></tr>
-            <tr><td><strong>Sponsored Markets</strong></td><td>Brand bayar untuk featured market terkait event mereka</td><td><span class="tag tag-orange">Fase 3</span></td><td>5–10%</td></tr>
+            <tr><td><strong>Platform Fee</strong></td><td>2% per alokasi bobot</td><td><span class="tag tag-green">Fase 1</span></td><td>55–65%</td></tr>
+            <tr><td><strong>Isu Creation Fee</strong></td><td>Rp 5.000–50.000 + deposit likuiditas</td><td><span class="tag tag-green">Fase 1</span></td><td>10–15%</td></tr>
+            <tr><td><strong>Premium Subscription</strong></td><td>Analytics mendalam, API data, early access isu</td><td><span class="tag tag-blue">Fase 2</span></td><td>15–20%</td></tr>
+            <tr><td><strong>B2B Data API</strong></td><td>Agregat bobot konsensus untuk media, konsultan, think tank</td><td><span class="tag tag-blue">Fase 2</span></td><td>10–15%</td></tr>
+            <tr><td><strong>Sponsored Issues</strong></td><td>Brand/lembaga bayar untuk isu unggulan yang relevan dengan mereka</td><td><span class="tag tag-orange">Fase 3</span></td><td>5–10%</td></tr>
           </tbody>
         </table>
+      </div>
+      <div class="highlight-card" style="border-left-color:var(--color-gold)">
+        <p><strong>B2B adalah moat jangka panjang:</strong> Data bobot konsensus dari jutaan pengguna Indonesia adalah produk yang tidak bisa direplikasi kompetitor baru. Media seperti Kompas dan konsultan politik akan membayar mahal untuk akses ke sinyal ini sebelum Pilkada 2027.</p>
       </div>
     </section>
 
     <div class="divider"></div>
 
+    <!-- 12 RISIKO -->
     <section class="section" id="risiko">
-      <div class="section-header"><span class="section-number">11</span><h2>Analisis Risiko</h2></div>
+      <div class="section-header"><span class="section-number">12</span><h2>Analisis Risiko</h2></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Risiko</th><th>Level</th><th>Prob.</th><th>Mitigasi</th></tr></thead>
           <tbody>
-            <tr><td><strong>Blokir regulasi</strong></td><td><span class="tag tag-red">TINGGI</span></td><td>40%</td><td>Launch poin dulu, OJK sandbox, siapkan backup domain</td></tr>
-            <tr><td><strong>Market manipulation</strong></td><td><span class="tag tag-red">TINGGI</span></td><td>60%</td><td>Volume minimum, deteksi anomali, review manual</td></tr>
-            <tr><td><strong>Cold start liquidity</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>70%</td><td>Subsidi likuiditas awal, ajak komunitas forecaster Indonesia</td></tr>
-            <tr><td><strong>Resolusi disengketakan</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>30%</td><td>Multi-oracle verification, dispute window 24–48 jam</td></tr>
-            <tr><td><strong>Churn user tinggi</strong></td><td><span class="tag tag-teal">RENDAH</span></td><td>50%</td><td>Gamification, notifikasi resolusi, streak rewards</td></tr>
-            <tr><td><strong>Kompetitor masuk</strong></td><td><span class="tag tag-teal">RENDAH</span></td><td>20%</td><td>Move fast, bangun brand trust dan data moat lebih awal</td></tr>
+            <tr><td><strong>Salah framing publik</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>30%</td><td>Kamus framing diterapkan ketat di semua touchpoint; tim PR terlatih</td></tr>
+            <tr><td><strong>Regulasi baru yang mencakup TAKAR</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>25%</td><td>Monitor aktif regulasi OJK/Kominfo; law firm on-retainer; siapkan argumen kategorisasi</td></tr>
+            <tr><td><strong>Manipulasi bobot terkoordinasi</strong></td><td><span class="tag tag-red">TINGGI</span></td><td>60%</td><td>Minimum bobot per user, deteksi anomali, rate limiting, review manual isu high-profile</td></tr>
+            <tr><td><strong>Cold start — kurang likuiditas awal</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>65%</td><td>TAKAR subsidi likuiditas 20 isu unggulan pertama; rekrut komunitas forecaster Indonesia sebagai seed users</td></tr>
+            <tr><td><strong>Resolusi disengketakan</strong></td><td><span class="tag tag-gold">SEDANG</span></td><td>30%</td><td>Multi-oracle verification, dispute window 24 jam, panel moderator independen</td></tr>
+            <tr><td><strong>Churn user tinggi</strong></td><td><span class="tag tag-teal">RENDAH</span></td><td>50%</td><td>Gamification kuat, notifikasi resolusi real-time, streak & achievement rewards</td></tr>
           </tbody>
         </table>
       </div>
@@ -464,38 +512,39 @@ tr:hover td{background:var(--color-surface-offset)}
 
     <div class="divider"></div>
 
+    <!-- 13 ROADMAP -->
     <section class="section" id="roadmap">
-      <div class="section-header"><span class="section-number">12</span><h2>Roadmap</h2></div>
+      <div class="section-header"><span class="section-number">13</span><h2>Roadmap</h2></div>
       <div class="timeline">
         <div class="timeline-item">
           <div class="timeline-phase">Fase 0 — Q2 2026 · Sekarang</div>
-          <div class="timeline-title">Riset & Validasi</div>
-          <div class="timeline-desc">Finalisasi dokumen ini. Konsultasi hukum awal. Identifikasi 50 beta user dari komunitas forecasting Indonesia. Landing page waitlist. Daftarkan PSE Kominfo.</div>
-          <div class="timeline-tags"><span class="tag tag-teal">Riset</span><span class="tag tag-teal">Legal</span><span class="tag tag-teal">Community</span></div>
+          <div class="timeline-title">Riset, Legal & Seed Community</div>
+          <div class="timeline-desc">Finalisasi dokumen ini. Konsultasi law firm fintech. Daftarkan PSE Kominfo. Identifikasi 50 seed users dari komunitas yang sudah aktif berdiskusi tentang isu publik (Twitter/X, forum). Landing page waitlist.</div>
+          <div class="timeline-tags"><span class="tag tag-teal">Riset</span><span class="tag tag-teal">Legal Setup</span><span class="tag tag-teal">PSE Kominfo</span></div>
         </div>
         <div class="timeline-item">
           <div class="timeline-phase">Fase 1 — Q3 2026</div>
-          <div class="timeline-title">MVP — Play Money Platform</div>
-          <div class="timeline-desc">Launch dengan sistem poin virtual. 20 featured markets awal. Implementasi LMSR pricing engine. User profiles & leaderboard. Target: 1.000 registered users, 200 MAU.</div>
+          <div class="timeline-title">MVP — Platform Poin Virtual</div>
+          <div class="timeline-desc">Launch dengan sistem poin virtual sepenuhnya. 20 isu unggulan dikurasi tim TAKAR. LMSR bobot engine live. Profil akurasi & leaderboard. Target: 1.000 registered users, 200 MAU.</div>
           <div class="timeline-tags"><span class="tag tag-blue">Next.js MVP</span><span class="tag tag-blue">LMSR Engine</span><span class="tag tag-blue">Azure Deploy</span></div>
         </div>
         <div class="timeline-item">
           <div class="timeline-phase">Fase 2 — Q4 2026</div>
-          <div class="timeline-title">Growth — User Markets + AI</div>
-          <div class="timeline-desc">Buka pembuatan market untuk semua user. Integrasi AI assistant. Mobile app React Native. Target: 5.000 users, 1.000 MAU, 500 markets aktif.</div>
-          <div class="timeline-tags"><span class="tag tag-gold">AI Integration</span><span class="tag tag-gold">Mobile App</span><span class="tag tag-gold">User Markets</span></div>
+          <div class="timeline-title">Growth — User Issues + AI Context</div>
+          <div class="timeline-desc">Buka pembuatan isu untuk semua user. Integrasi AI context assistant. Mobile app React Native. Target: 5.000 users, 1.000 MAU, 500 isu aktif.</div>
+          <div class="timeline-tags"><span class="tag tag-gold">AI Integration</span><span class="tag tag-gold">Mobile App</span><span class="tag tag-gold">User Issues</span></div>
         </div>
         <div class="timeline-item">
           <div class="timeline-phase">Fase 3 — Q1 2027</div>
-          <div class="timeline-title">Monetisasi — Real Money</div>
-          <div class="timeline-desc">Pilot real money dengan user terverifikasi KTP. Integrasi Midtrans & Xendit. Apply lisensi OJK. B2B data API untuk media dan konsultan politik.</div>
-          <div class="timeline-tags"><span class="tag tag-orange">Real Money</span><span class="tag tag-orange">Midtrans</span><span class="tag tag-orange">KYC/KTP</span></div>
+          <div class="timeline-title">Monetisasi — Real Reward + B2B</div>
+          <div class="timeline-desc">Pilot reward IDR nyata dengan user terverifikasi KTP. Integrasi Midtrans & Xendit. Launch B2B Data API untuk media dan konsultan menjelang Pilkada 2027.</div>
+          <div class="timeline-tags"><span class="tag tag-orange">Real Reward</span><span class="tag tag-orange">KYC/KTP</span><span class="tag tag-orange">B2B API</span></div>
         </div>
         <div class="timeline-item">
           <div class="timeline-phase">Fase 4 — Q2–Q3 2027</div>
-          <div class="timeline-title">Scale — Expansion & Fundraising</div>
-          <div class="timeline-desc">Ekspansi ke Malaysia/Philippines. Seed round fundraising. Partnership media besar (Kompas, Detik). Target: 50.000 users, Rp 1M+ volume/bulan.</div>
-          <div class="timeline-tags"><span class="tag tag-purple">Expansion</span><span class="tag tag-purple">Fundraising</span><span class="tag tag-purple">Media Partnership</span></div>
+          <div class="timeline-title">Scale — Pilkada Momentum & Fundraising</div>
+          <div class="timeline-desc">Manfaatkan momentum Pilkada 2027 sebagai showcase akurasi TAKAR. Partnership media besar (Kompas, Detik, CNBC Indonesia). Seed round fundraising. Target: 50.000 users, volume reward signifikan.</div>
+          <div class="timeline-tags"><span class="tag tag-purple">Pilkada 2027</span><span class="tag tag-purple">Fundraising</span><span class="tag tag-purple">Media Partnership</span></div>
         </div>
       </div>
     </section>
@@ -505,7 +554,7 @@ tr:hover td{background:var(--color-surface-offset)}
     <div class="card" style="background:var(--color-surface-offset);border-style:dashed;text-align:center;padding:var(--space-8)">
       <p style="color:var(--color-text-muted);font-size:var(--text-sm);margin:0 auto">
         <strong style="color:var(--color-text)">TAKAR</strong> — Dokumen ini bersifat konfidensial, intellectual property VOXIA / SOLUSI-AI.<br>
-        Versi: v0.1 · Mei 2026 · Status: Pre-seed Research
+        Versi: v0.2 · Mei 2026 · Status: Pre-seed Research · Framing: Bursa Opini Terukur
       </p>
     </div>
 
